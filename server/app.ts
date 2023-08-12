@@ -38,7 +38,7 @@ app.use((req, res, next) => {
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
-app.use("/api/v1/posts", newsRouter);
+app.use("/api/v1/news", newsRouter);
 app.use("/api/v1/comments", commentRouter);
 app.use("/api/v1/likeDislike", likeRouter);
 app.use("/api/v1/bookmarks", bookmarkRouter);

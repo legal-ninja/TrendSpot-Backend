@@ -58,7 +58,7 @@ app.use((req, res, next) => {
 });
 app.use("/api/v1/auth", auth_routes_1.default);
 app.use("/api/v1/users", user_routes_1.default);
-app.use("/api/v1/posts", news_routes_1.default);
+app.use("/api/v1/news", news_routes_1.default);
 app.use("/api/v1/comments", comment_routes_1.default);
 app.use("/api/v1/likeDislike", like_routes_1.default);
 app.use("/api/v1/bookmarks", bookmark_routes_1.default);

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AUTHOR_FIELDS_LONGER = exports.LIKE_FIELDS = exports.AUTHOR_FIELDS = void 0;
+exports.LONG_AUTHOR_FIELDS = exports.LIKE_FIELDS = exports.AUTHOR_FIELDS = void 0;
 exports.AUTHOR_FIELDS = {
     id: true,
     email: true,
@@ -16,10 +16,9 @@ exports.LIKE_FIELDS = {
     lastName: true,
     bio: true,
     joinedAt: true,
-    interests: true,
-    posts: true,
+    news: true,
 };
-exports.AUTHOR_FIELDS_LONGER = {
+exports.LONG_AUTHOR_FIELDS = {
     id: true,
     avatar: true,
     email: true,
@@ -27,6 +26,5 @@ exports.AUTHOR_FIELDS_LONGER = {
     lastName: true,
     bio: true,
     joinedAt: true,
-    interests: true,
-    posts: true,
+    news: true,
 };

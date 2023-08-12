@@ -37,7 +37,7 @@ model News {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   readTime Int
-  categories String[]
+  category String
   author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId   String
   comments Comment[]

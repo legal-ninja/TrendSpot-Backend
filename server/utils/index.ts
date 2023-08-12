@@ -14,11 +14,10 @@ export const LIKE_FIELDS = {
   lastName: true,
   bio: true,
   joinedAt: true,
-  interests: true,
-  posts: true,
+  news: true,
 };
 
-export const AUTHOR_FIELDS_LONGER = {
+export const LONG_AUTHOR_FIELDS = {
   id: true,
   avatar: true,
   email: true,
@@ -26,6 +25,5 @@ export const AUTHOR_FIELDS_LONGER = {
   lastName: true,
   bio: true,
   joinedAt: true,
-  interests: true,
-  posts: true,
+  news: true,
 };
