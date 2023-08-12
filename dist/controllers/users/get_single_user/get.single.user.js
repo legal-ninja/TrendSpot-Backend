@@ -14,6 +14,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getSingleUser = void 0;
 const async_handler_1 = __importDefault(require("../../../helpers/async.handler"));
+const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
+const global_error_1 = require("../../../helpers/global.error");
 exports.getSingleUser = (0, async_handler_1.default)(function (req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () { });
+    return __awaiter(this, void 0, void 0, function* () {
+        const user = yield prisma_client_1.default.user.findFirst({
+            where: {
+                id: req.params.userId,
+            },
+            include: {
+                news: true,
+            },
+        });
+        if (!user)
+            return next(new global_error_1.AppError("User could not be found", 404));
+        res.status(200).json({
+            status: "success",
+            user,
+        });
+    });
 });
