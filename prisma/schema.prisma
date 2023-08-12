@@ -85,8 +85,8 @@ model Like {
 
 model Bookmark {
   id String @id @default(uuid()) @map("_id")
-  post News @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId String
+  news News @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  newsId String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
   createdAt  DateTime @default(now())

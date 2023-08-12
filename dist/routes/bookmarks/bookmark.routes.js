@@ -1,5 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
+const auth_middleware_1 = require("../../middleware/auth.middleware");
+const get_user_bookmarks_controller_1 = require("../../controllers/bookmarks/get_user_bookmarks/get.user.bookmarks.controller");
+const account_status_1 = require("../../middleware/account.status");
+const remove_bookmark_controller_1 = require("../../controllers/bookmarks/remove_bookmark/remove.bookmark.controller");
 const router = (0, express_1.Router)();
+router.get("/", auth_middleware_1.verifyAuth, get_user_bookmarks_controller_1.getUserBookmarks);
+router.delete("/remove/:bookmarkId", auth_middleware_1.verifyAuth, account_status_1.verifyAccountStatus, remove_bookmark_controller_1.removeFromBookmarks);
+// router.post("/addRemoveBookmark/:postId", verifyAuth, addRemoveBookmark);
 exports.default = router;

@@ -19,6 +19,9 @@ const utils_1 = require("../../../utils");
 exports.getUserBookmarks = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const userBookmarks = yield prisma_client_1.default.bookmark.findMany({
+            where: {
+                userId: req.query.userId,
+            },
             include: {
                 post: {
                     include: {
