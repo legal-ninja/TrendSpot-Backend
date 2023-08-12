@@ -8,7 +8,9 @@ const update_news_controller_1 = require("../../controllers/news/update_news/upd
 const delete_news_controller_1 = require("../../controllers/news/delete_news/delete.news.controller");
 const auth_middleware_1 = require("../../middleware/auth.middleware");
 const account_status_1 = require("../../middleware/account.status");
+const get_external_news_controller_1 = require("../../controllers/news/get_external_news/get.external.news.controller");
 const router = (0, express_1.Router)();
+router.get("/external-news", get_external_news_controller_1.getExternalNews);
 router
     .route("/")
     .get(get_all_news_controller_1.getAllNews)

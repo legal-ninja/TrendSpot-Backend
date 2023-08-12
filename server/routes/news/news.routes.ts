@@ -6,9 +6,11 @@ import { updateNews } from "../../controllers/news/update_news/update.news.contr
 import { deleteNews } from "../../controllers/news/delete_news/delete.news.controller";
 import { verifyAdmin, verifyAuth } from "../../middleware/auth.middleware";
 import { verifyAccountStatus } from "../../middleware/account.status";
+import { getExternalNews } from "../../controllers/news/get_external_news/get.external.news.controller";
 
 const router = Router();
 
+router.get("/external-news", getExternalNews);
 router
   .route("/")
   .get(getAllNews)
