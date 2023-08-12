@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from "express";
-import handleAsync from "../../../helpers/async.handler";
-import { User } from "../../../types/models/types/user";
 import { genSaltSync, hashSync } from "bcryptjs";
+import handleAsync from "../../../helpers/async.handler";
 import { AppError } from "../../../helpers/global.error";
-import { generateToken } from "../../../helpers/generate.token";
 import prisma from "../../../lib/prisma.client";
+import { User } from "../../../models/types/user";
+import { generateToken } from "../../../helpers/generate.token";
+import { log } from "console";
 
 export const register = handleAsync(async function (
   req: Request,
@@ -26,14 +27,14 @@ export const register = handleAsync(async function (
       missingFields.push(field);
   }
 
-  const isMissingFieldsOne = (missingFields.length = 1);
+  const isMissingFieldsOne = missingFields.length === 1;
   const concatenatedMissingFields = missingFields.join(", ");
 
   if (missingFields.length > 0)
     return next(
       new AppError(
         `user ${concatenatedMissingFields} ${
-          isMissingFieldsOne ? "are" : "is"
+          isMissingFieldsOne ? "is" : "are"
         } required`,
         400
       )

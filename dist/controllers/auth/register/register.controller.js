@@ -24,11 +24,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.register = void 0;
-const async_handler_1 = __importDefault(require("../../../helpers/async.handler"));
 const bcryptjs_1 = require("bcryptjs");
+const async_handler_1 = __importDefault(require("../../../helpers/async.handler"));
 const global_error_1 = require("../../../helpers/global.error");
-const generate_token_1 = require("../../../helpers/generate.token");
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
+const generate_token_1 = require("../../../helpers/generate.token");
 exports.register = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const { firstname, lastname, email, password, isAdmin, avatar } = req.body;
@@ -43,10 +43,10 @@ exports.register = (0, async_handler_1.default)(function (req, res, next) {
             if (!(field in req.body) || !req.body[field])
                 missingFields.push(field);
         }
-        const isMissingFieldsOne = (missingFields.length = 1);
+        const isMissingFieldsOne = missingFields.length === 1;
         const concatenatedMissingFields = missingFields.join(", ");
         if (missingFields.length > 0)
-            return next(new global_error_1.AppError(`user ${concatenatedMissingFields} ${isMissingFieldsOne ? "are" : "is"} required`, 400));
+            return next(new global_error_1.AppError(`user ${concatenatedMissingFields} ${isMissingFieldsOne ? "is" : "are"} required`, 400));
         const userExists = yield prisma_client_1.default.user.findFirst({ where: { email } });
         if (userExists)
             return next(new global_error_1.AppError("Email already in use", 400));

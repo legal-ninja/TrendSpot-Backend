@@ -6,7 +6,8 @@ export interface SignUpPayload {
   email: string;
   avatar: string;
   password: string;
-  isAdmin: boolean;
+  interests: string;
+  withGoogle: boolean;
 }
 
 export type LoginPayload = Pick<SignUpPayload, "email" | "password">;
