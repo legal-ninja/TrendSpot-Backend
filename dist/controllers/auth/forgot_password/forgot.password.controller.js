@@ -48,7 +48,7 @@ exports.forgotPassword = (0, async_handler_1.default)(function (req, res, next) 
             // sendEmail({ subject, body, send_to, sent_from, reply_to });
             res.status(200).json({
                 status: "success",
-                token: hashedToken,
+                token: resetToken,
                 message: `An email has been sent to ${email} with instructions
         to reset your password. Please ensure to check your spam folder, Click on 'Report as not spam' so you can keep getting our emails in your inbox`,
             });
