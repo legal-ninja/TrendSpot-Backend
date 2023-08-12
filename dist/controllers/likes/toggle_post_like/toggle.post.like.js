@@ -22,7 +22,7 @@ exports.togglePostLike = (0, async_handler_1.default)(function (req, res, next) 
         const { newsId } = req.params;
         if (!newsId)
             return next(new global_error_1.AppError("Please provide the id of the news", 400));
-        const postToLike = yield prisma_client_1.default.news.findFirst({
+        const newsToLike = yield prisma_client_1.default.news.findFirst({
             where: {
                 id: newsId,
             },
@@ -30,10 +30,10 @@ exports.togglePostLike = (0, async_handler_1.default)(function (req, res, next) 
                 likes: true,
             },
         });
-        if (!postToLike)
+        if (!newsToLike)
             return next(new global_error_1.AppError("Post could not be found", 400));
-        const userHasLiked = (_a = postToLike === null || postToLike === void 0 ? void 0 : postToLike.likes) === null || _a === void 0 ? void 0 : _a.find((like) => { var _a; return like.userId === ((_a = req.user) === null || _a === void 0 ? void 0 : _a.id); });
-        if (userHasLiked) {
+        const userHasLikedNews = (_a = newsToLike === null || newsToLike === void 0 ? void 0 : newsToLike.likes) === null || _a === void 0 ? void 0 : _a.find((like) => { var _a; return like.userId === ((_a = req.user) === null || _a === void 0 ? void 0 : _a.id); });
+        if (userHasLikedNews) {
             yield prisma_client_1.default.like.deleteMany({
                 where: {
                     userId: (_b = req.user) === null || _b === void 0 ? void 0 : _b.id,
@@ -52,7 +52,7 @@ exports.togglePostLike = (0, async_handler_1.default)(function (req, res, next) 
         }
         res.status(200).json({
             status: "success",
-            message: userHasLiked ? "News Unliked" : "News liked",
+            message: userHasLikedNews ? "News Unliked" : "News liked",
         });
     });
 });

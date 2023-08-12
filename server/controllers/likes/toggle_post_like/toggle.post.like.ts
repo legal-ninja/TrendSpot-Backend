@@ -15,7 +15,7 @@ export const togglePostLike = handleAsync(async function (
   if (!newsId)
     return next(new AppError("Please provide the id of the news", 400));
 
-  const postToLike = await prisma.news.findFirst({
+  const newsToLike = await prisma.news.findFirst({
     where: {
       id: newsId,
     },
@@ -24,13 +24,13 @@ export const togglePostLike = handleAsync(async function (
     },
   });
 
-  if (!postToLike) return next(new AppError("Post could not be found", 400));
+  if (!newsToLike) return next(new AppError("Post could not be found", 400));
 
-  const userHasLiked = postToLike?.likes?.find(
+  const userHasLikedNews = newsToLike?.likes?.find(
     (like: Like) => like.userId === req.user?.id
   );
 
-  if (userHasLiked) {
+  if (userHasLikedNews) {
     await prisma.like.deleteMany({
       where: {
         userId: req.user?.id!,
@@ -49,6 +49,6 @@ export const togglePostLike = handleAsync(async function (
 
   res.status(200).json({
     status: "success",
-    message: userHasLiked ? "News Unliked" : "News liked",
+    message: userHasLikedNews ? "News Unliked" : "News liked",
   });
 });
