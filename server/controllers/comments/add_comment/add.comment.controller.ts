@@ -19,11 +19,14 @@ export const addComment = handleAsync(async function (
     if (!req.body[field]) missingFields.push(field);
   }
 
+  const isMissingFieldsOne = missingFields.length === 1;
+  const concatenatedMissingFields = missingFields.join(", ");
+
   if (missingFields.length > 0)
     return next(
       new AppError(
-        `comment ${missingFields.join(", ")} ${
-          missingFields.length > 1 ? "are" : "is"
+        `comment ${concatenatedMissingFields} ${
+          isMissingFieldsOne ? "is" : "are"
         } required`,
         400
       )
@@ -44,7 +47,7 @@ export const addComment = handleAsync(async function (
     },
   });
 
-  const post = await prisma.news.findFirst({
+  const news = await prisma.news.findFirst({
     where: {
       id: newsId,
     },

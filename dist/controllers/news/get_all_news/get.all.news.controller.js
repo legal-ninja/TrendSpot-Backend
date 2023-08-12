@@ -22,12 +22,12 @@ exports.getAllNews = (0, async_handler_1.default)(function (req, res, next) {
         const posts = yield prisma_client_1.default.news.findMany({
             include: {
                 author: {
-                    select: utils_1.LONG_AUTHOR_FIELDS,
+                    select: Object.assign(Object.assign({}, utils_1.LONG_AUTHOR_FIELDS), { news: false }),
                 },
                 likes: {
                     include: {
                         user: {
-                            select: utils_1.LIKE_FIELDS,
+                            select: Object.assign(Object.assign({}, utils_1.LIKE_FIELDS), { news: false }),
                         },
                     },
                 },

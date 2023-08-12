@@ -12,12 +12,12 @@ export const getAllNews = handleAsync(async function (
   const posts = await prisma.news.findMany({
     include: {
       author: {
-        select: LONG_AUTHOR_FIELDS,
+        select: { ...LONG_AUTHOR_FIELDS, news: false },
       },
       likes: {
         include: {
           user: {
-            select: LIKE_FIELDS,
+            select: { ...LIKE_FIELDS, news: false },
           },
         },
       },

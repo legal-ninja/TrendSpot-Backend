@@ -27,8 +27,10 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
             if (!req.body[field])
                 missingFields.push(field);
         }
+        const isMissingFieldsOne = missingFields.length === 1;
+        const concatenatedMissingFields = missingFields.join(", ");
         if (missingFields.length > 0)
-            return next(new global_error_1.AppError(`comment ${missingFields.join(", ")} ${missingFields.length > 1 ? "are" : "is"} required`, 400));
+            return next(new global_error_1.AppError(`comment ${concatenatedMissingFields} ${isMissingFieldsOne ? "is" : "are"} required`, 400));
         const comment = yield prisma_client_1.default.comment.create({
             data: {
                 message,
@@ -42,7 +44,7 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
                 email: authorEmail,
             },
         });
-        const post = yield prisma_client_1.default.news.findFirst({
+        const news = yield prisma_client_1.default.news.findFirst({
             where: {
                 id: newsId,
             },
