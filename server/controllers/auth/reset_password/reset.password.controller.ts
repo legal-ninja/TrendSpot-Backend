@@ -32,14 +32,22 @@ export const resetPassword = handleAsync(async function (
     },
   });
 
-  console.log({ existingToken });
-
   if (!existingToken)
     return next(new AppError("Invalid or expired token", 400));
 
   const user: User | null = await prisma.user.findFirst({
     where: { id: existingToken?.userId },
   });
+
+  if (user?.isDeactivated) {
+    let errorMessage;
+    user.isDeactivatedByAdmin
+      ? (errorMessage =
+          "Your account has been deactivated by the admin. Please file an appeal through our contact channels")
+      : (errorMessage =
+          "Your account is currently deactivated, reactivate your account to continue");
+    return next(new AppError(errorMessage, 400));
+  }
 
   const salt = genSaltSync(10);
   const passwordHash = hashSync(newPassword, salt);
