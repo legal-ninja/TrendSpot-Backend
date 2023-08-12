@@ -10,9 +10,9 @@ export const updateMe = handleAsync(async function (
   res: Response,
   next: NextFunction
 ) {
-  const { firstName, lastName, avatar, bio, isAdmin, isDeactivated } = req.body;
+  const { firstName, lastName, avatar, bio, isAdmin } = req.body;
 
-  if (!firstName && !lastName && !avatar && !bio && !isAdmin && !isDeactivated)
+  if (!firstName && !lastName && !avatar && !bio && !isAdmin)
     return next(
       new AppError(
         "Please provide at least one credential you want to update",
@@ -38,7 +38,6 @@ export const updateMe = handleAsync(async function (
       avatar: avatar || existingUser.avatar,
       bio: bio || existingUser.bio,
       isAdmin: isAdmin || existingUser.isAdmin,
-      isDeactivated: isDeactivated || existingUser.isDeactivated,
     },
   });
 
@@ -57,15 +56,32 @@ export const updateUser = handleAsync(async function (
   res: Response,
   next: NextFunction
 ) {
-  const { firstName, lastName, avatar, bio, isAdmin, isDeactivated } = req.body;
+  const {
+    firstName,
+    lastName,
+    avatar,
+    bio,
+    isDeactivated,
+    isDeactivatedByAdmin,
+  } = req.body;
 
-  if (!firstName && !lastName && !avatar && !bio && !isAdmin && !isDeactivated)
+  if (isDeactivated || isDeactivatedByAdmin)
+    return next(
+      new AppError(
+        "Invalid operation. User activation status cannot be updated from this route.",
+        400
+      )
+    );
+
+  if (!firstName && !lastName && !avatar && !bio)
     return next(
       new AppError(
         "Please provide at least one credential you want to update",
         400
       )
     );
+
+  console.log(req.params.userId);
 
   const existingUser = await prisma.user.findFirst({
     where: {
@@ -74,9 +90,8 @@ export const updateUser = handleAsync(async function (
   });
 
   if (!existingUser) return next(new AppError("User could not be found", 404));
-  if (req.user?.isAdmin) isDeactivated === true;
 
-  const user = await prisma.user.update({
+  const updatedUser = await prisma.user.update({
     where: {
       id: existingUser.id,
     },
@@ -85,18 +100,12 @@ export const updateUser = handleAsync(async function (
       lastName: lastName || existingUser.lastName,
       avatar: avatar || existingUser.avatar,
       bio: bio || existingUser.bio,
-      isAdmin: isAdmin || existingUser.isAdmin,
-      isDeactivated: isDeactivated || existingUser.isDeactivated,
-      isDeactivatedByAdmin: isDeactivated || existingUser.isDeactivatedByAdmin,
     },
   });
 
-  const token = generateToken(existingUser.id);
-  const { password: _password, ...userWithoutPassword } = user;
-  const updatedUser = { token, ...userWithoutPassword };
-
   res.status(200).json({
     status: "success",
+    message: "User updated successfully",
     updatedUser,
   });
 });

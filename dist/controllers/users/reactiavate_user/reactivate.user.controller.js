@@ -12,12 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deActivateUser = void 0;
+exports.reActivateUser = void 0;
 const async_handler_1 = __importDefault(require("../../../helpers/async.handler"));
 const global_error_1 = require("../../../helpers/global.error");
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
-exports.deActivateUser = (0, async_handler_1.default)(function (req, res, next) {
-    var _a;
+exports.reActivateUser = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const { userId } = req.body;
         if (!userId)
@@ -29,19 +28,18 @@ exports.deActivateUser = (0, async_handler_1.default)(function (req, res, next) 
         });
         if (!existingUser)
             return next(new global_error_1.AppError("User could not be found", 404));
-        const isDeactivatedByAdmin = ((_a = req.user) === null || _a === void 0 ? void 0 : _a.isAdmin) ? true : false;
         yield prisma_client_1.default.user.update({
             where: {
                 id: existingUser.id,
             },
             data: {
-                isDeactivated: true,
-                isDeactivatedByAdmin,
+                isDeactivated: false,
+                isDeactivatedByAdmin: false,
             },
         });
         res.status(200).json({
             status: "success",
-            message: "Account deactivated",
+            message: "Account reactivated",
         });
     });
 });

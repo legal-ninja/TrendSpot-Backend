@@ -4,7 +4,7 @@ import { AppError } from "../../../helpers/global.error";
 import { AuthenticatedRequest } from "../../../models/types/auth";
 import prisma from "../../../lib/prisma.client";
 
-export const deActivateUser = handleAsync(async function (
+export const reActivateUser = handleAsync(async function (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
@@ -19,20 +19,19 @@ export const deActivateUser = handleAsync(async function (
   });
 
   if (!existingUser) return next(new AppError("User could not be found", 404));
-  const isDeactivatedByAdmin = req.user?.isAdmin ? true : false;
 
   await prisma.user.update({
     where: {
       id: existingUser.id,
     },
     data: {
-      isDeactivated: true,
-      isDeactivatedByAdmin,
+      isDeactivated: false,
+      isDeactivatedByAdmin: false,
     },
   });
 
   res.status(200).json({
     status: "success",
-    message: "Account deactivated",
+    message: "Account reactivated",
   });
 });

@@ -31,8 +31,8 @@ const generate_token_1 = require("../../../helpers/generate.token");
 exports.updateMe = (0, async_handler_1.default)(function (req, res, next) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        const { firstName, lastName, avatar, bio, isAdmin, isDeactivated } = req.body;
-        if (!firstName && !lastName && !avatar && !bio && !isAdmin && !isDeactivated)
+        const { firstName, lastName, avatar, bio, isAdmin } = req.body;
+        if (!firstName && !lastName && !avatar && !bio && !isAdmin)
             return next(new global_error_1.AppError("Please provide at least one credential you want to update", 400));
         const existingUser = yield prisma_client_1.default.user.findFirst({
             where: {
@@ -51,7 +51,6 @@ exports.updateMe = (0, async_handler_1.default)(function (req, res, next) {
                 avatar: avatar || existingUser.avatar,
                 bio: bio || existingUser.bio,
                 isAdmin: isAdmin || existingUser.isAdmin,
-                isDeactivated: isDeactivated || existingUser.isDeactivated,
             },
         });
         const token = (0, generate_token_1.generateToken)(existingUser.id);
@@ -64,11 +63,13 @@ exports.updateMe = (0, async_handler_1.default)(function (req, res, next) {
     });
 });
 exports.updateUser = (0, async_handler_1.default)(function (req, res, next) {
-    var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        const { firstName, lastName, avatar, bio, isAdmin, isDeactivated } = req.body;
-        if (!firstName && !lastName && !avatar && !bio && !isAdmin && !isDeactivated)
+        const { firstName, lastName, avatar, bio, isDeactivated, isDeactivatedByAdmin, } = req.body;
+        if (isDeactivated || isDeactivatedByAdmin)
+            return next(new global_error_1.AppError("Invalid operation. User activation status cannot be updated from this route.", 400));
+        if (!firstName && !lastName && !avatar && !bio)
             return next(new global_error_1.AppError("Please provide at least one credential you want to update", 400));
+        console.log(req.params.userId);
         const existingUser = yield prisma_client_1.default.user.findFirst({
             where: {
                 id: req.params.userId,
@@ -76,9 +77,7 @@ exports.updateUser = (0, async_handler_1.default)(function (req, res, next) {
         });
         if (!existingUser)
             return next(new global_error_1.AppError("User could not be found", 404));
-        if ((_a = req.user) === null || _a === void 0 ? void 0 : _a.isAdmin)
-            isDeactivated === true;
-        const user = yield prisma_client_1.default.user.update({
+        const updatedUser = yield prisma_client_1.default.user.update({
             where: {
                 id: existingUser.id,
             },
@@ -87,16 +86,11 @@ exports.updateUser = (0, async_handler_1.default)(function (req, res, next) {
                 lastName: lastName || existingUser.lastName,
                 avatar: avatar || existingUser.avatar,
                 bio: bio || existingUser.bio,
-                isAdmin: isAdmin || existingUser.isAdmin,
-                isDeactivated: isDeactivated || existingUser.isDeactivated,
-                isDeactivatedByAdmin: isDeactivated || existingUser.isDeactivatedByAdmin,
             },
         });
-        const token = (0, generate_token_1.generateToken)(existingUser.id);
-        const { password: _password } = user, userWithoutPassword = __rest(user, ["password"]);
-        const updatedUser = Object.assign({ token }, userWithoutPassword);
         res.status(200).json({
             status: "success",
+            message: "User updated successfully",
             updatedUser,
         });
     });

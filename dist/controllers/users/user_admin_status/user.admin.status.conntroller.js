@@ -19,9 +19,9 @@ const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 exports.deActivateUser = (0, async_handler_1.default)(function (req, res, next) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        const { userId } = req.body;
+        const { isAdmin, userId } = req.body;
         if (!userId)
-            return next(new global_error_1.AppError("Please specify the user id", 404));
+            return next(new global_error_1.AppError("Please specify the user id and the admin status", 404));
         const existingUser = yield prisma_client_1.default.user.findFirst({
             where: {
                 id: userId,
