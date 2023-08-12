@@ -20,7 +20,9 @@ exports.verifyAccountStatus = (0, async_handler_1.default)(function (req, res, n
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         const currentUser = yield prisma_client_1.default.user.findFirst({
-            where: { id: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id },
+            where: {
+                OR: [{ email: req.body.email }, { id: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id }],
+            },
         });
         if (currentUser === null || currentUser === void 0 ? void 0 : currentUser.isDeactivated) {
             let errorMessage;
@@ -31,5 +33,6 @@ exports.verifyAccountStatus = (0, async_handler_1.default)(function (req, res, n
                     "Your account is currently deactivated, reactivate your account to continue");
             return next(new global_error_1.AppError(errorMessage, 400));
         }
+        next();
     });
 });

@@ -48,15 +48,6 @@ exports.signin = (0, async_handler_1.default)(function (req, res, next) {
         const passwordIscorrect = yield (0, bcryptjs_1.compare)(password, user.password);
         if (!passwordIscorrect)
             return next(new global_error_1.AppError("Invalid credentials provided", 400));
-        if (user.isDeactivated) {
-            let errorMessage;
-            user.isDeactivatedByAdmin
-                ? (errorMessage =
-                    "Your account has been deactivated by the admin. Please file an appeal through our contact channels")
-                : (errorMessage =
-                    "Your account is currently deactivated, reactivate your account to continue");
-            return next(new global_error_1.AppError(errorMessage, 400));
-        }
         const token = (0, generate_token_1.generateToken)(user.id);
         const { password: _password } = user, userWithoutPassword = __rest(user, ["password"]);
         const userInfo = Object.assign({ token }, userWithoutPassword);

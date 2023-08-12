@@ -10,7 +10,9 @@ export const verifyAccountStatus = handleAsync(async function (
   next: NextFunction
 ) {
   const currentUser = await prisma.user.findFirst({
-    where: { id: req.user?.id },
+    where: {
+      OR: [{ email: req.body.email }, { id: req.user?.id }],
+    },
   });
 
   if (currentUser?.isDeactivated) {
@@ -22,4 +24,6 @@ export const verifyAccountStatus = handleAsync(async function (
           "Your account is currently deactivated, reactivate your account to continue");
     return next(new AppError(errorMessage, 400));
   }
+
+  next();
 });
