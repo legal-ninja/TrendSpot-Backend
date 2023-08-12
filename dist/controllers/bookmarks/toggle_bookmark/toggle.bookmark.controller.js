@@ -21,7 +21,7 @@ exports.toggleBookmark = (0, async_handler_1.default)(function (req, res, next) 
     return __awaiter(this, void 0, void 0, function* () {
         const { newsId } = req.params;
         if (!newsId)
-            return next(new global_error_1.AppError("Please provide the id of the post", 400));
+            return next(new global_error_1.AppError("Please provide the id of the news", 400));
         const newsToBookmark = yield prisma_client_1.default.news.findFirst({
             where: {
                 id: newsId,
@@ -31,7 +31,7 @@ exports.toggleBookmark = (0, async_handler_1.default)(function (req, res, next) 
             },
         });
         if (!newsToBookmark)
-            return next(new global_error_1.AppError("Post could not be found", 400));
+            return next(new global_error_1.AppError("News could not be found", 400));
         const userHasBookmarked = (_a = newsToBookmark === null || newsToBookmark === void 0 ? void 0 : newsToBookmark.bookmarks) === null || _a === void 0 ? void 0 : _a.find((bookmark) => { var _a; return bookmark.userId === ((_a = req.user) === null || _a === void 0 ? void 0 : _a.id); });
         if (userHasBookmarked) {
             yield prisma_client_1.default.bookmark.deleteMany({
@@ -52,8 +52,8 @@ exports.toggleBookmark = (0, async_handler_1.default)(function (req, res, next) 
         res.status(200).json({
             status: "success",
             message: userHasBookmarked
-                ? "Post removed from bookmarks"
-                : "Post added to bookmarks",
+                ? "News removed from bookmarks"
+                : "News added to bookmarks",
         });
     });
 });

@@ -1,5 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
+const auth_middleware_1 = require("../../middleware/auth.middleware");
+const account_status_1 = require("../../middleware/account.status");
+const toggle_post_like_1 = require("../../controllers/likes/toggle_post_like/toggle.post.like");
+const get_user_likes_controller_1 = require("../../controllers/likes/get_user_likes/get.user.likes.controller");
 const router = (0, express_1.Router)();
+router.post("/togglePostLike/:newsId", auth_middleware_1.verifyAuth, account_status_1.verifyAccountStatus, toggle_post_like_1.togglePostLike);
+router.get("/", auth_middleware_1.verifyAuth, get_user_likes_controller_1.getUserLikes);
 exports.default = router;

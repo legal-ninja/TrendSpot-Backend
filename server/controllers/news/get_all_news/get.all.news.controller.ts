@@ -9,7 +9,7 @@ export const getAllNews = handleAsync(async function (
   res: Response,
   next: NextFunction
 ) {
-  const posts = await prisma.news.findMany({
+  const news = await prisma.news.findMany({
     include: {
       author: {
         select: { ...LONG_AUTHOR_FIELDS, news: false },
@@ -31,6 +31,6 @@ export const getAllNews = handleAsync(async function (
 
   res.status(200).json({
     status: "success",
-    posts,
+    news,
   });
 });

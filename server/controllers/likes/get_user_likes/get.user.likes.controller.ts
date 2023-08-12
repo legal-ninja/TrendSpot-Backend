@@ -3,12 +3,12 @@ import handleAsync from "../../../helpers/async.handler";
 import prisma from "../../../lib/prisma.client";
 import { AUTHOR_FIELDS } from "../../../utils";
 
-export const getUserBookmarks = handleAsync(async function (
+export const getUserLikes = handleAsync(async function (
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  const userBookmarks = await prisma.bookmark.findMany({
+  const userLikes = await prisma.like.findMany({
     where: {
       userId: req.query.userId as string,
     },
@@ -25,6 +25,6 @@ export const getUserBookmarks = handleAsync(async function (
 
   res.status(200).json({
     status: "success",
-    bookmarks: userBookmarks,
+    likes: userLikes,
   });
 });

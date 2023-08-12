@@ -23,7 +23,7 @@ exports.getUserBookmarks = (0, async_handler_1.default)(function (req, res, next
                 userId: req.query.userId,
             },
             include: {
-                post: {
+                news: {
                     include: {
                         author: {
                             select: utils_1.AUTHOR_FIELDS,

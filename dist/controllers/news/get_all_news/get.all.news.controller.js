@@ -19,7 +19,7 @@ const utils_1 = require("../../../utils");
 const client_1 = require("@prisma/client");
 exports.getAllNews = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const posts = yield prisma_client_1.default.news.findMany({
+        const news = yield prisma_client_1.default.news.findMany({
             include: {
                 author: {
                     select: Object.assign(Object.assign({}, utils_1.LONG_AUTHOR_FIELDS), { news: false }),
@@ -40,7 +40,7 @@ exports.getAllNews = (0, async_handler_1.default)(function (req, res, next) {
         });
         res.status(200).json({
             status: "success",
-            posts,
+            news,
         });
     });
 });

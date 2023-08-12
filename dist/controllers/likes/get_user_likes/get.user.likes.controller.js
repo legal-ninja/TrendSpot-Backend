@@ -12,15 +12,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserBookmarks = void 0;
+exports.getUserLikes = void 0;
 const async_handler_1 = __importDefault(require("../../../helpers/async.handler"));
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 const utils_1 = require("../../../utils");
-exports.getUserBookmarks = (0, async_handler_1.default)(function (req, res, next) {
+exports.getUserLikes = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const userBookmarks = yield prisma_client_1.default.bookmark.findMany({
+        const userLikes = yield prisma_client_1.default.like.findMany({
+            where: {
+                userId: req.query.userId,
+            },
             include: {
-                post: {
+                news: {
                     include: {
                         author: {
                             select: utils_1.AUTHOR_FIELDS,
@@ -31,7 +34,7 @@ exports.getUserBookmarks = (0, async_handler_1.default)(function (req, res, next
         });
         res.status(200).json({
             status: "success",
-            bookmarks: userBookmarks,
+            likes: userLikes,
         });
     });
 });

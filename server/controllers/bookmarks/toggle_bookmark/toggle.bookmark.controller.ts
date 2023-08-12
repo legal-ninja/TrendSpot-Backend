@@ -13,7 +13,7 @@ export const toggleBookmark = handleAsync(async function (
   const { newsId } = req.params;
 
   if (!newsId)
-    return next(new AppError("Please provide the id of the post", 400));
+    return next(new AppError("Please provide the id of the news", 400));
 
   const newsToBookmark = await prisma.news.findFirst({
     where: {
@@ -25,7 +25,7 @@ export const toggleBookmark = handleAsync(async function (
   });
 
   if (!newsToBookmark)
-    return next(new AppError("Post could not be found", 400));
+    return next(new AppError("News could not be found", 400));
 
   const userHasBookmarked = newsToBookmark?.bookmarks?.find(
     (bookmark: Bookmark) => bookmark.userId === req.user?.id
@@ -50,7 +50,7 @@ export const toggleBookmark = handleAsync(async function (
   res.status(200).json({
     status: "success",
     message: userHasBookmarked
-      ? "Post removed from bookmarks"
-      : "Post added to bookmarks",
+      ? "News removed from bookmarks"
+      : "News added to bookmarks",
   });
 });
