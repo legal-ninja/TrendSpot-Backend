@@ -9,4 +9,6 @@ export interface User {
   joinedAt: Date;
   lastUpdated: Date;
   isAdmin: boolean;
+  isDeactivated: boolean;
+  isDeactivatedByAdmin: boolean;
 }

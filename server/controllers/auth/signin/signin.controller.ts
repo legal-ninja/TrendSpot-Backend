@@ -42,6 +42,16 @@ export const signin = handleAsync(async function (
   if (!passwordIscorrect)
     return next(new AppError("Invalid credentials provided", 400));
 
+  if (user.isDeactivated) {
+    let errorMessage;
+    user.isDeactivatedByAdmin
+      ? (errorMessage =
+          "Your account has been deactivated by the admin. Please file an appeal through our contact channels")
+      : (errorMessage =
+          "Your account is currently deactivated, reactivate your account to continue");
+    return next(new AppError(errorMessage, 400));
+  }
+
   const token = generateToken(user.id);
   const { password: _password, ...userWithoutPassword } = user;
 
