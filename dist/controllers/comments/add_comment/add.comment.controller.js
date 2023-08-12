@@ -14,6 +14,72 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.addComment = void 0;
 const async_handler_1 = __importDefault(require("../../../helpers/async.handler"));
+const utils_1 = require("../../../utils");
+const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
+const global_error_1 = require("../../../helpers/global.error");
 exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () { });
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        const { message, parentId, newsId, authorEmail, path, isReplying } = req.body;
+        let missingFields = [];
+        let bodyObject = { message, newsId, authorEmail, path };
+        for (let field in bodyObject) {
+            if (!req.body[field])
+                missingFields.push(field);
+        }
+        if (missingFields.length > 0)
+            return next(new global_error_1.AppError(`comment ${missingFields.join(", ")} ${missingFields.length > 1 ? "are" : "is"} required`, 400));
+        const comment = yield prisma_client_1.default.comment.create({
+            data: {
+                message,
+                authorId: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
+                parentId: parentId,
+                newsId,
+            },
+        });
+        const commentAuthor = yield prisma_client_1.default.user.findFirst({
+            where: {
+                email: authorEmail,
+            },
+        });
+        const post = yield prisma_client_1.default.news.findFirst({
+            where: {
+                id: newsId,
+            },
+            include: {
+                author: {
+                    select: utils_1.AUTHOR_FIELDS,
+                },
+            },
+        });
+        // const replySubject = `New Reply on your comment`;
+        // const reply_send_to = authorEmail;
+        // const commentSubject = `New Comment on your post`;
+        // const comment_send_to = authorEmail;
+        // const sent_from = process.env.EMAIL_USER as string;
+        // const reply_to = process.env.REPLY_TO as string;
+        // const replyBody = emailReply(post?.author.firstName!, path, message);
+        // const commentBody = commentEmail(commentAuthor?.firstName!, path, message);
+        try {
+            // if (authorEmail !== req.user?.email) {
+            //   sendEmail({
+            //     subject: isReplying ? replySubject : commentSubject,
+            //     body: isReplying ? replyBody : commentBody,
+            //     send_to: isReplying ? reply_send_to : comment_send_to,
+            //     sent_from,
+            //     reply_to,
+            //   });
+            // }
+            res.status(200).json({
+                status: "success",
+                comment,
+            });
+        }
+        catch (error) {
+            res.status(500).json({
+                status: "fail",
+                message: `Something went wrong. Please try again.`,
+            });
+        }
+    });
 });

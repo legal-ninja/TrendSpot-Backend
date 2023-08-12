@@ -56,8 +56,8 @@ model Comment {
    updatedAt  DateTime @updatedAt
    author User  @relation(fields: [authorId], references: [id],  onDelete: NoAction, onUpdate: NoAction)
    authorId   String
-   post News @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-   postId String
+   news News @relation(fields: [newsId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+   newsId String
    parent Comment? @relation("ParentChild", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
    children Comment[] @relation("ParentChild")
    parentId String?
@@ -73,12 +73,12 @@ model Like {
   createdAt DateTime @default(now())
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
-  post News? @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId String?
+  news News? @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  newsId String?
   comment Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
   commentId String?
 
-  @@index([userId, postId])
+  @@index([userId, newsId])
   @@index([userId, commentId])
    @@map(name: "likes")
 }
