@@ -4,7 +4,7 @@ import { AUTHOR_FIELDS } from "../../../utils";
 import prisma from "../../../lib/prisma.client";
 import { Prisma } from "@prisma/client";
 
-export const getCommentsByUser = handleAsync(async function (
+export const getComments = handleAsync(async function (
   req: Request,
   res: Response,
   next: NextFunction
