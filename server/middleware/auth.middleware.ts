@@ -33,3 +33,38 @@ export const verifyAuth = handleAsync(
     next();
   }
 );
+
+export const verifyAdmin = handleAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    let token;
+    const headers = req.headers.authorization;
+    if (headers && headers.startsWith("Bearer")) token = headers.split(" ")[1];
+    if (!token)
+      return next(
+        new AppError("You are not logged in. Please login to get access", 400)
+      );
+
+    try {
+      const verifiedToken = jwt.verify(
+        token,
+        process.env.JWT_SECRET as string
+      ) as JwtPayload;
+
+      const currentUser: User | null = await prisma.user.findFirst({
+        where: { id: verifiedToken.id },
+      });
+      (req as AuthenticatedRequest).user = currentUser;
+      if (!currentUser?.isAdmin)
+        return next(
+          new AppError(
+            "Request denied. Only admins can perform this action",
+            401
+          )
+        );
+    } catch (error) {
+      return next(new AppError("Session expired. Please log in again", 401));
+    }
+
+    next();
+  }
+);

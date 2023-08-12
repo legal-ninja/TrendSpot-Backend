@@ -22,8 +22,6 @@ export const resetPassword = handleAsync(async function (
     return next(new AppError("New password credentials do not match", 400));
 
   const decryptedToken = createHash("sha256").update(token).digest("hex");
-  console.log({ decryptedToken });
-  console.log({ token });
 
   const existingToken = await prisma.token.findFirst({
     where: {

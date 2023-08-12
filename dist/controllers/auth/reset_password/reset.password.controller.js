@@ -28,8 +28,6 @@ exports.resetPassword = (0, async_handler_1.default)(function (req, res, next) {
         if (newPassword !== confirmNewPassword)
             return next(new global_error_1.AppError("New password credentials do not match", 400));
         const decryptedToken = (0, crypto_1.createHash)("sha256").update(token).digest("hex");
-        console.log({ decryptedToken });
-        console.log({ token });
         const existingToken = yield prisma_client_1.default.token.findFirst({
             where: {
                 token: decryptedToken,
