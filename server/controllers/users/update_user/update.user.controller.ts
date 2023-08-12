@@ -12,7 +12,13 @@ export const updateMe = handleAsync(async function (
 ) {
   const { firstName, lastName, avatar, bio, isAdmin } = req.body;
 
-  if (!firstName && !lastName && !avatar && !bio && !isAdmin)
+  if (isAdmin) {
+    return next(
+      new AppError("You are not allowed to change your admin status", 400)
+    );
+  }
+
+  if (!firstName && !lastName && !avatar && !bio)
     return next(
       new AppError(
         "Please provide at least one credential you want to update",
@@ -80,8 +86,6 @@ export const updateUser = handleAsync(async function (
         400
       )
     );
-
-  console.log(req.params.userId);
 
   const existingUser = await prisma.user.findFirst({
     where: {
