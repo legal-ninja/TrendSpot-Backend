@@ -1,0 +1,68 @@
+import { NextFunction, Request, Response } from "express";
+import handleAsync from "../../../helpers/async.handler";
+import { User } from "../../../types/models/types/user";
+import { genSaltSync, hashSync } from "bcryptjs";
+import { AppError } from "../../../helpers/global.error";
+import { generateToken } from "../../../helpers/generate.token";
+import prisma from "../../../lib/prisma.client";
+
+export const register = handleAsync(async function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { firstname, lastname, email, password, isAdmin, avatar } = req.body;
+
+  let missingFields: string[] = [];
+  let bodyObject = {
+    firstname,
+    lastname,
+    email,
+    password,
+  };
+
+  for (let field in bodyObject) {
+    if (!(field in req.body) || !req.body[field as keyof typeof bodyObject])
+      missingFields.push(field);
+  }
+
+  const isMissingFieldsOne = (missingFields.length = 1);
+  const concatenatedMissingFields = missingFields.join(", ");
+
+  if (missingFields.length > 0)
+    return next(
+      new AppError(
+        `user ${concatenatedMissingFields} ${
+          isMissingFieldsOne ? "are" : "is"
+        } required`,
+        400
+      )
+    );
+
+  const userExists = await prisma.user.findFirst({ where: { email } });
+  if (userExists) return next(new AppError("Email already in use", 400));
+
+  const salt = genSaltSync(10);
+  const passwordHash = hashSync(password, salt);
+
+  const newUser: User = await prisma.user.create({
+    data: {
+      firstName: firstname,
+      lastName: lastname,
+      email,
+      password: passwordHash,
+      avatar: avatar || "",
+      bio: "",
+      isAdmin,
+    },
+  });
+
+  const token = generateToken(newUser.id);
+  const { password: _password, ...userWithoutPassword } = newUser;
+  const userInfo = { token, ...userWithoutPassword };
+
+  res.status(200).json({
+    status: "success",
+    user: userInfo,
+  });
+});

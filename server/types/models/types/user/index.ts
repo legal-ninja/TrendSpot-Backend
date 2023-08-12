@@ -4,7 +4,7 @@ export interface User {
   lastName: string;
   email: string;
   password: string;
-  interests: string[];
+  isAdmin: boolean;
   avatar: string;
   bio: string;
   joinedAt: Date;

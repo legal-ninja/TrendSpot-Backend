@@ -3,7 +3,7 @@ import handleAsync from "../helpers/async.handler";
 import { AppError } from "../helpers/global.error";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { User } from "../models/types/user";
-import prisma from "../db/prisma.client";
+import prisma from "../lib/prisma.client";
 import { AuthenticatedRequest } from "../models/types/auth";
 
 export const verifyAuth = handleAsync(
