@@ -10,7 +10,7 @@ const router = Router();
 
 router.route("/").get(getAllNews).post(verifyAuth, addNews);
 router
-  .route("/:slug/:postId")
+  .route("/:slug/:newsId")
   .get(getSingleNews)
   .put(verifyAuth, updateNews)
   .delete(verifyAuth, verifyAdmin, deleteNews);

@@ -22,29 +22,29 @@ exports.updateNews = (0, async_handler_1.default)(function (req, res, next) {
         const { title, content, image, readTime, category } = req.body;
         if (!title && !content && !image && !readTime && category)
             return next(new global_error_1.AppError("Please provide at least one detail you want to update", 400));
-        const post = yield prisma_client_1.default.news.findFirst({
+        const news = yield prisma_client_1.default.news.findFirst({
             where: {
-                AND: [{ slug: req.params.slug }, { id: req.params.postId }],
+                AND: [{ slug: req.params.slug }, { id: req.params.newsId }],
             },
         });
-        if (!post)
-            return next(new global_error_1.AppError("Post could not be found", 404));
-        const updatedPost = yield prisma_client_1.default.news.update({
+        if (!news)
+            return next(new global_error_1.AppError("News could not be found", 404));
+        const updatedNews = yield prisma_client_1.default.news.update({
             where: {
-                id: post.id,
+                id: news.id,
             },
             data: {
-                title: title || post.title,
-                slug: title ? (0, slugify_1.slugify)(title) : post.slug,
-                content: content || post.content,
-                image: image || post.image,
-                category: category || post.category,
-                readTime: readTime || post.readTime,
+                title: title || news.title,
+                slug: title ? (0, slugify_1.slugify)(title) : news.slug,
+                content: content || news.content,
+                image: image || news.image,
+                category: category || news.category,
+                readTime: readTime || news.readTime,
             },
         });
         res.status(200).json({
             status: "success",
-            updatedPost,
+            updatedNews,
         });
     });
 });

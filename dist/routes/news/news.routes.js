@@ -10,7 +10,7 @@ const auth_middleware_1 = require("../../middleware/auth.middleware");
 const router = (0, express_1.Router)();
 router.route("/").get(get_all_news_controller_1.getAllNews).post(auth_middleware_1.verifyAuth, add_news_controller_1.addNews);
 router
-    .route("/:slug/:postId")
+    .route("/:slug/:newsId")
     .get(get_single_news_controller_1.getSingleNews)
     .put(auth_middleware_1.verifyAuth, update_news_controller_1.updateNews)
     .delete(auth_middleware_1.verifyAuth, auth_middleware_1.verifyAdmin, delete_news_controller_1.deleteNews);

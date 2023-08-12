@@ -16,30 +16,30 @@ export const updateNews = handleAsync(async function (
       new AppError("Please provide at least one detail you want to update", 400)
     );
 
-  const post = await prisma.news.findFirst({
+  const news = await prisma.news.findFirst({
     where: {
-      AND: [{ slug: req.params.slug }, { id: req.params.postId }],
+      AND: [{ slug: req.params.slug }, { id: req.params.newsId }],
     },
   });
 
-  if (!post) return next(new AppError("Post could not be found", 404));
+  if (!news) return next(new AppError("News could not be found", 404));
 
-  const updatedPost = await prisma.news.update({
+  const updatedNews = await prisma.news.update({
     where: {
-      id: post.id,
+      id: news.id,
     },
     data: {
-      title: title || post.title,
-      slug: title ? slugify(title) : post.slug,
-      content: content || post.content,
-      image: image || post.image,
-      category: category || post.category,
-      readTime: readTime || post.readTime,
+      title: title || news.title,
+      slug: title ? slugify(title) : news.slug,
+      content: content || news.content,
+      image: image || news.image,
+      category: category || news.category,
+      readTime: readTime || news.readTime,
     },
   });
 
   res.status(200).json({
     status: "success",
-    updatedPost,
+    updatedNews,
   });
 });
