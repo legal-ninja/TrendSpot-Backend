@@ -7,9 +7,15 @@ const get_comments_controller_1 = require("../../controllers/comments/get_commen
 const auth_middleware_1 = require("../../middleware/auth.middleware");
 const add_comment_controller_1 = require("../../controllers/comments/add_comment/add.comment.controller");
 const update_comment_controller_1 = require("../../controllers/comments/update_comment/update.comment.controller");
+const account_status_1 = require("../../middleware/account.status");
 const router = (0, express_1.Router)();
-router.route("/:commentId").patch(auth_middleware_1.verifyAuth, update_comment_controller_1.updateComment);
+router
+    .route("/:commentId")
+    .patch(auth_middleware_1.verifyAuth, account_status_1.verifyAccountStatus, update_comment_controller_1.updateComment);
 router.route("/:postId/:commentId").get(get_comments_by_id_1.getCommentByID);
 router.route("/:postId").get(get_post_comments_1.getPostComments);
-router.route("/").get(get_comments_controller_1.getComments).post(auth_middleware_1.verifyAuth, add_comment_controller_1.addComment);
+router
+    .route("/")
+    .get(get_comments_controller_1.getComments)
+    .post(auth_middleware_1.verifyAuth, account_status_1.verifyAccountStatus, add_comment_controller_1.addComment);
 exports.default = router;
