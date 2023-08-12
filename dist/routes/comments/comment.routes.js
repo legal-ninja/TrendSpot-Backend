@@ -9,5 +9,5 @@ const add_comment_controller_1 = require("../../controllers/comments/add_comment
 const router = (0, express_1.Router)();
 router.route("/:postId/:commentId").get(get_comments_by_id_1.getCommentByID);
 router.route("/:postId").get(get_post_comments_1.getPostComments);
-router.route("/").get(get_comments_controller_1.getComments).post(auth_middleware_1.verifyAuth, add_comment_controller_1.addComment);
+router.route("/").get(get_comments_controller_1.getCommentsByUser).post(auth_middleware_1.verifyAuth, add_comment_controller_1.addComment);
 exports.default = router;
