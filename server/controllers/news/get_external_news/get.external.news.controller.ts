@@ -11,12 +11,14 @@ export const getExternalNews = handleAsync(async function (
   const apiUrl = `${process.env.NEWS_API_URL}/top-headlines`;
   const { countryCode } = req.query;
   const { category } = req.query;
+  const { pageSize } = req.query;
 
   const requestToNewsAPI = await axios.get(apiUrl, {
     params: {
       apiKey,
       country: countryCode ? countryCode : "us",
       category: category ? category : "general",
+      pageSize,
     },
   });
   const news = requestToNewsAPI.data.articles;

@@ -12,12 +12,12 @@ export const register = handleAsync(async function (
   res: Response,
   next: NextFunction
 ) {
-  const { firstname, lastname, email, password, isAdmin, avatar } = req.body;
+  const { firstName, lastName, email, password, isAdmin, avatar } = req.body;
 
   let missingFields: string[] = [];
   let bodyObject = {
-    firstname,
-    lastname,
+    firstName,
+    lastName,
     email,
     password,
   };
@@ -48,8 +48,8 @@ export const register = handleAsync(async function (
 
   const newUser: User = await prisma.user.create({
     data: {
-      firstName: firstname,
-      lastName: lastname,
+      firstName,
+      lastName,
       email,
       password: passwordHash,
       avatar: avatar || "",

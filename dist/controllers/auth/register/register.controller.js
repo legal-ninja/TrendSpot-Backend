@@ -31,11 +31,11 @@ const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 const generate_token_1 = require("../../../helpers/generate.token");
 exports.register = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { firstname, lastname, email, password, isAdmin, avatar } = req.body;
+        const { firstName, lastName, email, password, isAdmin, avatar } = req.body;
         let missingFields = [];
         let bodyObject = {
-            firstname,
-            lastname,
+            firstName,
+            lastName,
             email,
             password,
         };
@@ -54,8 +54,8 @@ exports.register = (0, async_handler_1.default)(function (req, res, next) {
         const passwordHash = (0, bcryptjs_1.hashSync)(password, salt);
         const newUser = yield prisma_client_1.default.user.create({
             data: {
-                firstName: firstname,
-                lastName: lastname,
+                firstName,
+                lastName,
                 email,
                 password: passwordHash,
                 avatar: avatar || "",
