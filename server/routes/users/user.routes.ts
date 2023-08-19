@@ -9,6 +9,7 @@ import { getSingleUser } from "../../controllers/users/get_single_user/get.singl
 import { deActivateUser } from "../../controllers/users/deactivate_user/deactivate.user.controller";
 import { reActivateUser } from "../../controllers/users/reactiavate_user/reactivate.user.controller";
 import { toggleAdminStatus } from "../../controllers/users/user_admin_status/user.admin.status.controller";
+import { verifyAccountStatus } from "../../middleware/account.status";
 
 const router = Router();
 
@@ -16,7 +17,7 @@ router.use(verifyAuth);
 
 router.put("/account/deactivate", deActivateUser);
 router.put("/account/reactivate", reActivateUser);
-router.put("/update-me", updateMe);
+router.put("/update-me", verifyAccountStatus, updateMe);
 
 router.use(verifyAdmin);
 
