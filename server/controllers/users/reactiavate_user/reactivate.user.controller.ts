@@ -30,8 +30,17 @@ export const reActivateUser = handleAsync(async function (
     },
   });
 
+  const modifiedUser = {
+    ...existingUser,
+    isDeactivated: false,
+    isDeactivatedByAdmin: false,
+  };
+
+  const { password, ...userInfo } = modifiedUser;
+
   res.status(200).json({
     status: "success",
     message: "Account reactivated",
+    updatedUser: userInfo,
   });
 });

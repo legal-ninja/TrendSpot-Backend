@@ -31,8 +31,17 @@ export const deActivateUser = handleAsync(async function (
     },
   });
 
+  const modifiedUser = {
+    ...existingUser,
+    isDeactivated: true,
+    isDeactivatedByAdmin,
+  };
+
+  const { password, ...userInfo } = modifiedUser;
+
   res.status(200).json({
     status: "success",
     message: "Account deactivated",
+    updatedUser: userInfo,
   });
 });
