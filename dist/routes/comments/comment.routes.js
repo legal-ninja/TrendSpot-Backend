@@ -12,8 +12,8 @@ const router = (0, express_1.Router)();
 router
     .route("/:commentId")
     .patch(auth_middleware_1.verifyAuth, account_status_1.verifyAccountStatus, update_comment_controller_1.updateComment);
-router.route("/:postId/:commentId").get(get_comments_by_id_1.getCommentByID);
-router.route("/:postId").get(get_post_comments_1.getPostComments);
+router.route("/:newsId/").get(get_comments_by_id_1.getCommentByNewsID);
+router.route("/:newsId").get(get_post_comments_1.getPostComments);
 router
     .route("/")
     .get(get_comments_controller_1.getComments)

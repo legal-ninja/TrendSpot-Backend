@@ -7,6 +7,7 @@ exports.AUTHOR_FIELDS = {
     avatar: true,
     firstName: true,
     lastName: true,
+    isAdmin: true,
 };
 exports.LIKE_FIELDS = {
     id: true,
@@ -17,6 +18,7 @@ exports.LIKE_FIELDS = {
     bio: true,
     joinedAt: true,
     news: true,
+    // isAdmin: true,
 };
 exports.LONG_AUTHOR_FIELDS = {
     id: true,
@@ -27,4 +29,5 @@ exports.LONG_AUTHOR_FIELDS = {
     bio: true,
     joinedAt: true,
     news: true,
+    isAdmin: true,
 };

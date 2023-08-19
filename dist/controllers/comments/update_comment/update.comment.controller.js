@@ -28,7 +28,7 @@ exports.updateComment = (0, async_handler_1.default)(function (req, res, next) {
             return next(new global_error_1.AppError("Comment could not be found", 404));
         yield prisma_client_1.default.comment.update({
             where: { id: comment.id },
-            data: { message },
+            data: { message, isEdited: true },
         });
         res.status(200).json({
             status: "success",

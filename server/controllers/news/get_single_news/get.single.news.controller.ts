@@ -9,7 +9,7 @@ export const getSingleNews = handleAsync(async function (
   res: Response,
   next: NextFunction
 ) {
-  const post = await prisma.news.findFirst({
+  const news = await prisma.news.findFirst({
     where: {
       AND: [{ slug: req.params.slug }, { id: req.params.postId }],
     },
@@ -41,10 +41,10 @@ export const getSingleNews = handleAsync(async function (
     },
   });
 
-  if (!post) return next(new AppError("News not found", 400));
+  if (!news) return next(new AppError("News not found", 400));
 
   res.status(200).json({
     status: "success",
-    post,
+    news,
   });
 });

@@ -19,7 +19,7 @@ export const updateComment = handleAsync(async function (
 
   await prisma.comment.update({
     where: { id: comment.id },
-    data: { message },
+    data: { message, isEdited: true },
   });
 
   res.status(200).json({

@@ -4,6 +4,7 @@ export const AUTHOR_FIELDS = {
   avatar: true,
   firstName: true,
   lastName: true,
+  isAdmin: true,
 };
 
 export const LIKE_FIELDS = {
@@ -15,6 +16,7 @@ export const LIKE_FIELDS = {
   bio: true,
   joinedAt: true,
   news: true,
+  // isAdmin: true,
 };
 
 export const LONG_AUTHOR_FIELDS = {
@@ -26,4 +28,5 @@ export const LONG_AUTHOR_FIELDS = {
   bio: true,
   joinedAt: true,
   news: true,
+  isAdmin: true,
 };

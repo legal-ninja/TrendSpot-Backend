@@ -62,6 +62,7 @@ model Comment {
    children Comment[] @relation("ParentChild")
    parentId String?
    likes Like[]
+   isEdited Boolean @default(false)
 
    @@map(name: "comments")
 }

@@ -19,7 +19,7 @@ const utils_1 = require("../../../utils");
 const global_error_1 = require("../../../helpers/global.error");
 exports.getSingleNews = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const post = yield prisma_client_1.default.news.findFirst({
+        const news = yield prisma_client_1.default.news.findFirst({
             where: {
                 AND: [{ slug: req.params.slug }, { id: req.params.postId }],
             },
@@ -50,11 +50,11 @@ exports.getSingleNews = (0, async_handler_1.default)(function (req, res, next) {
                 },
             },
         });
-        if (!post)
+        if (!news)
             return next(new global_error_1.AppError("News not found", 400));
         res.status(200).json({
             status: "success",
-            post,
+            news,
         });
     });
 });
