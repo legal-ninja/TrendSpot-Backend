@@ -17,7 +17,7 @@ let server;
 prisma_client_1.default
     .$connect()
     .then(() => {
-    console.log("Database Connection Successful");
+    console.log("Database Connection Established");
     server = app_1.default.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 })
     .catch((error) => {
