@@ -11,5 +11,5 @@ const router = (0, express_1.Router)();
 router.post("/togglePostLike/:newsId", auth_middleware_1.verifyAuth, account_status_1.verifyAccountStatus, toggle_post_like_1.togglePostLike);
 router.post("/toggleCommentLike/:commentId", auth_middleware_1.verifyAuth, account_status_1.verifyAccountStatus, toggle_comment_like_1.toggleCommentLike);
 router.get("/", auth_middleware_1.verifyAuth, get_user_likes_controller_1.getUserLikes);
-router.get("/:newsId", get_news_likes_controller_1.getNewsLikes);
+router.get("/news/:newsId", get_news_likes_controller_1.getNewsLikes);
 exports.default = router;

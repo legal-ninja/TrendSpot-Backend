@@ -14,13 +14,15 @@ router.post(
   verifyAccountStatus,
   togglePostLike
 );
+
 router.post(
   "/toggleCommentLike/:commentId",
   verifyAuth,
   verifyAccountStatus,
   toggleCommentLike
 );
+
 router.get("/", verifyAuth, getUserLikes);
-router.get("/:newsId", getNewsLikes);
+router.get("/news/:newsId", getNewsLikes);
 
 export default router;
