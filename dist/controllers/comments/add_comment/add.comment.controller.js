@@ -35,16 +35,19 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
             data: {
                 message,
                 authorId: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
-                parentId: parentId,
+                parentId,
                 newsId,
             },
         });
         yield prisma_client_1.default.activity.create({
             data: {
-                description: "added a comment",
-                category: "comment",
+                description: parentId === null
+                    ? "added a comment to a news"
+                    : "added a reply to a news comment",
+                category: "news",
                 action: "add comment",
                 userId: (_b = req.user) === null || _b === void 0 ? void 0 : _b.id,
+                newsId,
             },
         });
         const commentAuthor = yield prisma_client_1.default.user.findFirst({

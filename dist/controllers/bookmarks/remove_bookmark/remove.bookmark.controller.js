@@ -25,9 +25,9 @@ exports.removeFromBookmarks = (0, async_handler_1.default)((req, res, next) => _
     });
     yield prisma_client_1.default.activity.create({
         data: {
-            description: "bookmarked a news",
-            category: "bookmark",
-            action: "bookmarked news",
+            description: "removed your bookmark of a news",
+            category: "news",
+            action: "removed news",
             userId: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
         },
     });

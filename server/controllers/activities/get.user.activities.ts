@@ -16,8 +16,9 @@ export const getUserActivities = handleAsync(async function (
     },
     include: {
       user: {
-        select: LONG_AUTHOR_FIELDS,
+        select: { ...LONG_AUTHOR_FIELDS, news: false },
       },
+      news: true,
     },
   });
 

@@ -36,17 +36,21 @@ export const addComment = handleAsync(async function (
     data: {
       message,
       authorId: req.user?.id!,
-      parentId: parentId,
+      parentId,
       newsId,
     },
   });
 
   await prisma.activity.create({
     data: {
-      description: "added a comment",
-      category: "comment",
+      description:
+        parentId === null
+          ? "added a comment to a news"
+          : "added a reply to a news comment",
+      category: "news",
       action: "add comment",
       userId: req.user?.id!,
+      newsId,
     },
   });
 

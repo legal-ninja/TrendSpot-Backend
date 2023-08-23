@@ -53,7 +53,7 @@ exports.signin = (0, async_handler_1.default)(function (req, res, next) {
         const userInfo = Object.assign({ token }, userWithoutPassword);
         yield prisma_client_1.default.activity.create({
             data: {
-                description: "signed in",
+                description: "signed in to your account",
                 category: "auth",
                 action: "sign in",
                 userId: user === null || user === void 0 ? void 0 : user.id,

@@ -43,7 +43,7 @@ exports.toggleBookmark = (0, async_handler_1.default)(function (req, res, next) 
             yield prisma_client_1.default.activity.create({
                 data: {
                     description: "removed a news from your bookmarks",
-                    category: "bookmark",
+                    category: "news",
                     action: "remove bookmark",
                     userId: (_c = req.user) === null || _c === void 0 ? void 0 : _c.id,
                 },
@@ -59,7 +59,7 @@ exports.toggleBookmark = (0, async_handler_1.default)(function (req, res, next) 
             yield prisma_client_1.default.activity.create({
                 data: {
                     description: "added a news to your bookmarks",
-                    category: "bookmark",
+                    category: "news",
                     action: "add bookmark",
                     userId: (_e = req.user) === null || _e === void 0 ? void 0 : _e.id,
                 },

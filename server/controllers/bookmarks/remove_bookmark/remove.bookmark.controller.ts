@@ -15,9 +15,9 @@ export const removeFromBookmarks = handleAsync(
 
     await prisma.activity.create({
       data: {
-        description: "bookmarked a news",
-        category: "bookmark",
-        action: "bookmarked news",
+        description: "removed your bookmark of a news",
+        category: "news",
+        action: "removed news",
         userId: req.user?.id!,
       },
     });

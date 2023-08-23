@@ -43,9 +43,10 @@ exports.togglePostLike = (0, async_handler_1.default)(function (req, res, next) 
             yield prisma_client_1.default.activity.create({
                 data: {
                     description: "removed your like from a news",
-                    category: "like",
+                    category: "news",
                     action: "removed like",
                     userId: (_c = req.user) === null || _c === void 0 ? void 0 : _c.id,
+                    newsId: newsToLike.id,
                 },
             });
         }
@@ -60,9 +61,10 @@ exports.togglePostLike = (0, async_handler_1.default)(function (req, res, next) 
             yield prisma_client_1.default.activity.create({
                 data: {
                     description: "added a like to a news",
-                    category: "like",
+                    category: "news",
                     action: "added like",
                     userId: (_e = req.user) === null || _e === void 0 ? void 0 : _e.id,
+                    newsId: newsToLike.id,
                 },
             });
         }

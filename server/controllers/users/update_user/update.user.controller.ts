@@ -49,7 +49,7 @@ export const updateMe = handleAsync(async function (
 
   await prisma.activity.create({
     data: {
-      description: "updated your account",
+      description: "updated your account information",
       category: "account",
       action: "update account",
       userId: req.user?.id!,

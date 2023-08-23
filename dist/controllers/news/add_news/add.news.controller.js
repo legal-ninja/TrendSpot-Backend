@@ -46,7 +46,7 @@ exports.addNews = (0, async_handler_1.default)(function (req, res, next) {
             data: {
                 description: "added a news",
                 category: "news",
-                action: "delete",
+                action: "add",
                 userId: (_b = req.user) === null || _b === void 0 ? void 0 : _b.id,
             },
         });

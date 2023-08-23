@@ -24,8 +24,9 @@ exports.getUserActivities = (0, async_handler_1.default)(function (req, res, nex
             },
             include: {
                 user: {
-                    select: utils_1.LONG_AUTHOR_FIELDS,
+                    select: Object.assign(Object.assign({}, utils_1.LONG_AUTHOR_FIELDS), { news: false }),
                 },
+                news: true,
             },
         });
         res.status(200).json({

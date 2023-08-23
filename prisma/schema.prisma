@@ -44,6 +44,7 @@ model News {
   comments Comment[]
   likes Like[]
   bookmarks Bookmark[]
+  activities Activity[]
 
    @@map(name: "news")
 }
@@ -114,6 +115,8 @@ model Activity {
   activityDate DateTime @default(now())
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
+  news News? @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  newsId String?
 
    @@map(name: "activity")
 }

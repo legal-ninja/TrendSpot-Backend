@@ -19,7 +19,7 @@ const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 exports.updateComment = (0, async_handler_1.default)(function (req, res, next) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        const { message } = req.body;
+        const { message, newsId } = req.body;
         if (!message)
             return next(new global_error_1.AppError("Comment message is required", 400));
         const comment = yield prisma_client_1.default.comment.findFirst({
@@ -33,10 +33,11 @@ exports.updateComment = (0, async_handler_1.default)(function (req, res, next) {
         });
         yield prisma_client_1.default.activity.create({
             data: {
-                description: "updated your comment",
-                category: "comment",
+                description: "updated your comment on a news",
+                category: "news",
                 action: "update comment",
                 userId: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
+                newsId,
             },
         });
         res.status(200).json({

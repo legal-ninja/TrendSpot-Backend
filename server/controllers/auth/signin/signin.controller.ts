@@ -49,7 +49,7 @@ export const signin = handleAsync(async function (
 
   await prisma.activity.create({
     data: {
-      description: "signed in",
+      description: "signed in to your account",
       category: "auth",
       action: "sign in",
       userId: user?.id,

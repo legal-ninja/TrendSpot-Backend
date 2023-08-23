@@ -9,7 +9,7 @@ export const updateComment = handleAsync(async function (
   res: Response,
   next: NextFunction
 ) {
-  const { message } = req.body;
+  const { message, newsId } = req.body;
   if (!message) return next(new AppError("Comment message is required", 400));
 
   const comment = await prisma.comment.findFirst({
@@ -25,10 +25,11 @@ export const updateComment = handleAsync(async function (
 
   await prisma.activity.create({
     data: {
-      description: "updated your comment",
-      category: "comment",
+      description: "updated your comment on a news",
+      category: "news",
       action: "update comment",
       userId: req.user?.id!,
+      newsId,
     },
   });
 

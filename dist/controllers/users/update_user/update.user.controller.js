@@ -58,7 +58,7 @@ exports.updateMe = (0, async_handler_1.default)(function (req, res, next) {
         });
         yield prisma_client_1.default.activity.create({
             data: {
-                description: "updated your account",
+                description: "updated your account information",
                 category: "account",
                 action: "update account",
                 userId: (_b = req.user) === null || _b === void 0 ? void 0 : _b.id,

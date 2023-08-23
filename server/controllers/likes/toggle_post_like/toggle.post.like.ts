@@ -40,9 +40,10 @@ export const togglePostLike = handleAsync(async function (
     await prisma.activity.create({
       data: {
         description: "removed your like from a news",
-        category: "like",
+        category: "news",
         action: "removed like",
         userId: req.user?.id!,
+        newsId: newsToLike.id!,
       },
     });
   } else {
@@ -57,9 +58,10 @@ export const togglePostLike = handleAsync(async function (
     await prisma.activity.create({
       data: {
         description: "added a like to a news",
-        category: "like",
+        category: "news",
         action: "added like",
         userId: req.user?.id!,
+        newsId: newsToLike.id!,
       },
     });
   }
