@@ -17,6 +17,7 @@ const async_handler_1 = __importDefault(require("../../../helpers/async.handler"
 const global_error_1 = require("../../../helpers/global.error");
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 exports.updateComment = (0, async_handler_1.default)(function (req, res, next) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         const { message } = req.body;
         if (!message)
@@ -29,6 +30,14 @@ exports.updateComment = (0, async_handler_1.default)(function (req, res, next) {
         yield prisma_client_1.default.comment.update({
             where: { id: comment.id },
             data: { message, isEdited: true },
+        });
+        yield prisma_client_1.default.activity.create({
+            data: {
+                description: "updated your comment",
+                category: "comment",
+                action: "update comment",
+                userId: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
+            },
         });
         res.status(200).json({
             status: "success",

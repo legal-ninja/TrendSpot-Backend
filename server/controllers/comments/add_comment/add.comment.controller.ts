@@ -41,6 +41,15 @@ export const addComment = handleAsync(async function (
     },
   });
 
+  await prisma.activity.create({
+    data: {
+      description: "added a comment",
+      category: "comment",
+      action: "add comment",
+      userId: req.user?.id!,
+    },
+  });
+
   const commentAuthor = await prisma.user.findFirst({
     where: {
       email: authorEmail,

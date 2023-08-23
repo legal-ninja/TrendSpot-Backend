@@ -28,6 +28,7 @@ const async_handler_1 = __importDefault(require("../../../helpers/async.handler"
 const global_error_1 = require("../../../helpers/global.error");
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 exports.reActivateUser = (0, async_handler_1.default)(function (req, res, next) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         const { userId } = req.body;
         if (!userId)
@@ -46,6 +47,14 @@ exports.reActivateUser = (0, async_handler_1.default)(function (req, res, next) 
             data: {
                 isDeactivated: false,
                 isDeactivatedByAdmin: false,
+            },
+        });
+        yield prisma_client_1.default.activity.create({
+            data: {
+                description: "reactivated your account",
+                category: "account",
+                action: "reactivate account",
+                userId: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
             },
         });
         const modifiedUser = Object.assign(Object.assign({}, existingUser), { isDeactivated: false, isDeactivatedByAdmin: false });

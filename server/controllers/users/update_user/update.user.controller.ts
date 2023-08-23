@@ -47,6 +47,15 @@ export const updateMe = handleAsync(async function (
     },
   });
 
+  await prisma.activity.create({
+    data: {
+      description: "updated your account",
+      category: "account",
+      action: "update account",
+      userId: req.user?.id!,
+    },
+  });
+
   const token = generateToken(existingUser.id);
   const { password: _password, ...userWithoutPassword } = user;
   const updatedUser = { token, ...userWithoutPassword };

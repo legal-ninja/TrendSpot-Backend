@@ -18,7 +18,7 @@ const global_error_1 = require("../../../helpers/global.error");
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 const slugify_1 = require("../../../helpers/slugify");
 exports.addNews = (0, async_handler_1.default)(function (req, res, next) {
-    var _a;
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         const { title, content, image, readTime, category } = req.body;
         let missingFields = [];
@@ -40,6 +40,14 @@ exports.addNews = (0, async_handler_1.default)(function (req, res, next) {
                 category,
                 slug: (0, slugify_1.slugify)(title),
                 authorId: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
+            },
+        });
+        yield prisma_client_1.default.activity.create({
+            data: {
+                description: "added a news",
+                category: "news",
+                action: "delete",
+                userId: (_b = req.user) === null || _b === void 0 ? void 0 : _b.id,
             },
         });
         res.status(200).json({

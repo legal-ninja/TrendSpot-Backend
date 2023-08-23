@@ -17,7 +17,7 @@ const async_handler_1 = __importDefault(require("../../../helpers/async.handler"
 const global_error_1 = require("../../../helpers/global.error");
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 exports.toggleBookmark = (0, async_handler_1.default)(function (req, res, next) {
-    var _a, _b, _c;
+    var _a, _b, _c, _d, _e;
     return __awaiter(this, void 0, void 0, function* () {
         const { newsId } = req.params;
         if (!newsId)
@@ -40,12 +40,28 @@ exports.toggleBookmark = (0, async_handler_1.default)(function (req, res, next) 
                     newsId,
                 },
             });
+            yield prisma_client_1.default.activity.create({
+                data: {
+                    description: "removed a news from your bookmarks",
+                    category: "bookmark",
+                    action: "remove bookmark",
+                    userId: (_c = req.user) === null || _c === void 0 ? void 0 : _c.id,
+                },
+            });
         }
         else {
             yield prisma_client_1.default.bookmark.create({
                 data: {
-                    userId: (_c = req.user) === null || _c === void 0 ? void 0 : _c.id,
+                    userId: (_d = req.user) === null || _d === void 0 ? void 0 : _d.id,
                     newsId,
+                },
+            });
+            yield prisma_client_1.default.activity.create({
+                data: {
+                    description: "added a news to your bookmarks",
+                    category: "bookmark",
+                    action: "add bookmark",
+                    userId: (_e = req.user) === null || _e === void 0 ? void 0 : _e.id,
                 },
             });
         }

@@ -65,6 +65,14 @@ exports.resetPassword = (0, async_handler_1.default)(function (req, res, next) {
                 id: existingToken === null || existingToken === void 0 ? void 0 : existingToken.id,
             },
         });
+        yield prisma_client_1.default.activity.create({
+            data: {
+                description: "reset your password",
+                category: "auth",
+                action: "reset password",
+                userId: user === null || user === void 0 ? void 0 : user.id,
+            },
+        });
         const userAgent = (0, ua_parser_js_1.default)(req.headers["user-agent"]);
         const browser = userAgent.browser.name || "Not detected";
         const OS = `${userAgent.os.name || "Not detected"} (${userAgent.os.version || "Not detected"})`;

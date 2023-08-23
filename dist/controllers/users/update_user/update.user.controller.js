@@ -29,7 +29,7 @@ const global_error_1 = require("../../../helpers/global.error");
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 const generate_token_1 = require("../../../helpers/generate.token");
 exports.updateMe = (0, async_handler_1.default)(function (req, res, next) {
-    var _a;
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         const { firstName, lastName, avatar, bio, isAdmin } = req.body;
         if (isAdmin) {
@@ -54,6 +54,14 @@ exports.updateMe = (0, async_handler_1.default)(function (req, res, next) {
                 avatar: avatar || existingUser.avatar,
                 bio: bio || existingUser.bio,
                 isAdmin: isAdmin || existingUser.isAdmin,
+            },
+        });
+        yield prisma_client_1.default.activity.create({
+            data: {
+                description: "updated your account",
+                category: "account",
+                action: "update account",
+                userId: (_b = req.user) === null || _b === void 0 ? void 0 : _b.id,
             },
         });
         const token = (0, generate_token_1.generateToken)(existingUser.id);

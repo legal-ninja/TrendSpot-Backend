@@ -38,11 +38,29 @@ export const toggleBookmark = handleAsync(async function (
         newsId,
       },
     });
+
+    await prisma.activity.create({
+      data: {
+        description: "removed a news from your bookmarks",
+        category: "bookmark",
+        action: "remove bookmark",
+        userId: req.user?.id!,
+      },
+    });
   } else {
     await prisma.bookmark.create({
       data: {
         userId: req.user?.id!,
         newsId,
+      },
+    });
+
+    await prisma.activity.create({
+      data: {
+        description: "added a news to your bookmarks",
+        category: "bookmark",
+        action: "add bookmark",
+        userId: req.user?.id!,
       },
     });
   }

@@ -18,7 +18,7 @@ const utils_1 = require("../../../utils");
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 const global_error_1 = require("../../../helpers/global.error");
 exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
-    var _a;
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         const { message, parentId, newsId, authorEmail, path, isReplying } = req.body;
         let missingFields = [];
@@ -37,6 +37,14 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
                 authorId: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
                 parentId: parentId,
                 newsId,
+            },
+        });
+        yield prisma_client_1.default.activity.create({
+            data: {
+                description: "added a comment",
+                category: "comment",
+                action: "add comment",
+                userId: (_b = req.user) === null || _b === void 0 ? void 0 : _b.id,
             },
         });
         const commentAuthor = yield prisma_client_1.default.user.findFirst({

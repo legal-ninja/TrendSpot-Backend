@@ -30,6 +30,15 @@ export const reActivateUser = handleAsync(async function (
     },
   });
 
+  await prisma.activity.create({
+    data: {
+      description: "reactivated your account",
+      category: "account",
+      action: "reactivate account",
+      userId: req.user?.id!,
+    },
+  });
+
   const modifiedUser = {
     ...existingUser,
     isDeactivated: false,

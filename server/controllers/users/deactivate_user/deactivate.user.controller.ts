@@ -31,6 +31,15 @@ export const deActivateUser = handleAsync(async function (
     },
   });
 
+  await prisma.activity.create({
+    data: {
+      description: "deactivated your account",
+      category: "account",
+      action: "deactivate account",
+      userId: req.user?.id!,
+    },
+  });
+
   const modifiedUser = {
     ...existingUser,
     isDeactivated: true,

@@ -16,10 +16,19 @@ exports.removeFromBookmarks = void 0;
 const async_handler_1 = __importDefault(require("../../../helpers/async.handler"));
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 exports.removeFromBookmarks = (0, async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const { bookmarkId } = req.params;
     yield prisma_client_1.default.bookmark.delete({
         where: {
             id: bookmarkId,
+        },
+    });
+    yield prisma_client_1.default.activity.create({
+        data: {
+            description: "bookmarked a news",
+            category: "bookmark",
+            action: "bookmarked news",
+            userId: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
         },
     });
     res.status(200).json({

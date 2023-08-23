@@ -22,6 +22,7 @@ model User {
    news News[]
    likes Like[]
    bookmarks Bookmark[]
+   activities Activity []
    joinedAt  DateTime @default(now())
    lastUpdated  DateTime @updatedAt
 
@@ -105,3 +106,14 @@ model Token {
   @@map(name: "token")
 }
 
+model Activity {
+  id String @id @default(uuid()) @map("_id")
+  description String
+  category  String
+  action String
+  activityDate DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+   @@map(name: "activity")
+}

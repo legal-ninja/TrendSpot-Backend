@@ -44,6 +44,15 @@ export const addNews = handleAsync(async function (
     },
   });
 
+  await prisma.activity.create({
+    data: {
+      description: "added a news",
+      category: "news",
+      action: "delete",
+      userId: req.user?.id!,
+    },
+  });
+
   res.status(200).json({
     status: "success",
     news,

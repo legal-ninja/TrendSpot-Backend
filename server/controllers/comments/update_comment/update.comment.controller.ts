@@ -2,9 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import handleAsync from "../../../helpers/async.handler";
 import { AppError } from "../../../helpers/global.error";
 import prisma from "../../../lib/prisma.client";
+import { AuthenticatedRequest } from "../../../models/types/auth";
 
 export const updateComment = handleAsync(async function (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) {
@@ -20,6 +21,15 @@ export const updateComment = handleAsync(async function (
   await prisma.comment.update({
     where: { id: comment.id },
     data: { message, isEdited: true },
+  });
+
+  await prisma.activity.create({
+    data: {
+      description: "updated your comment",
+      category: "comment",
+      action: "update comment",
+      userId: req.user?.id!,
+    },
   });
 
   res.status(200).json({

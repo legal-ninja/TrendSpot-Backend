@@ -67,6 +67,15 @@ export const resetPassword = handleAsync(async function (
     },
   });
 
+  await prisma.activity.create({
+    data: {
+      description: "reset your password",
+      category: "auth",
+      action: "reset password",
+      userId: user?.id!,
+    },
+  });
+
   const userAgent = parser(req.headers["user-agent"]);
 
   const browser: string = userAgent.browser.name || "Not detected";
