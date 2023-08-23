@@ -9,6 +9,7 @@ import newsRouter from "./routes/news/news.routes";
 import commentRouter from "./routes/comments/comment.routes";
 import likeRouter from "./routes/likes/like.routes";
 import bookmarkRouter from "./routes/bookmarks/bookmark.routes";
+import activityRouter from "./routes/activities/activities.routes";
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use("/api/v1/news", newsRouter);
 app.use("/api/v1/comments", commentRouter);
 app.use("/api/v1/likes", likeRouter);
 app.use("/api/v1/bookmarks", bookmarkRouter);
+app.use("/api/v1/activities", activityRouter);
 
 app.all("*", (req, res, next) => {
   next(
