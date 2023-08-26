@@ -47,15 +47,6 @@ export const signin = handleAsync(async function (
 
   const userInfo = { token, ...userWithoutPassword };
 
-  await prisma.activity.create({
-    data: {
-      description: "signed in to your account",
-      category: "auth",
-      action: "sign in",
-      userId: user?.id,
-    },
-  });
-
   res.status(200).json({
     status: "success",
     user: userInfo,
