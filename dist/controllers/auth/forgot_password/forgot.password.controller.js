@@ -17,6 +17,8 @@ const async_handler_1 = __importDefault(require("../../../helpers/async.handler"
 const global_error_1 = require("../../../helpers/global.error");
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 const crypto_1 = require("crypto");
+const reset_email_1 = require("../../../views/reset.email");
+const email_service_1 = __importDefault(require("../../../services/email.service"));
 exports.forgotPassword = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const { email } = req.body;
@@ -39,13 +41,12 @@ exports.forgotPassword = (0, async_handler_1.default)(function (req, res, next) 
         const send_to = email;
         const sent_from = process.env.EMAIL_USER;
         const reply_to = process.env.REPLY_TO;
-        // const body = passwordResetEmail({
-        //   username: user.firstName,
-        //   url: resetUrl,
-        //   withGoogle: user.withGoogle,
-        // });
+        const body = (0, reset_email_1.passwordResetEmail)({
+            username: user.firstName,
+            url: resetUrl,
+        });
         try {
-            // sendEmail({ subject, body, send_to, sent_from, reply_to });
+            (0, email_service_1.default)({ subject, body, send_to, sent_from, reply_to });
             res.status(200).json({
                 status: "success",
                 token: resetToken,

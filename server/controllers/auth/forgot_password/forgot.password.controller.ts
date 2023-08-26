@@ -4,6 +4,8 @@ import { AppError } from "../../../helpers/global.error";
 import prisma from "../../../lib/prisma.client";
 import { User } from "../../../models/types/user";
 import { createHash, randomBytes } from "crypto";
+import { passwordResetEmail } from "../../../views/reset.email";
+import sendEmail from "../../../services/email.service";
 
 export const forgotPassword = handleAsync(async function (
   req: Request,
@@ -37,14 +39,13 @@ export const forgotPassword = handleAsync(async function (
   const send_to = email;
   const sent_from = process.env.EMAIL_USER as string;
   const reply_to = process.env.REPLY_TO as string;
-  // const body = passwordResetEmail({
-  //   username: user.firstName,
-  //   url: resetUrl,
-  //   withGoogle: user.withGoogle,
-  // });
+  const body = passwordResetEmail({
+    username: user.firstName,
+    url: resetUrl,
+  });
 
   try {
-    // sendEmail({ subject, body, send_to, sent_from, reply_to });
+    sendEmail({ subject, body, send_to, sent_from, reply_to });
     res.status(200).json({
       status: "success",
       token: resetToken,

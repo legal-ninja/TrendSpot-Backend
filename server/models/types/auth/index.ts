@@ -15,7 +15,6 @@ export type LoginPayload = Pick<SignUpPayload, "email" | "password">;
 export interface passwordResetType {
   username: string;
   url: string;
-  withGoogle: boolean;
 }
 
 export interface AuthenticatedRequest extends Request {
