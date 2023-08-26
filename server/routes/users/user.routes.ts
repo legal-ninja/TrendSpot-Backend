@@ -10,14 +10,21 @@ import { deActivateUser } from "../../controllers/users/deactivate_user/deactiva
 import { reActivateUser } from "../../controllers/users/reactiavate_user/reactivate.user.controller";
 import { toggleAdminStatus } from "../../controllers/users/user_admin_status/user.admin.status.controller";
 import { verifyAccountStatus } from "../../middleware/account.status";
+import { changePassword } from "../../controllers/users/update_user/change_password/change.password.controller";
 
 const router = Router();
 
 router.use(verifyAuth);
 
-router.put("/account/deactivate", deActivateUser);
-router.put("/account/reactivate", reActivateUser);
-router.put("/update-me", verifyAccountStatus, updateMe);
+router.put("/account/deactivate", verifyAuth, deActivateUser);
+router.put("/account/reactivate", verifyAuth, reActivateUser);
+router.put("/update-me", verifyAccountStatus, verifyAuth, updateMe);
+router.put(
+  "/account/change-password",
+  verifyAccountStatus,
+  verifyAuth,
+  changePassword
+);
 
 router.use(verifyAdmin);
 
