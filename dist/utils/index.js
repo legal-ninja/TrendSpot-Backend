@@ -30,4 +30,5 @@ exports.LONG_AUTHOR_FIELDS = {
     joinedAt: true,
     news: true,
     isAdmin: true,
+    isDeactivated: true,
 };
