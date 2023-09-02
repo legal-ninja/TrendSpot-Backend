@@ -8,7 +8,7 @@ const reset_password_controller_1 = require("../../controllers/auth/reset_passwo
 const account_status_1 = require("../../middleware/account.status");
 const router = (0, express_1.Router)();
 router.post("/register", register_controller_1.register);
-router.post("/signin", account_status_1.verifyAccountStatus, signin_controller_1.signin);
+router.post("/signin", signin_controller_1.signin);
 router.post("/forgot-password", account_status_1.verifyAccountStatus, forgot_password_controller_1.forgotPassword);
 router.post("/reset-password/:token", account_status_1.verifyAccountStatus, reset_password_controller_1.resetPassword);
 exports.default = router;

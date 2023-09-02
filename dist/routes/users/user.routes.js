@@ -11,6 +11,7 @@ const user_admin_status_controller_1 = require("../../controllers/users/user_adm
 const account_status_1 = require("../../middleware/account.status");
 const change_password_controller_1 = require("../../controllers/users/update_user/change_password/change.password.controller");
 const router = (0, express_1.Router)();
+router.route("/").get(get_users_controller_1.getUsers);
 router.use(auth_middleware_1.verifyAuth);
 router.put("/account/deactivate", auth_middleware_1.verifyAuth, deactivate_user_controller_1.deActivateUser);
 router.put("/account/reactivate", auth_middleware_1.verifyAuth, reactivate_user_controller_1.reActivateUser);

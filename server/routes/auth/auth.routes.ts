@@ -8,7 +8,7 @@ import { verifyAccountStatus } from "../../middleware/account.status";
 const router = Router();
 
 router.post("/register", register);
-router.post("/signin", verifyAccountStatus, signin);
+router.post("/signin", signin);
 router.post("/forgot-password", verifyAccountStatus, forgotPassword);
 router.post("/reset-password/:token", verifyAccountStatus, resetPassword);
 

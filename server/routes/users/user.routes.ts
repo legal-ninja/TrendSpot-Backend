@@ -14,6 +14,8 @@ import { changePassword } from "../../controllers/users/update_user/change_passw
 
 const router = Router();
 
+router.route("/").get(getUsers);
+
 router.use(verifyAuth);
 
 router.put("/account/deactivate", verifyAuth, deActivateUser);
