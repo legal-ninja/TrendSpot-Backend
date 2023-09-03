@@ -20,6 +20,10 @@ export const toggleAdminStatus = handleAsync(async function (
   });
 
   if (!existingUser) return next(new AppError("User could not be found", 404));
+  if (existingUser.email === "trendspot@admin.com")
+    return next(
+      new AppError("Invalid operation. This user is a super admin", 401)
+    );
 
   await prisma.user.update({
     where: {

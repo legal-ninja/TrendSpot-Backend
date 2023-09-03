@@ -46,7 +46,11 @@ app.use((req, res, next) => {
 app.use((0, express_1.json)());
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
-    origin: ["http://localhost:5173", "exp://172.20.10.10:19000"],
+    origin: [
+        "http://localhost:5173",
+        "exp://172.20.10.10:19000",
+        "https://trend-spot-admin.vercel.app",
+    ],
     credentials: true,
 }));
 app.use((req, res, next) => {

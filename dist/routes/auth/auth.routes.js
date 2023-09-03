@@ -6,9 +6,11 @@ const signin_controller_1 = require("../../controllers/auth/signin/signin.contro
 const forgot_password_controller_1 = require("../../controllers/auth/forgot_password/forgot.password.controller");
 const reset_password_controller_1 = require("../../controllers/auth/reset_password/reset.password.controller");
 const account_status_1 = require("../../middleware/account.status");
+const check_auth_status_1 = require("../../controllers/auth/check_auth_status/check.auth.status");
 const router = (0, express_1.Router)();
 router.post("/register", register_controller_1.register);
 router.post("/signin", signin_controller_1.signin);
 router.post("/forgot-password", account_status_1.verifyAccountStatus, forgot_password_controller_1.forgotPassword);
 router.post("/reset-password/:token", account_status_1.verifyAccountStatus, reset_password_controller_1.resetPassword);
+router.post("/check-auth-session", check_auth_status_1.checAuthSession);
 exports.default = router;

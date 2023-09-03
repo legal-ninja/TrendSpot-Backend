@@ -28,6 +28,8 @@ exports.toggleAdminStatus = (0, async_handler_1.default)(function (req, res, nex
         });
         if (!existingUser)
             return next(new global_error_1.AppError("User could not be found", 404));
+        if (existingUser.email === "trendspot@admin.com")
+            return next(new global_error_1.AppError("Invalid operation. This user is a super admin", 401));
         yield prisma_client_1.default.user.update({
             where: {
                 id: existingUser.id,

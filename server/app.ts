@@ -23,7 +23,11 @@ app.use(json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "exp://172.20.10.10:19000"],
+    origin: [
+      "http://localhost:5173",
+      "exp://172.20.10.10:19000",
+      "https://trend-spot-admin.vercel.app",
+    ],
     credentials: true,
   })
 );
