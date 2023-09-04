@@ -15,6 +15,8 @@ export const addComment = handleAsync(async function (
 ) {
   const { message, parentId, newsId, authorEmail, path, isReplying } = req.body;
 
+  console.log({ path });
+
   let missingFields = [];
   let bodyObject = { message, newsId, authorEmail, path };
 
@@ -74,34 +76,26 @@ export const addComment = handleAsync(async function (
     },
   });
 
-  const replySubject = `New Reply on your comment`;
-  const reply_send_to = authorEmail;
-  const commentSubject = `New Comment on your post`;
-  const comment_send_to = authorEmail;
-  const sent_from = process.env.EMAIL_USER as string;
-  const reply_to = process.env.REPLY_TO as string;
-  const replyBody = emailReply(
-    news?.author.firstName!,
-    "exp://172.20.10.10:19000",
-    message
-  );
-  const commentBody = commentEmail(
-    commentAuthor?.firstName!,
-    "exp://172.20.10.10:19000",
-    message
-  );
+  const REPLY_SUBJECT = `New Reply on your comment`;
+  const REPLY_SEND_TO = authorEmail;
+  const COMMENT_SUBJECT = `New Comment on your post`;
+  const COMMENT_SEND_TO = authorEmail;
+  const SENT_FROM = process.env.EMAIL_USER as string;
+  const REPLY_TO = process.env.REPLY_TO as string;
+  const PATH = "exp://172.20.10.10:19000";
+  const REPLY_BODY = emailReply(news?.author.firstName!, PATH, message);
+  const COMMENT_BODY = commentEmail(commentAuthor?.firstName!, PATH, message);
 
   try {
     if (authorEmail !== req.user?.email) {
       sendEmail({
-        subject: isReplying ? replySubject : commentSubject,
-        body: isReplying ? replyBody : commentBody,
-        send_to: isReplying ? reply_send_to : comment_send_to,
-        sent_from,
-        reply_to,
+        subject: isReplying ? REPLY_SUBJECT : COMMENT_SUBJECT,
+        body: isReplying ? REPLY_BODY : COMMENT_BODY,
+        send_to: isReplying ? REPLY_SEND_TO : COMMENT_SEND_TO,
+        SENT_FROM,
+        REPLY_TO,
       });
     }
-
     res.status(200).json({
       status: "success",
       comment,

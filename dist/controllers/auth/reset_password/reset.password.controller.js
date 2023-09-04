@@ -71,15 +71,15 @@ exports.resetPassword = (0, async_handler_1.default)(function (req, res, next) {
         const OS = `${userAgent.os.name || "Not detected"} (${userAgent.os.version || "Not detected"})`;
         const subject = `${user === null || user === void 0 ? void 0 : user.firstName}, Your password was successfully reset`;
         const send_to = user === null || user === void 0 ? void 0 : user.email;
-        const sent_from = process.env.EMAIL_USER;
-        const reply_to = process.env.REPLY_TO;
+        const SENT_FROM = process.env.EMAIL_USER;
+        const REPLY_TO = process.env.REPLY_TO;
         const body = (0, reset_success_email_1.resetSuccess)({
             username: user === null || user === void 0 ? void 0 : user.lastName,
             browser,
             OS,
         });
         try {
-            (0, email_service_1.default)({ subject, body, send_to, sent_from, reply_to });
+            (0, email_service_1.default)({ subject, body, send_to, SENT_FROM, REPLY_TO });
             res.status(200).json({
                 status: "success",
                 message: `Your password has been reset`,

@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const nodemailer_1 = __importDefault(require("nodemailer"));
-const sendEmail = ({ subject, body, send_to, sent_from, reply_to }) => {
+const sendEmail = ({ subject, body, send_to, SENT_FROM, REPLY_TO }) => {
     const transporter = nodemailer_1.default.createTransport({
         service: "gmail",
         auth: {
@@ -16,9 +16,9 @@ const sendEmail = ({ subject, body, send_to, sent_from, reply_to }) => {
         },
     });
     const options = {
-        from: sent_from,
+        from: SENT_FROM,
         to: send_to,
-        replyTo: reply_to,
+        replyTo: REPLY_TO,
         subject: subject,
         html: body,
     };

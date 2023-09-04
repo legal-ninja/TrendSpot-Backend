@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 import { Email } from "../models/types/general";
 
-const sendEmail = ({ subject, body, send_to, sent_from, reply_to }: Email) => {
+const sendEmail = ({ subject, body, send_to, SENT_FROM, REPLY_TO }: Email) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -14,9 +14,9 @@ const sendEmail = ({ subject, body, send_to, sent_from, reply_to }: Email) => {
   });
 
   const options = {
-    from: sent_from,
+    from: SENT_FROM,
     to: send_to,
-    replyTo: reply_to,
+    replyTo: REPLY_TO,
     subject: subject,
     html: body,
   };

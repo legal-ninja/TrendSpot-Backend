@@ -77,8 +77,8 @@ export const resetPassword = handleAsync(async function (
 
   const subject = `${user?.firstName}, Your password was successfully reset`;
   const send_to = user?.email!;
-  const sent_from = process.env.EMAIL_USER as string;
-  const reply_to = process.env.REPLY_TO as string;
+  const SENT_FROM = process.env.EMAIL_USER as string;
+  const REPLY_TO = process.env.REPLY_TO as string;
   const body = resetSuccess({
     username: user?.lastName,
     browser,
@@ -86,7 +86,7 @@ export const resetPassword = handleAsync(async function (
   });
 
   try {
-    sendEmail({ subject, body, send_to, sent_from, reply_to });
+    sendEmail({ subject, body, send_to, SENT_FROM, REPLY_TO });
     res.status(200).json({
       status: "success",
       message: `Your password has been reset`,

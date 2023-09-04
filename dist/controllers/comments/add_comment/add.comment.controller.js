@@ -24,6 +24,7 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
         const { message, parentId, newsId, authorEmail, path, isReplying } = req.body;
+        console.log({ path });
         let missingFields = [];
         let bodyObject = { message, newsId, authorEmail, path };
         for (let field in bodyObject) {
@@ -68,22 +69,23 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
                 },
             },
         });
-        const replySubject = `New Reply on your comment`;
-        const reply_send_to = authorEmail;
-        const commentSubject = `New Comment on your post`;
-        const comment_send_to = authorEmail;
-        const sent_from = process.env.EMAIL_USER;
-        const reply_to = process.env.REPLY_TO;
-        const replyBody = (0, reply_email_1.emailReply)(news === null || news === void 0 ? void 0 : news.author.firstName, "exp://172.20.10.10:19000", message);
-        const commentBody = (0, comment_email_1.commentEmail)(commentAuthor === null || commentAuthor === void 0 ? void 0 : commentAuthor.firstName, "exp://172.20.10.10:19000", message);
+        const REPLY_SUBJECT = `New Reply on your comment`;
+        const REPLY_SEND_TO = authorEmail;
+        const COMMENT_SUBJECT = `New Comment on your post`;
+        const COMMENT_SEND_TO = authorEmail;
+        const SENT_FROM = process.env.EMAIL_USER;
+        const REPLY_TO = process.env.REPLY_TO;
+        const PATH = "exp://172.20.10.10:19000";
+        const REPLY_BODY = (0, reply_email_1.emailReply)(news === null || news === void 0 ? void 0 : news.author.firstName, PATH, message);
+        const COMMENT_BODY = (0, comment_email_1.commentEmail)(commentAuthor === null || commentAuthor === void 0 ? void 0 : commentAuthor.firstName, PATH, message);
         try {
             if (authorEmail !== ((_c = req.user) === null || _c === void 0 ? void 0 : _c.email)) {
                 (0, email_service_1.default)({
-                    subject: isReplying ? replySubject : commentSubject,
-                    body: isReplying ? replyBody : commentBody,
-                    send_to: isReplying ? reply_send_to : comment_send_to,
-                    sent_from,
-                    reply_to,
+                    subject: isReplying ? REPLY_SUBJECT : COMMENT_SUBJECT,
+                    body: isReplying ? REPLY_BODY : COMMENT_BODY,
+                    send_to: isReplying ? REPLY_SEND_TO : COMMENT_SEND_TO,
+                    SENT_FROM,
+                    REPLY_TO,
                 });
             }
             res.status(200).json({

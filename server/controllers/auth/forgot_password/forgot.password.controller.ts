@@ -37,15 +37,15 @@ export const forgotPassword = handleAsync(async function (
 
   const subject = "Password Reset Request";
   const send_to = email;
-  const sent_from = process.env.EMAIL_USER as string;
-  const reply_to = process.env.REPLY_TO as string;
+  const SENT_FROM = process.env.EMAIL_USER as string;
+  const REPLY_TO = process.env.REPLY_TO as string;
   const body = passwordResetEmail({
     username: user.firstName,
     url: resetUrl,
   });
 
   try {
-    sendEmail({ subject, body, send_to, sent_from, reply_to });
+    sendEmail({ subject, body, send_to, SENT_FROM, REPLY_TO });
     res.status(200).json({
       status: "success",
       token: resetToken,

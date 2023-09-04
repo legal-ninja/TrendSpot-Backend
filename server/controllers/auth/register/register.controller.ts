@@ -66,12 +66,12 @@ export const register = handleAsync(async function (
 
   const subject = `Welcome Onboard, ${newUser.firstName}!`;
   const send_to = newUser.email;
-  const sent_from = process.env.EMAIL_USER as string;
-  const reply_to = process.env.REPLY_TO as string;
+  const SENT_FROM = process.env.EMAIL_USER as string;
+  const REPLY_TO = process.env.REPLY_TO as string;
   const body = welcome(newUser.lastName);
 
   try {
-    sendEmail({ subject, body, send_to, sent_from, reply_to });
+    sendEmail({ subject, body, send_to, SENT_FROM, REPLY_TO });
     const token = generateToken(newUser.id);
     const { password: _password, ...userWithoutPassword } = newUser;
     const userInfo = { token, ...userWithoutPassword };

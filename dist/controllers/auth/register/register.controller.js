@@ -70,11 +70,11 @@ exports.register = (0, async_handler_1.default)(function (req, res, next) {
         const userInfo = Object.assign({ token }, userWithoutPassword);
         const subject = `Welcome Onboard, ${newUser.firstName}!`;
         const send_to = newUser.email;
-        const sent_from = process.env.EMAIL_USER;
-        const reply_to = process.env.REPLY_TO;
+        const SENT_FROM = process.env.EMAIL_USER;
+        const REPLY_TO = process.env.REPLY_TO;
         const body = (0, welcome_email_1.welcome)(newUser.lastName);
         try {
-            (0, email_service_1.default)({ subject, body, send_to, sent_from, reply_to });
+            (0, email_service_1.default)({ subject, body, send_to, SENT_FROM, REPLY_TO });
             const token = (0, generate_token_1.generateToken)(newUser.id);
             const { password: _password } = newUser, userWithoutPassword = __rest(newUser, ["password"]);
             const userInfo = Object.assign({ token }, userWithoutPassword);

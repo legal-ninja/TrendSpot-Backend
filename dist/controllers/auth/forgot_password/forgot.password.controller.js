@@ -39,14 +39,14 @@ exports.forgotPassword = (0, async_handler_1.default)(function (req, res, next) 
         const resetUrl = `${process.env.CLIENT_URL}/auth/reset-password/${resetToken}`;
         const subject = "Password Reset Request";
         const send_to = email;
-        const sent_from = process.env.EMAIL_USER;
-        const reply_to = process.env.REPLY_TO;
+        const SENT_FROM = process.env.EMAIL_USER;
+        const REPLY_TO = process.env.REPLY_TO;
         const body = (0, reset_email_1.passwordResetEmail)({
             username: user.firstName,
             url: resetUrl,
         });
         try {
-            (0, email_service_1.default)({ subject, body, send_to, sent_from, reply_to });
+            (0, email_service_1.default)({ subject, body, send_to, SENT_FROM, REPLY_TO });
             res.status(200).json({
                 status: "success",
                 token: resetToken,

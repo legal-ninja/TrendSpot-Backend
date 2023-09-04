@@ -125,7 +125,7 @@ const commentEmail = (firstName, url, message) => {
                                 <a
                             href="${url}"
                             style="
-                              background: #20e277;
+                              background: #CE5158;
                               text-decoration: none !important;
                               font-weight: 500;
                               margin-top: 35px;
