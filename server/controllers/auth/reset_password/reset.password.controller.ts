@@ -6,6 +6,8 @@ import prisma from "../../../lib/prisma.client";
 import { User } from "../../../models/types/user";
 import { genSaltSync, hashSync } from "bcryptjs";
 import parser from "ua-parser-js";
+import sendEmail from "../../../services/email.service";
+import { resetSuccess } from "../../../views/reset.success.email";
 
 export const resetPassword = handleAsync(async function (
   req: Request,
@@ -38,16 +40,6 @@ export const resetPassword = handleAsync(async function (
   const user: User | null = await prisma.user.findFirst({
     where: { id: existingToken?.userId },
   });
-
-  if (user?.isDeactivated) {
-    let errorMessage;
-    user.isDeactivatedByAdmin
-      ? (errorMessage =
-          "Your account has been deactivated by the admin. Please file an appeal through our contact channels")
-      : (errorMessage =
-          "Your account is currently deactivated, reactivate your account to continue");
-    return next(new AppError(errorMessage, 400));
-  }
 
   const salt = genSaltSync(10);
   const passwordHash = hashSync(newPassword, salt);
@@ -87,17 +79,17 @@ export const resetPassword = handleAsync(async function (
   const send_to = user?.email!;
   const sent_from = process.env.EMAIL_USER as string;
   const reply_to = process.env.REPLY_TO as string;
-  // const body = resetSuccess({
-  //   username: user?.lastName,
-  //   browser,
-  //   OS,
-  // });
+  const body = resetSuccess({
+    username: user?.lastName,
+    browser,
+    OS,
+  });
 
   try {
-    // sendEmail({ subject, body, send_to, sent_from, reply_to });
+    sendEmail({ subject, body, send_to, sent_from, reply_to });
     res.status(200).json({
       status: "success",
-      message: `Password reset successful!`,
+      message: `Your password has been reset`,
     });
   } catch (error) {
     res.status(500).json({

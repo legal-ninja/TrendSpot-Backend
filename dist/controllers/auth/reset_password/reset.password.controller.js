@@ -19,6 +19,8 @@ const crypto_1 = require("crypto");
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 const bcryptjs_1 = require("bcryptjs");
 const ua_parser_js_1 = __importDefault(require("ua-parser-js"));
+const email_service_1 = __importDefault(require("../../../services/email.service"));
+const reset_success_email_1 = require("../../../views/reset.success.email");
 exports.resetPassword = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const { newPassword, confirmNewPassword } = req.body;
@@ -41,15 +43,6 @@ exports.resetPassword = (0, async_handler_1.default)(function (req, res, next) {
         const user = yield prisma_client_1.default.user.findFirst({
             where: { id: existingToken === null || existingToken === void 0 ? void 0 : existingToken.userId },
         });
-        if (user === null || user === void 0 ? void 0 : user.isDeactivated) {
-            let errorMessage;
-            user.isDeactivatedByAdmin
-                ? (errorMessage =
-                    "Your account has been deactivated by the admin. Please file an appeal through our contact channels")
-                : (errorMessage =
-                    "Your account is currently deactivated, reactivate your account to continue");
-            return next(new global_error_1.AppError(errorMessage, 400));
-        }
         const salt = (0, bcryptjs_1.genSaltSync)(10);
         const passwordHash = (0, bcryptjs_1.hashSync)(newPassword, salt);
         yield prisma_client_1.default.user.update({
@@ -80,16 +73,16 @@ exports.resetPassword = (0, async_handler_1.default)(function (req, res, next) {
         const send_to = user === null || user === void 0 ? void 0 : user.email;
         const sent_from = process.env.EMAIL_USER;
         const reply_to = process.env.REPLY_TO;
-        // const body = resetSuccess({
-        //   username: user?.lastName,
-        //   browser,
-        //   OS,
-        // });
+        const body = (0, reset_success_email_1.resetSuccess)({
+            username: user === null || user === void 0 ? void 0 : user.lastName,
+            browser,
+            OS,
+        });
         try {
-            // sendEmail({ subject, body, send_to, sent_from, reply_to });
+            (0, email_service_1.default)({ subject, body, send_to, sent_from, reply_to });
             res.status(200).json({
                 status: "success",
-                message: `Password reset successful!`,
+                message: `Your password has been reset`,
             });
         }
         catch (error) {
