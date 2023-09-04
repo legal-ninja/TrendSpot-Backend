@@ -5,7 +5,9 @@ import { AppError } from "../../../helpers/global.error";
 import prisma from "../../../lib/prisma.client";
 import { User } from "../../../models/types/user";
 import { generateToken } from "../../../helpers/generate.token";
-import { log } from "console";
+
+import { welcome } from "../../../views/welcome.email";
+import sendEmail from "../../../services/email.service";
 
 export const register = handleAsync(async function (
   req: Request,
@@ -62,8 +64,25 @@ export const register = handleAsync(async function (
   const { password: _password, ...userWithoutPassword } = newUser;
   const userInfo = { token, ...userWithoutPassword };
 
-  res.status(200).json({
-    status: "success",
-    user: userInfo,
-  });
+  const subject = `Welcome Onboard, ${newUser.firstName}!`;
+  const send_to = newUser.email;
+  const sent_from = process.env.EMAIL_USER as string;
+  const reply_to = process.env.REPLY_TO as string;
+  const body = welcome(newUser.lastName);
+
+  try {
+    sendEmail({ subject, body, send_to, sent_from, reply_to });
+    const token = generateToken(newUser.id);
+    const { password: _password, ...userWithoutPassword } = newUser;
+    const userInfo = { token, ...userWithoutPassword };
+    res.status(200).json({
+      status: "success",
+      user: userInfo,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "fail",
+      message: `Something went wrong. Please try again.`,
+    });
+  }
 });

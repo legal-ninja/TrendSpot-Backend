@@ -29,6 +29,8 @@ const async_handler_1 = __importDefault(require("../../../helpers/async.handler"
 const global_error_1 = require("../../../helpers/global.error");
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 const generate_token_1 = require("../../../helpers/generate.token");
+const welcome_email_1 = require("../../../views/welcome.email");
+const email_service_1 = __importDefault(require("../../../services/email.service"));
 exports.register = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const { firstName, lastName, email, password, isAdmin, avatar } = req.body;
@@ -66,9 +68,26 @@ exports.register = (0, async_handler_1.default)(function (req, res, next) {
         const token = (0, generate_token_1.generateToken)(newUser.id);
         const { password: _password } = newUser, userWithoutPassword = __rest(newUser, ["password"]);
         const userInfo = Object.assign({ token }, userWithoutPassword);
-        res.status(200).json({
-            status: "success",
-            user: userInfo,
-        });
+        const subject = `Welcome Onboard, ${newUser.firstName}!`;
+        const send_to = newUser.email;
+        const sent_from = process.env.EMAIL_USER;
+        const reply_to = process.env.REPLY_TO;
+        const body = (0, welcome_email_1.welcome)(newUser.lastName);
+        try {
+            (0, email_service_1.default)({ subject, body, send_to, sent_from, reply_to });
+            const token = (0, generate_token_1.generateToken)(newUser.id);
+            const { password: _password } = newUser, userWithoutPassword = __rest(newUser, ["password"]);
+            const userInfo = Object.assign({ token }, userWithoutPassword);
+            res.status(200).json({
+                status: "success",
+                user: userInfo,
+            });
+        }
+        catch (error) {
+            res.status(500).json({
+                status: "fail",
+                message: `Something went wrong. Please try again.`,
+            });
+        }
     });
 });

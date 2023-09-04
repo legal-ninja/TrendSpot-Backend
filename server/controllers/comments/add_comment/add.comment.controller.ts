@@ -4,6 +4,9 @@ import { AUTHOR_FIELDS } from "../../../utils";
 import prisma from "../../../lib/prisma.client";
 import { AuthenticatedRequest } from "../../../models/types/auth";
 import { AppError } from "../../../helpers/global.error";
+import sendEmail from "../../../services/email.service";
+import { emailReply } from "../../../views/reply.email";
+import { commentEmail } from "../../../views/comment.email";
 
 export const addComment = handleAsync(async function (
   req: AuthenticatedRequest,
@@ -71,25 +74,33 @@ export const addComment = handleAsync(async function (
     },
   });
 
-  // const replySubject = `New Reply on your comment`;
-  // const reply_send_to = authorEmail;
-  // const commentSubject = `New Comment on your post`;
-  // const comment_send_to = authorEmail;
-  // const sent_from = process.env.EMAIL_USER as string;
-  // const reply_to = process.env.REPLY_TO as string;
-  // const replyBody = emailReply(post?.author.firstName!, path, message);
-  // const commentBody = commentEmail(commentAuthor?.firstName!, path, message);
+  const replySubject = `New Reply on your comment`;
+  const reply_send_to = authorEmail;
+  const commentSubject = `New Comment on your post`;
+  const comment_send_to = authorEmail;
+  const sent_from = process.env.EMAIL_USER as string;
+  const reply_to = process.env.REPLY_TO as string;
+  const replyBody = emailReply(
+    news?.author.firstName!,
+    "exp://172.20.10.10:19000",
+    message
+  );
+  const commentBody = commentEmail(
+    commentAuthor?.firstName!,
+    "exp://172.20.10.10:19000",
+    message
+  );
 
   try {
-    // if (authorEmail !== req.user?.email) {
-    //   sendEmail({
-    //     subject: isReplying ? replySubject : commentSubject,
-    //     body: isReplying ? replyBody : commentBody,
-    //     send_to: isReplying ? reply_send_to : comment_send_to,
-    //     sent_from,
-    //     reply_to,
-    //   });
-    // }
+    if (authorEmail !== req.user?.email) {
+      sendEmail({
+        subject: isReplying ? replySubject : commentSubject,
+        body: isReplying ? replyBody : commentBody,
+        send_to: isReplying ? reply_send_to : comment_send_to,
+        sent_from,
+        reply_to,
+      });
+    }
 
     res.status(200).json({
       status: "success",

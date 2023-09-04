@@ -75,11 +75,6 @@ export const resetSuccess = ({ username, browser, OS }: resetSuccessType) => {
                     </tr>
                     <tr>
                       <td style="padding: 0 35px">
-                      <img
-                        src="https://res.cloudinary.com/dwdsjbetu/image/upload/v1685817701/BYTES_LOGO_1_2_tvdree.png"
-                        alt="Bytes Logo"
-                        style="padding-bottom: 2rem; object-fit:cover;"
-                        />
                         <h1
                           style="
                             color: #1e1e2d;
@@ -110,7 +105,7 @@ export const resetSuccess = ({ username, browser, OS }: resetSuccessType) => {
                               margin: 0;
                             "
                           >
-                            You have successfully reset your BytesBlog password.
+                            You have successfully reset your TrendSpot password.
                           </p>
                           <br />
                           <p
@@ -163,7 +158,7 @@ export const resetSuccess = ({ username, browser, OS }: resetSuccessType) => {
                         <span style="text-align: left; font-size: 18px">
                           <p>
                             Regards,<br />
-                            BytesBlog team.
+                            TrendSpot team.
                           </p>
                         </span>
                       </td>
@@ -188,7 +183,7 @@ export const resetSuccess = ({ username, browser, OS }: resetSuccessType) => {
                       margin: 0 0 0;
                     "
                   >
-                  <strong> &copy; ${new Date().getFullYear()}. BytesBlog Inc</strong>
+                  <strong> &copy; ${new Date().getFullYear()}. TrendSpot Inc</strong>
                   </p>
                 </td>
               </tr>

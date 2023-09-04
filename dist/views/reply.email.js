@@ -74,12 +74,7 @@ const emailReply = (firstName, url, message) => {
                           <td style="height: 40px">&nbsp;</td>
                         </tr>
                         <tr>
-                          <td style="padding: 0 35px">
-                              <img
-                              src="https://res.cloudinary.com/dwdsjbetu/image/upload/v1685817701/BYTES_LOGO_1_2_tvdree.png"
-                              alt="Bytes Logo"
-                              style="padding-bottom: 2rem; object-fit:cover;"
-                          />
+                         
                             <h1
                               style="
                                 color: #1e1e2d;
@@ -166,7 +161,7 @@ const emailReply = (firstName, url, message) => {
                           margin: 0 0 0;
                         "
                       >
-                      <strong> &copy; ${new Date().getFullYear()}. Bytes Blog Inc.</strong>
+                      <strong> &copy; ${new Date().getFullYear()}. TrendSpot Inc.</strong>
                       </p>
                     </td>
                   </tr>

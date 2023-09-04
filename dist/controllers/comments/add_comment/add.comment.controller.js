@@ -17,8 +17,11 @@ const async_handler_1 = __importDefault(require("../../../helpers/async.handler"
 const utils_1 = require("../../../utils");
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 const global_error_1 = require("../../../helpers/global.error");
+const email_service_1 = __importDefault(require("../../../services/email.service"));
+const reply_email_1 = require("../../../views/reply.email");
+const comment_email_1 = require("../../../views/comment.email");
 exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
-    var _a, _b;
+    var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
         const { message, parentId, newsId, authorEmail, path, isReplying } = req.body;
         let missingFields = [];
@@ -65,24 +68,24 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
                 },
             },
         });
-        // const replySubject = `New Reply on your comment`;
-        // const reply_send_to = authorEmail;
-        // const commentSubject = `New Comment on your post`;
-        // const comment_send_to = authorEmail;
-        // const sent_from = process.env.EMAIL_USER as string;
-        // const reply_to = process.env.REPLY_TO as string;
-        // const replyBody = emailReply(post?.author.firstName!, path, message);
-        // const commentBody = commentEmail(commentAuthor?.firstName!, path, message);
+        const replySubject = `New Reply on your comment`;
+        const reply_send_to = authorEmail;
+        const commentSubject = `New Comment on your post`;
+        const comment_send_to = authorEmail;
+        const sent_from = process.env.EMAIL_USER;
+        const reply_to = process.env.REPLY_TO;
+        const replyBody = (0, reply_email_1.emailReply)(news === null || news === void 0 ? void 0 : news.author.firstName, "exp://172.20.10.10:19000", message);
+        const commentBody = (0, comment_email_1.commentEmail)(commentAuthor === null || commentAuthor === void 0 ? void 0 : commentAuthor.firstName, "exp://172.20.10.10:19000", message);
         try {
-            // if (authorEmail !== req.user?.email) {
-            //   sendEmail({
-            //     subject: isReplying ? replySubject : commentSubject,
-            //     body: isReplying ? replyBody : commentBody,
-            //     send_to: isReplying ? reply_send_to : comment_send_to,
-            //     sent_from,
-            //     reply_to,
-            //   });
-            // }
+            if (authorEmail !== ((_c = req.user) === null || _c === void 0 ? void 0 : _c.email)) {
+                (0, email_service_1.default)({
+                    subject: isReplying ? replySubject : commentSubject,
+                    body: isReplying ? replyBody : commentBody,
+                    send_to: isReplying ? reply_send_to : comment_send_to,
+                    sent_from,
+                    reply_to,
+                });
+            }
             res.status(200).json({
                 status: "success",
                 comment,

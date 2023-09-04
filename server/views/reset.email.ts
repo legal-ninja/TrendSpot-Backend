@@ -104,7 +104,7 @@ export const passwordResetEmail = ({ username, url }: passwordResetType) => {
                             margin: 0;
                           "
                         >
-                         This email was sent to you because you requested to reset your Trendspot password. Please click on the button below to create a new password.
+                         This email was sent to you because you requested to reset your TrendSpot password. Please click on the button below to create a new password.
                         
                         </p>
                         <br />
