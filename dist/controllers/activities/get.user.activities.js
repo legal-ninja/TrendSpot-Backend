@@ -16,7 +16,8 @@ exports.getUserActivities = void 0;
 const async_handler_1 = __importDefault(require("../../helpers/async.handler"));
 const prisma_client_1 = __importDefault(require("../../lib/prisma.client"));
 const utils_1 = require("../../utils");
-exports.getUserActivities = (0, async_handler_1.default)(function (req, res, next) {
+const client_1 = require("@prisma/client");
+exports.getUserActivities = (0, async_handler_1.default)(function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const activities = yield prisma_client_1.default.activity.findMany({
             where: {
@@ -27,6 +28,9 @@ exports.getUserActivities = (0, async_handler_1.default)(function (req, res, nex
                     select: Object.assign(Object.assign({}, utils_1.LONG_AUTHOR_FIELDS), { news: false }),
                 },
                 news: true,
+            },
+            orderBy: {
+                activityDate: client_1.Prisma.SortOrder.desc,
             },
         });
         res.status(200).json({

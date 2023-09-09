@@ -1,14 +1,13 @@
-import { NextFunction, Request, Response } from "express";
+import { Response } from "express";
 import handleAsync from "../../helpers/async.handler";
 import { AuthenticatedRequest } from "../../models/types/auth";
-import { AppError } from "../../helpers/global.error";
 import prisma from "../../lib/prisma.client";
 import { LONG_AUTHOR_FIELDS } from "../../utils";
+import { Prisma } from "@prisma/client";
 
 export const getUserActivities = handleAsync(async function (
   req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction
+  res: Response
 ) {
   const activities = await prisma.activity.findMany({
     where: {
@@ -19,6 +18,9 @@ export const getUserActivities = handleAsync(async function (
         select: { ...LONG_AUTHOR_FIELDS, news: false },
       },
       news: true,
+    },
+    orderBy: {
+      activityDate: Prisma.SortOrder.desc,
     },
   });
 
