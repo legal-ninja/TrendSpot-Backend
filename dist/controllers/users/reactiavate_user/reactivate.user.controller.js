@@ -40,6 +40,17 @@ exports.reActivateUser = (0, async_handler_1.default)(function (req, res, next) 
         });
         if (!existingUser)
             return next(new global_error_1.AppError("User could not be found", 404));
+        console.log(existingUser.isDeactivatedByAdmin);
+        // if (
+        //   existingUser.isDeactivatedByAdmin &&
+        //   req.user?.email !== "trendspot@admin.com"
+        // )
+        //   return next(
+        //     new AppError(
+        //       "Your account was deactivated by the admin. Please file an appeal to get your account reactivated",
+        //       401
+        //     )
+        //   );
         yield prisma_client_1.default.user.update({
             where: {
                 id: existingUser.id,

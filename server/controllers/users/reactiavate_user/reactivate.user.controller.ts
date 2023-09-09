@@ -20,6 +20,19 @@ export const reActivateUser = handleAsync(async function (
 
   if (!existingUser) return next(new AppError("User could not be found", 404));
 
+  console.log(existingUser.isDeactivatedByAdmin);
+
+  // if (
+  //   existingUser.isDeactivatedByAdmin &&
+  //   req.user?.email !== "trendspot@admin.com"
+  // )
+  //   return next(
+  //     new AppError(
+  //       "Your account was deactivated by the admin. Please file an appeal to get your account reactivated",
+  //       401
+  //     )
+  //   );
+
   await prisma.user.update({
     where: {
       id: existingUser.id,

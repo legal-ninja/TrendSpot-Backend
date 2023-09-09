@@ -16,6 +16,7 @@ model User {
    password String
    bio String
    isAdmin Boolean @default(false)
+   isSuperAdmin Boolean @default(false)
    isDeactivated Boolean @default(false)
    isDeactivatedByAdmin Boolean @default(false)
    comments Comment[]

@@ -40,7 +40,7 @@ exports.deActivateUser = (0, async_handler_1.default)(function (req, res, next) 
         });
         if (!existingUser)
             return next(new global_error_1.AppError("User could not be found", 404));
-        const isDeactivatedByAdmin = ((_a = req.user) === null || _a === void 0 ? void 0 : _a.isAdmin) ? true : false;
+        const isDeactivatedByAdmin = ((_a = req.user) === null || _a === void 0 ? void 0 : _a.isSuperAdmin) ? true : false;
         yield prisma_client_1.default.user.update({
             where: {
                 id: existingUser.id,

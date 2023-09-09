@@ -19,7 +19,7 @@ export const deActivateUser = handleAsync(async function (
   });
 
   if (!existingUser) return next(new AppError("User could not be found", 404));
-  const isDeactivatedByAdmin = req.user?.isAdmin ? true : false;
+  const isDeactivatedByAdmin = req.user?.isSuperAdmin ? true : false;
 
   await prisma.user.update({
     where: {

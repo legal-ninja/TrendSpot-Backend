@@ -11,4 +11,5 @@ export interface User {
   isAdmin: boolean;
   isDeactivated: boolean;
   isDeactivatedByAdmin: boolean;
+  isSuperAdmin: boolean;
 }
