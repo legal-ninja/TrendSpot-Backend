@@ -25,6 +25,15 @@ export const verifyAuth = handleAsync(
       const currentUser: User | null = await prisma.user.findFirst({
         where: { id: verifiedToken.id },
       });
+
+      if (currentUser?.email === "guestuser@trendspot.com") {
+        return next(
+          new AppError(
+            "The guest account is meant for browsing the app alone.",
+            401
+          )
+        );
+      }
       (req as AuthenticatedRequest).user = currentUser;
     } catch (error) {
       return next(new AppError("Session expired. Please log in again", 401));

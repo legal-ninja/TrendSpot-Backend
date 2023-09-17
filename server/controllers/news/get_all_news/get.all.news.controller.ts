@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import handleAsync from "../../../helpers/async.handler";
 import prisma from "../../../lib/prisma.client";
 import { LIKE_FIELDS, LONG_AUTHOR_FIELDS } from "../../../utils";
@@ -6,8 +6,7 @@ import { Prisma } from "@prisma/client";
 
 export const getAllNews = handleAsync(async function (
   req: Request,
-  res: Response,
-  next: NextFunction
+  res: Response
 ) {
   const news = await prisma.news.findMany({
     include: {

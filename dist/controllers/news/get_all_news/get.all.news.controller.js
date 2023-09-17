@@ -17,7 +17,7 @@ const async_handler_1 = __importDefault(require("../../../helpers/async.handler"
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 const utils_1 = require("../../../utils");
 const client_1 = require("@prisma/client");
-exports.getAllNews = (0, async_handler_1.default)(function (req, res, next) {
+exports.getAllNews = (0, async_handler_1.default)(function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const news = yield prisma_client_1.default.news.findMany({
             include: {
