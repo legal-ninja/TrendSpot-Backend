@@ -39,7 +39,7 @@ router.put(
 router.use(verifyAdmin);
 
 router.route("/").get(getUsers);
-router.route("/:userId").get(getSingleUser).put(updateUser);
+router.route("/:userId").get(getSingleUser).put(verifyGuest, updateUser);
 router.put("/account/toggle-admin-status", verifyGuest, toggleAdminStatus);
 
 export default router;

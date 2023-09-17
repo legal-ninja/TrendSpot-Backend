@@ -20,6 +20,6 @@ router.put("/update-me", account_status_1.verifyAccountStatus, auth_middleware_1
 router.put("/account/change-password", account_status_1.verifyAccountStatus, auth_middleware_1.verifyAuth, verifyGuest_1.verifyGuest, change_password_controller_1.changePassword);
 router.use(auth_middleware_1.verifyAdmin);
 router.route("/").get(get_users_controller_1.getUsers);
-router.route("/:userId").get(get_single_user_1.getSingleUser).put(update_user_controller_1.updateUser);
+router.route("/:userId").get(get_single_user_1.getSingleUser).put(verifyGuest_1.verifyGuest, update_user_controller_1.updateUser);
 router.put("/account/toggle-admin-status", verifyGuest_1.verifyGuest, user_admin_status_controller_1.toggleAdminStatus);
 exports.default = router;
