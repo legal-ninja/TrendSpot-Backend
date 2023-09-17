@@ -29,9 +29,6 @@ exports.verifyAuth = (0, async_handler_1.default)((req, res, next) => __awaiter(
         const currentUser = yield prisma_client_1.default.user.findFirst({
             where: { id: verifiedToken.id },
         });
-        if ((currentUser === null || currentUser === void 0 ? void 0 : currentUser.email) === "guestuser@trendspot.com") {
-            return next(new global_error_1.AppError("The guest account is meant for browsing the app alone.", 401));
-        }
         req.user = currentUser;
     }
     catch (error) {

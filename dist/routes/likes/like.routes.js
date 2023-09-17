@@ -7,9 +7,10 @@ const toggle_post_like_1 = require("../../controllers/likes/toggle_post_like/tog
 const get_user_likes_controller_1 = require("../../controllers/likes/get_user_likes/get.user.likes.controller");
 const toggle_comment_like_1 = require("../../controllers/likes/toggle_comment_like/toggle.comment.like");
 const get_news_likes_controller_1 = require("../../controllers/likes/get_news_likes/get.news.likes.controller");
+const verifyGuest_1 = require("../../middleware/verifyGuest");
 const router = (0, express_1.Router)();
-router.post("/togglePostLike/:newsId", auth_middleware_1.verifyAuth, account_status_1.verifyAccountStatus, toggle_post_like_1.togglePostLike);
-router.post("/toggleCommentLike/:commentId", auth_middleware_1.verifyAuth, account_status_1.verifyAccountStatus, toggle_comment_like_1.toggleCommentLike);
+router.post("/togglePostLike/:newsId", auth_middleware_1.verifyAuth, account_status_1.verifyAccountStatus, verifyGuest_1.verifyGuest, toggle_post_like_1.togglePostLike);
+router.post("/toggleCommentLike/:commentId", auth_middleware_1.verifyAuth, account_status_1.verifyAccountStatus, verifyGuest_1.verifyGuest, toggle_comment_like_1.toggleCommentLike);
 router.get("/", auth_middleware_1.verifyAuth, get_user_likes_controller_1.getUserLikes);
 router.get("/news/:newsId", get_news_likes_controller_1.getNewsLikes);
 exports.default = router;

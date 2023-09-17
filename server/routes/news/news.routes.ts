@@ -8,6 +8,7 @@ import { verifyAdmin, verifyAuth } from "../../middleware/auth.middleware";
 import { verifyAccountStatus } from "../../middleware/account.status";
 import { getExternalNews } from "../../controllers/news/get_external_news/get.external.news.controller";
 import { getUserNews } from "../../controllers/news/get_user_news/get.user.news.controller";
+import { verifyGuest } from "../../middleware/verifyGuest";
 
 const router = Router();
 
@@ -16,11 +17,17 @@ router.get("/user-news/:userId", getUserNews);
 router
   .route("/")
   .get(getAllNews)
-  .post(verifyAuth, verifyAccountStatus, addNews);
+  .post(verifyAuth, verifyAccountStatus, verifyGuest, addNews);
 router
   .route("/:slug/:newsId")
   .get(getSingleNews)
-  .put(verifyAuth, verifyAccountStatus, updateNews)
-  .delete(verifyAuth, verifyAdmin, verifyAccountStatus, deleteNews);
+  .put(verifyAuth, verifyAccountStatus, verifyGuest, updateNews)
+  .delete(
+    verifyAuth,
+    verifyAdmin,
+    verifyAccountStatus,
+    verifyGuest,
+    deleteNews
+  );
 
 export default router;

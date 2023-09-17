@@ -6,13 +6,24 @@ import { resetPassword } from "../../controllers/auth/reset_password/reset.passw
 import { verifyAccountStatus } from "../../middleware/account.status";
 import { checAuthSession } from "../../controllers/auth/check_auth_status/check.auth.status";
 import { verifyAuth } from "../../middleware/auth.middleware";
+import { verifyGuest } from "../../middleware/verifyGuest";
 
 const router = Router();
 
 router.post("/register", register);
 router.post("/signin", signin);
-router.post("/forgot-password", verifyAccountStatus, forgotPassword);
-router.post("/reset-password/:token", verifyAccountStatus, resetPassword);
+router.post(
+  "/forgot-password",
+  verifyAccountStatus,
+  verifyGuest,
+  forgotPassword
+);
+router.post(
+  "/reset-password/:token",
+  verifyAccountStatus,
+  verifyGuest,
+  resetPassword
+);
 router.post("/check-auth-session", checAuthSession);
 
 export default router;

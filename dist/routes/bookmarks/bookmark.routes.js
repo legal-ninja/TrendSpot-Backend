@@ -6,8 +6,9 @@ const get_user_bookmarks_controller_1 = require("../../controllers/bookmarks/get
 const account_status_1 = require("../../middleware/account.status");
 const remove_bookmark_controller_1 = require("../../controllers/bookmarks/remove_bookmark/remove.bookmark.controller");
 const toggle_bookmark_controller_1 = require("../../controllers/bookmarks/toggle_bookmark/toggle.bookmark.controller");
+const verifyGuest_1 = require("../../middleware/verifyGuest");
 const router = (0, express_1.Router)();
 router.get("/", auth_middleware_1.verifyAuth, get_user_bookmarks_controller_1.getUserBookmarks);
-router.delete("/remove/:bookmarkId", auth_middleware_1.verifyAuth, account_status_1.verifyAccountStatus, remove_bookmark_controller_1.removeFromBookmarks);
-router.post("/toggleBookmark/:newsId", auth_middleware_1.verifyAuth, account_status_1.verifyAccountStatus, toggle_bookmark_controller_1.toggleBookmark);
+router.delete("/remove/:bookmarkId", auth_middleware_1.verifyAuth, account_status_1.verifyAccountStatus, verifyGuest_1.verifyGuest, remove_bookmark_controller_1.removeFromBookmarks);
+router.post("/toggleBookmark/:newsId", auth_middleware_1.verifyAuth, account_status_1.verifyAccountStatus, verifyGuest_1.verifyGuest, toggle_bookmark_controller_1.toggleBookmark);
 exports.default = router;

@@ -5,6 +5,7 @@ import { togglePostLike } from "../../controllers/likes/toggle_post_like/toggle.
 import { getUserLikes } from "../../controllers/likes/get_user_likes/get.user.likes.controller";
 import { toggleCommentLike } from "../../controllers/likes/toggle_comment_like/toggle.comment.like";
 import { getNewsLikes } from "../../controllers/likes/get_news_likes/get.news.likes.controller";
+import { verifyGuest } from "../../middleware/verifyGuest";
 
 const router = Router();
 
@@ -12,6 +13,7 @@ router.post(
   "/togglePostLike/:newsId",
   verifyAuth,
   verifyAccountStatus,
+  verifyGuest,
   togglePostLike
 );
 
@@ -19,6 +21,7 @@ router.post(
   "/toggleCommentLike/:commentId",
   verifyAuth,
   verifyAccountStatus,
+  verifyGuest,
   toggleCommentLike
 );
 
