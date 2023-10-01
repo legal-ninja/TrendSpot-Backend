@@ -4,13 +4,14 @@ import { AuthenticatedRequest } from "../../../../models/types/auth";
 import { AppError } from "../../../../helpers/global.error";
 import prisma from "../../../../lib/prisma.client";
 import { compare, genSaltSync, hashSync } from "bcryptjs";
+import sendPushNotification from "../../../../helpers/push.noification";
 
 export const changePassword = handleAsync(async function (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) {
-  const { oldPassword, newPassword, confirmNewPassword } = req.body;
+  const { oldPassword, newPassword, confirmNewPassword, token } = req.body;
   const currentUser = await prisma.user.findFirst({
     where: {
       id: req.user?.id,
@@ -42,6 +43,12 @@ export const changePassword = handleAsync(async function (
       action: "update account password",
       userId: req.user?.id!,
     },
+  });
+
+  await sendPushNotification({
+    token,
+    title: "Password Changed",
+    body: `Hey ${currentUser.firstName}, Your TrendSpot password has been changed.`,
   });
 
   res.status(200).json({

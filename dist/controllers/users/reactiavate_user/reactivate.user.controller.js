@@ -27,10 +27,11 @@ exports.reActivateUser = void 0;
 const async_handler_1 = __importDefault(require("../../../helpers/async.handler"));
 const global_error_1 = require("../../../helpers/global.error");
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
+const push_noification_1 = __importDefault(require("../../../helpers/push.noification"));
 exports.reActivateUser = (0, async_handler_1.default)(function (req, res, next) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        const { userId } = req.body;
+        const { userId, token } = req.body;
         if (!userId)
             return next(new global_error_1.AppError("Please specify the user id", 404));
         const existingUser = yield prisma_client_1.default.user.findFirst({
@@ -67,6 +68,11 @@ exports.reActivateUser = (0, async_handler_1.default)(function (req, res, next) 
                 action: "reactivate account",
                 userId: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
             },
+        });
+        yield (0, push_noification_1.default)({
+            token,
+            title: "Account Reactivated",
+            body: `Hey ${existingUser.firstName}, You just reactivated your TrendSpot account! You are back up and running!`,
         });
         const modifiedUser = Object.assign(Object.assign({}, existingUser), { isDeactivated: false, isDeactivatedByAdmin: false });
         const { password } = modifiedUser, userInfo = __rest(modifiedUser, ["password"]);

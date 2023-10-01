@@ -10,7 +10,6 @@ import commentRouter from "./routes/comments/comment.routes";
 import likeRouter from "./routes/likes/like.routes";
 import bookmarkRouter from "./routes/bookmarks/bookmark.routes";
 import activityRouter from "./routes/activities/activities.routes";
-import prisma from "./lib/prisma.client";
 
 const app = express();
 

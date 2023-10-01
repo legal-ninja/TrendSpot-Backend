@@ -3,13 +3,14 @@ import handleAsync from "../../../helpers/async.handler";
 import { AppError } from "../../../helpers/global.error";
 import { AuthenticatedRequest } from "../../../models/types/auth";
 import prisma from "../../../lib/prisma.client";
+import sendPushNotification from "../../../helpers/push.noification";
 
 export const deActivateUser = handleAsync(async function (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) {
-  const { userId } = req.body;
+  const { userId, token } = req.body;
   if (!userId) return next(new AppError("Please specify the user id", 404));
 
   const existingUser = await prisma.user.findFirst({
@@ -38,6 +39,12 @@ export const deActivateUser = handleAsync(async function (
       action: "deactivate account",
       userId: req.user?.id!,
     },
+  });
+
+  await sendPushNotification({
+    token,
+    title: "Account Deactivated",
+    body: `Hey ${existingUser.firstName}, You just deactivated your TrendSpot account. You can always change this settig later.`,
   });
 
   const modifiedUser = {

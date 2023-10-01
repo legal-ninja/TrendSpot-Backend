@@ -17,10 +17,11 @@ const async_handler_1 = __importDefault(require("../../../helpers/async.handler"
 const global_error_1 = require("../../../helpers/global.error");
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 const slugify_1 = require("../../../helpers/slugify");
+const push_noification_1 = __importDefault(require("../../../helpers/push.noification"));
 exports.addNews = (0, async_handler_1.default)(function (req, res, next) {
-    var _a, _b;
+    var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
-        const { title, content, image, readTime, category } = req.body;
+        const { title, content, image, readTime, category, token } = req.body;
         let missingFields = [];
         let bodyObject = { title, content, image, readTime, category };
         for (let field in bodyObject) {
@@ -49,6 +50,11 @@ exports.addNews = (0, async_handler_1.default)(function (req, res, next) {
                 action: "add",
                 userId: (_b = req.user) === null || _b === void 0 ? void 0 : _b.id,
             },
+        });
+        yield (0, push_noification_1.default)({
+            token,
+            title: "News Published",
+            body: `Hey ${(_c = req.user) === null || _c === void 0 ? void 0 : _c.firstName}, Your news has been published!`,
         });
         res.status(200).json({
             status: "success",

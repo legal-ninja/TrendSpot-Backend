@@ -4,13 +4,14 @@ import { AppError } from "../../../helpers/global.error";
 import prisma from "../../../lib/prisma.client";
 import { slugify } from "../../../helpers/slugify";
 import { AuthenticatedRequest } from "../../../models/types/auth";
+import sendPushNotification from "../../../helpers/push.noification";
 
 export const addNews = handleAsync(async function (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) {
-  const { title, content, image, readTime, category } = req.body;
+  const { title, content, image, readTime, category, token } = req.body;
 
   let missingFields = [];
   let bodyObject = { title, content, image, readTime, category };
@@ -51,6 +52,12 @@ export const addNews = handleAsync(async function (
       action: "add",
       userId: req.user?.id!,
     },
+  });
+
+  await sendPushNotification({
+    token,
+    title: "News Published",
+    body: `Hey ${req.user?.firstName}, Your news has been published!`,
   });
 
   res.status(200).json({

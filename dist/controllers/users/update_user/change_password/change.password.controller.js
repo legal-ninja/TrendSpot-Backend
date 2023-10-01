@@ -17,10 +17,11 @@ const async_handler_1 = __importDefault(require("../../../../helpers/async.handl
 const global_error_1 = require("../../../../helpers/global.error");
 const prisma_client_1 = __importDefault(require("../../../../lib/prisma.client"));
 const bcryptjs_1 = require("bcryptjs");
+const push_noification_1 = __importDefault(require("../../../../helpers/push.noification"));
 exports.changePassword = (0, async_handler_1.default)(function (req, res, next) {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
-        const { oldPassword, newPassword, confirmNewPassword } = req.body;
+        const { oldPassword, newPassword, confirmNewPassword, token } = req.body;
         const currentUser = yield prisma_client_1.default.user.findFirst({
             where: {
                 id: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
@@ -48,6 +49,11 @@ exports.changePassword = (0, async_handler_1.default)(function (req, res, next) 
                 action: "update account password",
                 userId: (_c = req.user) === null || _c === void 0 ? void 0 : _c.id,
             },
+        });
+        yield (0, push_noification_1.default)({
+            token,
+            title: "Password Changed",
+            body: `Hey ${currentUser.firstName}, Your TrendSpot password has been changed.`,
         });
         res.status(200).json({
             status: "success",

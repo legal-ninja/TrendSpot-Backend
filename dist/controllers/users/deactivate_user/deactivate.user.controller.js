@@ -27,10 +27,11 @@ exports.deActivateUser = void 0;
 const async_handler_1 = __importDefault(require("../../../helpers/async.handler"));
 const global_error_1 = require("../../../helpers/global.error");
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
+const push_noification_1 = __importDefault(require("../../../helpers/push.noification"));
 exports.deActivateUser = (0, async_handler_1.default)(function (req, res, next) {
     var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
-        const { userId } = req.body;
+        const { userId, token } = req.body;
         if (!userId)
             return next(new global_error_1.AppError("Please specify the user id", 404));
         const existingUser = yield prisma_client_1.default.user.findFirst({
@@ -57,6 +58,11 @@ exports.deActivateUser = (0, async_handler_1.default)(function (req, res, next) 
                 action: "deactivate account",
                 userId: (_b = req.user) === null || _b === void 0 ? void 0 : _b.id,
             },
+        });
+        yield (0, push_noification_1.default)({
+            token,
+            title: "Account Deactivated",
+            body: `Hey ${existingUser.firstName}, You just deactivated your TrendSpot account. You can always change this settig later.`,
         });
         const modifiedUser = Object.assign(Object.assign({}, existingUser), { isDeactivated: true, isDeactivatedByAdmin });
         const { password } = modifiedUser, userInfo = __rest(modifiedUser, ["password"]);
