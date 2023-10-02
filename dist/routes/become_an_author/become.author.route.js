@@ -6,5 +6,5 @@ const auth_middleware_1 = require("../../middleware/auth.middleware");
 const accept_author_request_1 = require("../../controllers/become_an_author/accept.author.request");
 const router = (0, express_1.Router)();
 router.post("/", auth_middleware_1.verifyAuth, become_author_controller_1.becomeAnAuthor);
-router.post("/accept/:id", auth_middleware_1.verifyAuth, accept_author_request_1.acceptAuthorRequest);
+router.post("/accept/:requestId/:userId", auth_middleware_1.verifyAuth, accept_author_request_1.acceptAuthorRequest);
 exports.default = router;

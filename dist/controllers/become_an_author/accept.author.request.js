@@ -21,8 +21,13 @@ const become_author_accepted_email_1 = require("../../views/become.author.accept
 exports.acceptAuthorRequest = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const userToUpdate = yield prisma_client_1.default.user.findFirst({
-            where: { id: req.params.id },
+            where: { id: req.params.userId },
         });
+        const requestToAccept = yield prisma_client_1.default.user.findFirst({
+            where: { id: req.params.requestId },
+        });
+        if (!requestToAccept)
+            return next(new global_error_1.AppError("Become and Author request not found.", 404));
         if (!userToUpdate)
             return next(new global_error_1.AppError("User not found.", 404));
         yield prisma_client_1.default.authorRequest.update({

@@ -130,6 +130,7 @@ model AuthorRequest {
   lastName String
   email String
   avatar String
+  isAccepted Boolean @default(false)
   actionTaken Boolean @default(false)
 
   @@map(name: "authorRequest")

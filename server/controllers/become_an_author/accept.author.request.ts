@@ -13,9 +13,15 @@ export const acceptAuthorRequest = handleAsync(async function (
   next: NextFunction
 ) {
   const userToUpdate = await prisma.user.findFirst({
-    where: { id: req.params.id },
+    where: { id: req.params.userId },
   });
 
+  const requestToAccept = await prisma.user.findFirst({
+    where: { id: req.params.requestId },
+  });
+
+  if (!requestToAccept)
+    return next(new AppError("Become and Author request not found.", 404));
   if (!userToUpdate) return next(new AppError("User not found.", 404));
 
   await prisma.authorRequest.update({
