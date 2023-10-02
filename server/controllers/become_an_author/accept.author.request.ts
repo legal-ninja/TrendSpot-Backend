@@ -7,6 +7,7 @@ import sendEmail from "../../services/email.service";
 import prisma from "../../lib/prisma.client";
 import { becomeAuthorAcceptedEmail } from "../../views/become.author.accepted.email";
 import { becomeAuthorRejectedEmail } from "../../views/become.author.rejected.email";
+import sendPushNotification from "../../services/push.notification";
 
 export const acceptAuthorRequest = handleAsync(async function (
   req: AuthenticatedRequest,
@@ -51,6 +52,18 @@ export const acceptAuthorRequest = handleAsync(async function (
       isAuthor: requestWasAccepted ? true : false,
     },
   });
+
+  requestWasAccepted
+    ? await sendPushNotification({
+        token: userToUpdate.pushToken || "",
+        title: "Author Request Accepted",
+        body: `Hey ${userToUpdate.firstName}, Your request to become an author on TrendSpot has been accepted! Refresh app to see changes.`,
+      })
+    : await sendPushNotification({
+        token: userToUpdate.pushToken || "",
+        title: "Author Request Rejected",
+        body: `Hey ${userToUpdate.firstName}, Your request to become an author on TrendSpot has been rejected.`,
+      });
 
   const subject = "An Update on your request Become An Author on TrendSpot";
   const SENT_FROM = process.env.EMAIL_USER as string;

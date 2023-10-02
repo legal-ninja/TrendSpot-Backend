@@ -8,6 +8,7 @@ export interface User {
   bio: string;
   joinedAt: Date;
   lastUpdated: Date;
+  isAuthor: string;
   isAdmin: boolean;
   isDeactivated: boolean;
   isDeactivatedByAdmin: boolean;

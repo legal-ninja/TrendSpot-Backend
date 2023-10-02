@@ -19,6 +19,7 @@ const email_service_1 = __importDefault(require("../../services/email.service"))
 const prisma_client_1 = __importDefault(require("../../lib/prisma.client"));
 const become_author_accepted_email_1 = require("../../views/become.author.accepted.email");
 const become_author_rejected_email_1 = require("../../views/become.author.rejected.email");
+const push_notification_1 = __importDefault(require("../../services/push.notification"));
 exports.acceptAuthorRequest = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const { response } = req.body;
@@ -52,6 +53,17 @@ exports.acceptAuthorRequest = (0, async_handler_1.default)(function (req, res, n
                 isAuthor: requestWasAccepted ? true : false,
             },
         });
+        requestWasAccepted
+            ? yield (0, push_notification_1.default)({
+                token: userToUpdate.pushToken || "",
+                title: "Author Request Accepted",
+                body: `Hey ${userToUpdate.firstName}, Your request to become an author on TrendSpot has been accepted! Refresh app to see changes.`,
+            })
+            : yield (0, push_notification_1.default)({
+                token: userToUpdate.pushToken || "",
+                title: "Author Request Rejected",
+                body: `Hey ${userToUpdate.firstName}, Your request to become an author on TrendSpot has been rejected.`,
+            });
         const subject = "An Update on your request Become An Author on TrendSpot";
         const SENT_FROM = process.env.EMAIL_USER;
         const REPLY_TO = process.env.REPLY_TO;

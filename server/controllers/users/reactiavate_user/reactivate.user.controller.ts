@@ -21,8 +21,6 @@ export const reActivateUser = handleAsync(async function (
 
   if (!existingUser) return next(new AppError("User could not be found", 404));
 
-  console.log(existingUser.isDeactivatedByAdmin);
-
   // if (
   //   existingUser.isDeactivatedByAdmin &&
   //   req.user?.email !== "trendspot@admin.com"

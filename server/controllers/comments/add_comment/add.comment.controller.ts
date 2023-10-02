@@ -15,8 +15,6 @@ export const addComment = handleAsync(async function (
 ) {
   const { message, parentId, newsId, authorEmail, path, isReplying } = req.body;
 
-  console.log({ path });
-
   let missingFields = [];
   let bodyObject = { message, newsId, authorEmail, path };
 

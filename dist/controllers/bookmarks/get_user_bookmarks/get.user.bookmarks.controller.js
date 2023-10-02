@@ -18,8 +18,6 @@ const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 const utils_1 = require("../../../utils");
 exports.getUserBookmarks = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("heree");
-        console.log(req.query.userId);
         const userBookmarks = yield prisma_client_1.default.bookmark.findMany({
             where: {
                 userId: req.query.userId,
@@ -34,7 +32,6 @@ exports.getUserBookmarks = (0, async_handler_1.default)(function (req, res, next
                 },
             },
         });
-        console.log({ userBookmarks });
         res.status(200).json({
             status: "success",
             bookmarks: userBookmarks,

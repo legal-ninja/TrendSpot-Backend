@@ -19,15 +19,16 @@ const become_author_email_1 = require("../../views/become.author.email");
 const email_service_1 = __importDefault(require("../../services/email.service"));
 const prisma_client_1 = __importDefault(require("../../lib/prisma.client"));
 exports.becomeAnAuthor = (0, async_handler_1.default)(function (req, res, next) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
     return __awaiter(this, void 0, void 0, function* () {
         const userIsAdmin = (_a = req.user) === null || _a === void 0 ? void 0 : _a.isAdmin;
         if (userIsAdmin)
             return next(new global_error_1.AppError("Admins cannot request to become an author", 403));
-        const adminEmails = [process.env.ADMIN_EMAIL_ONE];
+        if ((_b = req.user) === null || _b === void 0 ? void 0 : _b.isAuthor)
+            return next(new global_error_1.AppError("You are already an author", 403));
         const previousRequests = yield prisma_client_1.default.authorRequest.findMany({
             where: {
-                userId: (_b = req.user) === null || _b === void 0 ? void 0 : _b.id,
+                userId: (_c = req.user) === null || _c === void 0 ? void 0 : _c.id,
             },
         });
         const unansweredRequests = previousRequests.filter((request) => request.actionTaken === false);
@@ -35,19 +36,20 @@ exports.becomeAnAuthor = (0, async_handler_1.default)(function (req, res, next) 
             return next(new global_error_1.AppError("You have raised a request that has not been responded to yet, Please wait till you get a response.", 403));
         yield prisma_client_1.default.authorRequest.create({
             data: {
-                userId: (_c = req.user) === null || _c === void 0 ? void 0 : _c.id,
-                firstName: (_d = req.user) === null || _d === void 0 ? void 0 : _d.firstName,
-                lastName: (_e = req.user) === null || _e === void 0 ? void 0 : _e.lastName,
-                email: (_f = req.user) === null || _f === void 0 ? void 0 : _f.email,
-                avatar: (_g = req.user) === null || _g === void 0 ? void 0 : _g.avatar,
+                userId: (_d = req.user) === null || _d === void 0 ? void 0 : _d.id,
+                firstName: (_e = req.user) === null || _e === void 0 ? void 0 : _e.firstName,
+                lastName: (_f = req.user) === null || _f === void 0 ? void 0 : _f.lastName,
+                email: (_g = req.user) === null || _g === void 0 ? void 0 : _g.email,
+                avatar: (_h = req.user) === null || _h === void 0 ? void 0 : _h.avatar,
             },
         });
+        const adminEmails = [process.env.ADMIN_EMAIL_ONE];
         const subject = "Become An Author Request";
         const SENT_FROM = process.env.EMAIL_USER;
         const REPLY_TO = process.env.REPLY_TO;
         const body = (0, become_author_email_1.becomeAuthorEmail)({
-            firstName: (_h = req.user) === null || _h === void 0 ? void 0 : _h.firstName,
-            lastName: (_j = req.user) === null || _j === void 0 ? void 0 : _j.lastName,
+            firstName: (_j = req.user) === null || _j === void 0 ? void 0 : _j.firstName,
+            lastName: (_k = req.user) === null || _k === void 0 ? void 0 : _k.lastName,
             url: "https://trend-spot-admin.vercel.app/notifications",
         });
         adminEmails.map((email) => {

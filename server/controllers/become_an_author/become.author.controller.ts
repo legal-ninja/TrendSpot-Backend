@@ -16,7 +16,8 @@ export const becomeAnAuthor = handleAsync(async function (
   if (userIsAdmin)
     return next(new AppError("Admins cannot request to become an author", 403));
 
-  const adminEmails = [process.env.ADMIN_EMAIL_ONE as string];
+  if (req.user?.isAuthor)
+    return next(new AppError("You are already an author", 403));
 
   const previousRequests = await prisma.authorRequest.findMany({
     where: {
@@ -45,6 +46,8 @@ export const becomeAnAuthor = handleAsync(async function (
       avatar: req.user?.avatar!,
     },
   });
+
+  const adminEmails = [process.env.ADMIN_EMAIL_ONE as string];
 
   const subject = "Become An Author Request";
   const SENT_FROM = process.env.EMAIL_USER as string;

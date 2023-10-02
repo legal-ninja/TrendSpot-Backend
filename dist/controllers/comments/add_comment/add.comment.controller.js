@@ -24,7 +24,6 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
         const { message, parentId, newsId, authorEmail, path, isReplying } = req.body;
-        console.log({ path });
         let missingFields = [];
         let bodyObject = { message, newsId, authorEmail, path };
         for (let field in bodyObject) {

@@ -17,8 +17,6 @@ const router = Router();
 
 router.route("/").get(getUsers);
 
-router.use(verifyAuth);
-
 router.put("/account/deactivate", verifyAuth, verifyGuest, deActivateUser);
 router.put("/account/reactivate", verifyAuth, verifyGuest, reActivateUser);
 router.put(
@@ -36,10 +34,17 @@ router.put(
   changePassword
 );
 
-router.use(verifyAdmin);
-
-router.route("/").get(getUsers);
-router.route("/:userId").get(getSingleUser).put(verifyGuest, updateUser);
-router.put("/account/toggle-admin-status", verifyGuest, toggleAdminStatus);
+router.route("/").get(verifyAuth, verifyAdmin, getUsers);
+router
+  .route("/:userId")
+  .get(getSingleUser)
+  .put(verifyAuth, verifyGuest, updateUser);
+router.put(
+  "/account/toggle-admin-status",
+  verifyAuth,
+  verifyAdmin,
+  verifyGuest,
+  toggleAdminStatus
+);
 
 export default router;
