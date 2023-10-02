@@ -111,7 +111,7 @@ const becomeAuthorAcceptedEmail = (firstName, lastName) => {
                             <br><br>
                             Please ensure to go through our Terms of Use and Privacy Policy to ensure your News follow the proper guidelines.
                              <br/><br>
-                             <b>Note:</b> You would nneed to log out of the application and log in to see changes
+                             
                              <span style="text-align: left; font-size: 18px">
                             <p>
                               Regards,<br />
