@@ -106,10 +106,10 @@ const becomeAuthorEmail = ({ firstName, lastName, url, }) => {
                                 "
                               >
                              ${firstName} ${lastName} has requested to become an author on TrendSpot. 
-                             <br/><br/>
-                             This requets needs your response or the response of other admins. 
-                             <br/>
-                             To respond to this, follow the button below to proceed.
+                             <br><br>
+                             This request needs your response or the response of other admins. 
+                             <br>
+                             To respond to this request, please follow the button below.
                               </p>
                               <br />
                               <p

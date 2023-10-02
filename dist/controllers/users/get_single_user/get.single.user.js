@@ -26,6 +26,7 @@ exports.getSingleUser = (0, async_handler_1.default)(function (req, res, next) {
                 news: true,
             },
         });
+        console.log({ user });
         if (!user)
             return next(new global_error_1.AppError("User could not be found", 404));
         res.status(200).json({

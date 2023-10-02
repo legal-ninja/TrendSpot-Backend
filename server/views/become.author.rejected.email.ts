@@ -1,10 +1,7 @@
-import { BecomeAuthorEmail } from "../models/types/general";
-
-export const becomeAuthorEmail = ({
-  firstName,
-  lastName,
-  url,
-}: BecomeAuthorEmail) => {
+export const becomeAuthorRejectedEmail = (
+  firstName: string,
+  lastName: string
+) => {
   return `
                 
       <!DOCTYPE html>
@@ -88,7 +85,7 @@ export const becomeAuthorEmail = ({
                                 text-align: left;
                               "
                             >
-                              Hi Admin,
+                              Hi ${firstName} ${lastName},
                             </h1>
                             <span
                               style="
@@ -108,11 +105,15 @@ export const becomeAuthorEmail = ({
                                   margin: 0;
                                 "
                               >
-                             ${firstName} ${lastName} has requested to become an author on TrendSpot. 
-                             <br><br>
-                             This request needs your response or the response of other admins. 
-                             <br>
-                             To respond to this request, please follow the button below.
+                              This is to inform you that your request to become an author on TrendSpot has been rejected.
+                              <br><br>
+                            
+                             <span style="text-align: left; font-size: 18px">
+                            <p>
+                              Regards,<br />
+                              TrendSpot team.
+                            </p>
+                          </span>
                               </p>
                               <br />
                               <p
@@ -123,24 +124,7 @@ export const becomeAuthorEmail = ({
                                   margin: 0;
                                 "
                               >
-                              <a
-                              href="${url}"
-                              style="
-                                background: #CE5158;
-                                text-decoration: none !important;
-                                font-weight: 700;
-                                margin-top: 35px;
-                                color: #fff;
-                                text-transform: uppercase;
-                                font-size: 14px;
-                                padding: 10px 24px;
-                                display: inline-block;
-                                border-radius: 50px;
-                          "
-                          >
-                           Proceed
-                          </a
-                        >
+                          
                               </p>
                             </span>
                               <br />

@@ -19,7 +19,8 @@ model User {
    isSuperAdmin Boolean @default(false)
    isDeactivated Boolean @default(false)
    isDeactivatedByAdmin Boolean @default(false)
-   isAuthor Boolean @default(false)
+   isAuthor Boolean? @default(false)
+   pushToken String?
    comments Comment[]
    news News[]
    likes Like[]
@@ -47,7 +48,7 @@ model News {
   likes Like[]
   bookmarks Bookmark[]
   activities Activity[]
-  status String
+  status String?
 
    @@map(name: "news")
 }
@@ -126,12 +127,14 @@ model Activity {
 
 model AuthorRequest {
   id String @id @default(uuid()) @map("_id")
+  userId String
   firstName String
   lastName String
   email String
   avatar String
   isAccepted Boolean @default(false)
   actionTaken Boolean @default(false)
+  createdAt  DateTime @default(now())
 
   @@map(name: "authorRequest")
 }

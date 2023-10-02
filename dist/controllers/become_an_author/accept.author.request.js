@@ -18,44 +18,52 @@ const global_error_1 = require("../../helpers/global.error");
 const email_service_1 = __importDefault(require("../../services/email.service"));
 const prisma_client_1 = __importDefault(require("../../lib/prisma.client"));
 const become_author_accepted_email_1 = require("../../views/become.author.accepted.email");
+const become_author_rejected_email_1 = require("../../views/become.author.rejected.email");
 exports.acceptAuthorRequest = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
+        const { response } = req.body;
+        const requestWasAccepted = response === "Accepted";
+        const requestToAccept = yield prisma_client_1.default.authorRequest.findFirst({
+            where: { id: req.params.requestId },
+        });
         const userToUpdate = yield prisma_client_1.default.user.findFirst({
             where: { id: req.params.userId },
         });
-        const requestToAccept = yield prisma_client_1.default.user.findFirst({
-            where: { id: req.params.requestId },
-        });
         if (!requestToAccept)
             return next(new global_error_1.AppError("Become and Author request not found.", 404));
+        if (requestToAccept.isAccepted)
+            return next(new global_error_1.AppError("This request has been previously accepted.", 404));
         if (!userToUpdate)
             return next(new global_error_1.AppError("User not found.", 404));
         yield prisma_client_1.default.authorRequest.update({
             where: {
-                id: req.params.id,
+                id: req.params.requestId,
             },
             data: {
                 actionTaken: true,
+                isAccepted: requestWasAccepted ? true : false,
             },
         });
         yield prisma_client_1.default.user.update({
             where: {
-                id: req.params.id,
+                id: req.params.userId,
             },
             data: {
-                isAuthor: true,
+                isAuthor: requestWasAccepted ? true : false,
             },
         });
-        const subject = "Update on your request Become An Author on TrendSpot";
+        const subject = "An Update on your request Become An Author on TrendSpot";
         const SENT_FROM = process.env.EMAIL_USER;
         const REPLY_TO = process.env.REPLY_TO;
         const email = userToUpdate.email;
-        const body = (0, become_author_accepted_email_1.becomeAuthorAcceptedEmail)(userToUpdate.firstName);
+        const body = requestWasAccepted
+            ? (0, become_author_accepted_email_1.becomeAuthorAcceptedEmail)(userToUpdate.firstName, userToUpdate.lastName)
+            : (0, become_author_rejected_email_1.becomeAuthorRejectedEmail)(userToUpdate.firstName, userToUpdate.lastName);
         try {
             (0, email_service_1.default)({ subject, body, send_to: email, SENT_FROM, REPLY_TO });
             res.status(200).json({
                 status: "success",
-                message: `Your response on this request has been sent to the ${userToUpdate.firstName}.`,
+                message: `Your response on this request has been sent to ${userToUpdate.firstName} ${userToUpdate.lastName}.`,
             });
         }
         catch (error) {

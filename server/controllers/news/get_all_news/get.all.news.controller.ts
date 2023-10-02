@@ -9,11 +9,6 @@ export const getAllNews = handleAsync(async function (
   res: Response
 ) {
   const news = await prisma.news.findMany({
-    where: {
-      status: {
-        not: "draft",
-      },
-    },
     include: {
       author: {
         select: { ...LONG_AUTHOR_FIELDS, news: false },
@@ -33,8 +28,10 @@ export const getAllNews = handleAsync(async function (
     },
   });
 
+  const filteredNews = news.filter((news) => news.status !== "draft");
+
   res.status(200).json({
     status: "success",
-    news,
+    news: filteredNews,
   });
 });

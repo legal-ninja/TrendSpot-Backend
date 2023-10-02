@@ -16,6 +16,9 @@ export const getSingleUser = handleAsync(async function (
       news: true,
     },
   });
+
+  console.log({ user });
+
   if (!user) return next(new AppError("User could not be found", 404));
 
   res.status(200).json({

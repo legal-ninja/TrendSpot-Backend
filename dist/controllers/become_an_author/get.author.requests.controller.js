@@ -8,26 +8,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const expo_server_sdk_1 = require("expo-server-sdk");
-const expo = new expo_server_sdk_1.Expo();
-function sendPushNotification({ token, title, body, sound, }) {
+exports.getAuthourRequests = void 0;
+const async_handler_1 = __importDefault(require("../../helpers/async.handler"));
+const prisma_client_1 = __importDefault(require("../../lib/prisma.client"));
+const client_1 = require("@prisma/client");
+exports.getAuthourRequests = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const pushMessage = {
-            to: token,
-            sound: sound || "default",
-            title,
-            body,
-        };
-        try {
-            let ticketChunk = yield expo.sendPushNotificationsAsync([pushMessage]);
-            console.log("Push notification sent:", ticketChunk);
-            if (ticketChunk)
-                return true;
-        }
-        catch (error) {
-            console.error("Error sending push notification:", error);
-        }
+        const authorRequests = yield prisma_client_1.default.authorRequest.findMany({
+            orderBy: {
+                createdAt: client_1.Prisma.SortOrder.desc,
+            },
+        });
+        res.status(200).json({
+            status: "success",
+            requests: authorRequests,
+        });
     });
-}
-exports.default = sendPushNotification;
+});

@@ -16,13 +16,29 @@ export const becomeAnAuthor = handleAsync(async function (
   if (userIsAdmin)
     return next(new AppError("Admins cannot request to become an author", 403));
 
-  const adminEmails = [
-    process.env.ADMIN_EMAIL_ONE as string,
-    process.env.ADMIN_EMAIL_TWO as string,
-  ];
+  const adminEmails = [process.env.ADMIN_EMAIL_ONE as string];
+
+  const previousRequests = await prisma.authorRequest.findMany({
+    where: {
+      userId: req.user?.id,
+    },
+  });
+
+  const unansweredRequests = previousRequests.filter(
+    (request) => request.actionTaken === false
+  );
+
+  if (unansweredRequests.length > 0)
+    return next(
+      new AppError(
+        "You have raised a request that has not been responded to yet, Please wait till you get a response.",
+        403
+      )
+    );
 
   await prisma.authorRequest.create({
     data: {
+      userId: req.user?.id!,
       firstName: req.user?.firstName!,
       lastName: req.user?.lastName!,
       email: req.user?.email!,

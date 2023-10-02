@@ -1,6 +1,7 @@
-import { BecomeAuthorEmail } from "../models/types/general";
-
-export const becomeAuthorAcceptedEmail = (firstName: string) => {
+export const becomeAuthorAcceptedEmail = (
+  firstName: string,
+  lastName: string
+) => {
   return `
                 
       <!DOCTYPE html>
@@ -84,7 +85,7 @@ export const becomeAuthorAcceptedEmail = (firstName: string) => {
                                 text-align: left;
                               "
                             >
-                              Hi ${firstName},
+                              Hi ${firstName} ${lastName},
                             </h1>
                             <span
                               style="
@@ -104,11 +105,11 @@ export const becomeAuthorAcceptedEmail = (firstName: string) => {
                                   margin: 0;
                                 "
                               >
-                              We are thrilled to inform you that your request to become an author on TrendSpot has been approved.
+                              We are thrilled to inform you that your request to become an author on TrendSpot has been approved!.
                              <br/>
                             You can now add News on TrendSpot, but it would need to be approved before being published.
                             <br><br>
-                            Please ensure to go through our Terms of Use and Privacy Policy to ensure your News follow the right guidelines
+                            Please ensure to go through our Terms of Use and Privacy Policy to ensure your News follow the proper guidelines.
                              <br/><br>
                              <span style="text-align: left; font-size: 18px">
                             <p>
