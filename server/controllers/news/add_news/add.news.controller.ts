@@ -4,7 +4,7 @@ import { AppError } from "../../../helpers/global.error";
 import prisma from "../../../lib/prisma.client";
 import { slugify } from "../../../helpers/slugify";
 import { AuthenticatedRequest } from "../../../models/types/auth";
-import sendPushNotification from "../../../helpers/push.noification";
+import sendPushNotification from "../../../services/push.notification";
 
 export const addNews = handleAsync(async function (
   req: AuthenticatedRequest,
@@ -40,6 +40,7 @@ export const addNews = handleAsync(async function (
       image,
       readTime,
       category,
+      status: req.user?.isAdmin ? "published" : "draft",
       slug: slugify(title),
       authorId: req.user?.id!,
     },

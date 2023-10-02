@@ -1,15 +1,14 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.emailReply = void 0;
-const emailReply = (firstName, url, message) => {
-    return `
+import { BecomeAuthorEmail } from "../models/types/general";
+
+export const becomeAuthorAcceptedEmail = (firstName: string) => {
+  return `
                 
       <!DOCTYPE html>
       <html lang="en-US">
         <head>
           <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-          <title>Verification success</title>
-          <meta name="description" content="Verification success" />
+          <title>Become Author</title>
+          <meta name="description" content="Become Author" />
           <style type="text/css">
             a:hover {
               text-decoration: underline !important;
@@ -74,7 +73,7 @@ const emailReply = (firstName, url, message) => {
                           <td style="height: 40px">&nbsp;</td>
                         </tr>
                         <tr>
-                         
+                          <td style="padding: 0 35px">
                             <h1
                               style="
                                 color: #1e1e2d;
@@ -85,7 +84,7 @@ const emailReply = (firstName, url, message) => {
                                 text-align: left;
                               "
                             >
-                             People are trying to reach out to you!
+                              Hi ${firstName},
                             </h1>
                             <span
                               style="
@@ -105,9 +104,18 @@ const emailReply = (firstName, url, message) => {
                                   margin: 0;
                                 "
                               >
-                               Hi ${firstName}, You have a new reply on your comment
-                               <br><br>
-                               <aside style='font-style: italic; text-align: center; font-size: 1.2rem;'>'${message}'</aside>
+                              We are thrilled to inform you that your request to become an author on TrendSpot has been approved.
+                             <br/>
+                            You can now add News on TrendSpot, but it would need to be approved before being published.
+                            <br><br>
+                            Please ensure to go through our Terms of Use and Privacy Policy to ensure your News follow the right guidelines
+                             <br/><br>
+                             <span style="text-align: left; font-size: 18px">
+                            <p>
+                              Regards,<br />
+                              TrendSpot team.
+                            </p>
+                          </span>
                               </p>
                               <br />
                               <p
@@ -118,28 +126,10 @@ const emailReply = (firstName, url, message) => {
                                   margin: 0;
                                 "
                               >
-                                Click on the button below to view the reply and repond!
+                          
                               </p>
-
-
-                              <a
-                          href="${url}"
-                          style="
-                            background: #CE5158;
-                            text-decoration: none !important;
-                            font-weight: 700;
-                            margin-top: 35px;
-                            color: #fff;
-                            text-transform: uppercase;
-                            font-size: 14px;
-                            padding: 10px 24px;
-                            display: inline-block;
-                            border-radius: 50px;
-                          "
-                          >View Reply</a
-                        >
                             </span>
-      
+                              <br />
                           </td>
                         </tr>
                         <tr>
@@ -178,4 +168,3 @@ const emailReply = (firstName, url, message) => {
       </html>
       `;
 };
-exports.emailReply = emailReply;

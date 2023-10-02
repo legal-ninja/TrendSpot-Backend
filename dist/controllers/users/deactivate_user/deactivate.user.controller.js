@@ -27,7 +27,7 @@ exports.deActivateUser = void 0;
 const async_handler_1 = __importDefault(require("../../../helpers/async.handler"));
 const global_error_1 = require("../../../helpers/global.error");
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
-const push_noification_1 = __importDefault(require("../../../helpers/push.noification"));
+const push_notification_1 = __importDefault(require("../../../services/push.notification"));
 exports.deActivateUser = (0, async_handler_1.default)(function (req, res, next) {
     var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
@@ -59,10 +59,10 @@ exports.deActivateUser = (0, async_handler_1.default)(function (req, res, next) 
                 userId: (_b = req.user) === null || _b === void 0 ? void 0 : _b.id,
             },
         });
-        yield (0, push_noification_1.default)({
+        yield (0, push_notification_1.default)({
             token,
             title: "Account Deactivated",
-            body: `Hey ${existingUser.firstName}, You just deactivated your TrendSpot account. You can always change this settig later.`,
+            body: `Hey ${existingUser.firstName}, Your TrendSpot account has been deactivated. You can always change this setting later.`,
         });
         const modifiedUser = Object.assign(Object.assign({}, existingUser), { isDeactivated: true, isDeactivatedByAdmin });
         const { password } = modifiedUser, userInfo = __rest(modifiedUser, ["password"]);

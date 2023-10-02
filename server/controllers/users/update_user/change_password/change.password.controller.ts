@@ -4,7 +4,7 @@ import { AuthenticatedRequest } from "../../../../models/types/auth";
 import { AppError } from "../../../../helpers/global.error";
 import prisma from "../../../../lib/prisma.client";
 import { compare, genSaltSync, hashSync } from "bcryptjs";
-import sendPushNotification from "../../../../helpers/push.noification";
+import sendPushNotification from "../../../../services/push.notification";
 
 export const changePassword = handleAsync(async function (
   req: AuthenticatedRequest,

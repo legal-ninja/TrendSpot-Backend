@@ -78,7 +78,7 @@ const passwordResetEmail = ({ username, url }) => {
                       <h1
                         style="
                           color: #1e1e2d;
-                          font-weight: 500;
+                          font-weight: 700;
                           margin: 0;
                           font-size: 28px;
                           font-family: 'Rubik', sans-serif;

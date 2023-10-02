@@ -20,6 +20,11 @@ const client_1 = require("@prisma/client");
 exports.getAllNews = (0, async_handler_1.default)(function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const news = yield prisma_client_1.default.news.findMany({
+            where: {
+                status: {
+                    not: "draft",
+                },
+            },
             include: {
                 author: {
                     select: Object.assign(Object.assign({}, utils_1.LONG_AUTHOR_FIELDS), { news: false }),

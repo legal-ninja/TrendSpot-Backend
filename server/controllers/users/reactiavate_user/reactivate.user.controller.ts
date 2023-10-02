@@ -3,7 +3,7 @@ import handleAsync from "../../../helpers/async.handler";
 import { AppError } from "../../../helpers/global.error";
 import { AuthenticatedRequest } from "../../../models/types/auth";
 import prisma from "../../../lib/prisma.client";
-import sendPushNotification from "../../../helpers/push.noification";
+import sendPushNotification from "../../../services/push.notification";
 
 export const reActivateUser = handleAsync(async function (
   req: AuthenticatedRequest,
@@ -56,7 +56,7 @@ export const reActivateUser = handleAsync(async function (
   await sendPushNotification({
     token,
     title: "Account Reactivated",
-    body: `Hey ${existingUser.firstName}, You just reactivated your TrendSpot account! You are back up and running!`,
+    body: `Hey ${existingUser.firstName}, Your TrendSpot account has been reactivated! You are back up and running!`,
   });
 
   const modifiedUser = {

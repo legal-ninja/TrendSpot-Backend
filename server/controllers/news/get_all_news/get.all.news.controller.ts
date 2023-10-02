@@ -9,6 +9,11 @@ export const getAllNews = handleAsync(async function (
   res: Response
 ) {
   const news = await prisma.news.findMany({
+    where: {
+      status: {
+        not: "draft",
+      },
+    },
     include: {
       author: {
         select: { ...LONG_AUTHOR_FIELDS, news: false },

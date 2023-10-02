@@ -12,6 +12,12 @@ export interface resetSuccessType {
   OS: string;
 }
 
+export interface BecomeAuthorEmail {
+  firstName: string;
+  lastName: string;
+  url: string;
+}
+
 export interface PushNotification {
   token: string;
   title: string;

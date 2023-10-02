@@ -17,9 +17,9 @@ const async_handler_1 = __importDefault(require("../../../helpers/async.handler"
 const global_error_1 = require("../../../helpers/global.error");
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 const slugify_1 = require("../../../helpers/slugify");
-const push_noification_1 = __importDefault(require("../../../helpers/push.noification"));
+const push_notification_1 = __importDefault(require("../../../services/push.notification"));
 exports.addNews = (0, async_handler_1.default)(function (req, res, next) {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     return __awaiter(this, void 0, void 0, function* () {
         const { title, content, image, readTime, category, token } = req.body;
         let missingFields = [];
@@ -39,8 +39,9 @@ exports.addNews = (0, async_handler_1.default)(function (req, res, next) {
                 image,
                 readTime,
                 category,
+                status: ((_a = req.user) === null || _a === void 0 ? void 0 : _a.isAdmin) ? "published" : "draft",
                 slug: (0, slugify_1.slugify)(title),
-                authorId: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
+                authorId: (_b = req.user) === null || _b === void 0 ? void 0 : _b.id,
             },
         });
         yield prisma_client_1.default.activity.create({
@@ -48,13 +49,13 @@ exports.addNews = (0, async_handler_1.default)(function (req, res, next) {
                 description: "added a news",
                 category: "news",
                 action: "add",
-                userId: (_b = req.user) === null || _b === void 0 ? void 0 : _b.id,
+                userId: (_c = req.user) === null || _c === void 0 ? void 0 : _c.id,
             },
         });
-        yield (0, push_noification_1.default)({
+        yield (0, push_notification_1.default)({
             token,
             title: "News Published",
-            body: `Hey ${(_c = req.user) === null || _c === void 0 ? void 0 : _c.firstName}, Your news has been published!`,
+            body: `Hey ${(_d = req.user) === null || _d === void 0 ? void 0 : _d.firstName}, Your news has been published!`,
         });
         res.status(200).json({
             status: "success",

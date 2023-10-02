@@ -3,7 +3,7 @@ import handleAsync from "../../../helpers/async.handler";
 import { AppError } from "../../../helpers/global.error";
 import { AuthenticatedRequest } from "../../../models/types/auth";
 import prisma from "../../../lib/prisma.client";
-import sendPushNotification from "../../../helpers/push.noification";
+import sendPushNotification from "../../../services/push.notification";
 
 export const deActivateUser = handleAsync(async function (
   req: AuthenticatedRequest,
@@ -44,7 +44,7 @@ export const deActivateUser = handleAsync(async function (
   await sendPushNotification({
     token,
     title: "Account Deactivated",
-    body: `Hey ${existingUser.firstName}, You just deactivated your TrendSpot account. You can always change this settig later.`,
+    body: `Hey ${existingUser.firstName}, Your TrendSpot account has been deactivated. You can always change this setting later.`,
   });
 
   const modifiedUser = {
