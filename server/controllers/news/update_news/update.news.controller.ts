@@ -69,6 +69,12 @@ export const updateNews = handleAsync(async function (
     });
   }
 
+  if (fromPublishRequest && response === "Rejected") {
+    await prisma.news.deleteMany({
+      where: { id: news.id },
+    });
+  }
+
   res.status(200).json({
     status: "success",
     message: "News updated successfully",

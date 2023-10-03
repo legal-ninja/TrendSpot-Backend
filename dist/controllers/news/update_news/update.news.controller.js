@@ -63,6 +63,11 @@ exports.updateNews = (0, async_handler_1.default)(function (req, res, next) {
                 body: `Hey ${currentUser === null || currentUser === void 0 ? void 0 : currentUser.firstName} ${currentUser === null || currentUser === void 0 ? void 0 : currentUser.lastName}, Your news has been rejected and would not be published`,
             });
         }
+        if (fromPublishRequest && response === "Rejected") {
+            yield prisma_client_1.default.news.deleteMany({
+                where: { id: news.id },
+            });
+        }
         res.status(200).json({
             status: "success",
             message: "News updated successfully",
