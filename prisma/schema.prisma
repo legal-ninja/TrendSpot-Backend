@@ -49,6 +49,8 @@ model News {
   bookmarks Bookmark[]
   activities Activity[]
   status String?
+  actionTaken Boolean? @default(false)
+  isAccepted Boolean? @default(false)
 
    @@map(name: "news")
 }

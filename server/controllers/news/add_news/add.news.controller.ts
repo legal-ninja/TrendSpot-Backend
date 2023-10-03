@@ -11,7 +11,15 @@ export const addNews = handleAsync(async function (
   res: Response,
   next: NextFunction
 ) {
-  const { title, content, image, readTime, category, token } = req.body;
+  const {
+    title,
+    content,
+    image,
+    readTime,
+    category,
+    token,
+    fromPublishRequest,
+  } = req.body;
 
   let missingFields = [];
   let bodyObject = { title, content, image, readTime, category };
@@ -41,6 +49,7 @@ export const addNews = handleAsync(async function (
       readTime,
       category,
       status: req.user?.isAdmin ? "published" : "draft",
+      isAccepted: req.user?.isAdmin ? true : false,
       slug: slugify(title),
       authorId: req.user?.id!,
     },
@@ -55,11 +64,19 @@ export const addNews = handleAsync(async function (
     },
   });
 
-  await sendPushNotification({
-    token,
-    title: "News Published",
-    body: `Hey ${req.user?.firstName}, Your news has been published!`,
-  });
+  if (req.user?.isAdmin) {
+    await sendPushNotification({
+      token,
+      title: "News Published",
+      body: `Hey ${req.user?.firstName}, Your news has been published!`,
+    });
+  } else {
+    await sendPushNotification({
+      token,
+      title: "News Publication",
+      body: `Hey ${req.user?.firstName}, Your news has been sent to the admins for a review. We would keep in touch!`,
+    });
+  }
 
   res.status(200).json({
     status: "success",
