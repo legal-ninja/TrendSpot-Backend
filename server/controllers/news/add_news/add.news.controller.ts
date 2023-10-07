@@ -55,28 +55,35 @@ export const addNews = handleAsync(async function (
     },
   });
 
-  await prisma.activity.create({
-    data: {
-      description: "added a news",
-      category: "news",
-      action: "add",
-      userId: req.user?.id!,
-    },
-  });
+  req.user?.isAdmin
+    ? await prisma.activity.create({
+        data: {
+          description: "published a news",
+          category: "news",
+          action: "add",
+          userId: req.user?.id!,
+        },
+      })
+    : await prisma.activity.create({
+        data: {
+          description: "requested to publish a news",
+          category: "news",
+          action: "add",
+          userId: req.user?.id!,
+        },
+      });
 
-  if (req.user?.isAdmin) {
-    await sendPushNotification({
-      token,
-      title: "News Published",
-      body: `Hey ${req.user?.firstName}, Your news has been published!`,
-    });
-  } else {
-    await sendPushNotification({
-      token,
-      title: "News Publication",
-      body: `Hey ${req.user?.firstName}, Your news has been sent to the admins for a review. We would keep in touch!`,
-    });
-  }
+  req.user?.isAdmin
+    ? await sendPushNotification({
+        token,
+        title: "News Published",
+        body: `Hey ${req.user?.firstName}, Your news has been published!`,
+      })
+    : await sendPushNotification({
+        token,
+        title: "News Publication",
+        body: `Hey ${req.user?.firstName}, Your news has been sent to the admins for a review. We would keep in touch!`,
+      });
 
   res.status(200).json({
     status: "success",

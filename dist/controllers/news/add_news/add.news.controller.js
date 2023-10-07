@@ -19,7 +19,7 @@ const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 const slugify_1 = require("../../../helpers/slugify");
 const push_notification_1 = __importDefault(require("../../../services/push.notification"));
 exports.addNews = (0, async_handler_1.default)(function (req, res, next) {
-    var _a, _b, _c, _d, _e, _f, _g;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     return __awaiter(this, void 0, void 0, function* () {
         const { title, content, image, readTime, category, token, fromPublishRequest, } = req.body;
         let missingFields = [];
@@ -45,28 +45,34 @@ exports.addNews = (0, async_handler_1.default)(function (req, res, next) {
                 authorId: (_c = req.user) === null || _c === void 0 ? void 0 : _c.id,
             },
         });
-        yield prisma_client_1.default.activity.create({
-            data: {
-                description: "added a news",
-                category: "news",
-                action: "add",
-                userId: (_d = req.user) === null || _d === void 0 ? void 0 : _d.id,
-            },
-        });
-        if ((_e = req.user) === null || _e === void 0 ? void 0 : _e.isAdmin) {
-            yield (0, push_notification_1.default)({
+        ((_d = req.user) === null || _d === void 0 ? void 0 : _d.isAdmin)
+            ? yield prisma_client_1.default.activity.create({
+                data: {
+                    description: "published a news",
+                    category: "news",
+                    action: "add",
+                    userId: (_e = req.user) === null || _e === void 0 ? void 0 : _e.id,
+                },
+            })
+            : yield prisma_client_1.default.activity.create({
+                data: {
+                    description: "requested to publish a news",
+                    category: "news",
+                    action: "add",
+                    userId: (_f = req.user) === null || _f === void 0 ? void 0 : _f.id,
+                },
+            });
+        ((_g = req.user) === null || _g === void 0 ? void 0 : _g.isAdmin)
+            ? yield (0, push_notification_1.default)({
                 token,
                 title: "News Published",
-                body: `Hey ${(_f = req.user) === null || _f === void 0 ? void 0 : _f.firstName}, Your news has been published!`,
-            });
-        }
-        else {
-            yield (0, push_notification_1.default)({
+                body: `Hey ${(_h = req.user) === null || _h === void 0 ? void 0 : _h.firstName}, Your news has been published!`,
+            })
+            : yield (0, push_notification_1.default)({
                 token,
                 title: "News Publication",
-                body: `Hey ${(_g = req.user) === null || _g === void 0 ? void 0 : _g.firstName}, Your news has been sent to the admins for a review. We would keep in touch!`,
+                body: `Hey ${(_j = req.user) === null || _j === void 0 ? void 0 : _j.firstName}, Your news has been sent to the admins for a review. We would keep in touch!`,
             });
-        }
         res.status(200).json({
             status: "success",
             news,
