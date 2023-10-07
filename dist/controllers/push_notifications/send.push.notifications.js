@@ -12,14 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendBulkPushNotification = void 0;
+exports.sendOutPushNotification = void 0;
 const async_handler_1 = __importDefault(require("../../helpers/async.handler"));
 const push_notification_1 = __importDefault(require("../../services/push.notification"));
 const prisma_client_1 = __importDefault(require("../../lib/prisma.client"));
 const global_error_1 = require("../../helpers/global.error");
-exports.sendBulkPushNotification = (0, async_handler_1.default)(function (req, res, next) {
+exports.sendOutPushNotification = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const { title, message, firstName, lastName, pushToken, notificationType } = req.body;
+        console.log({ pushToken, notificationType });
         if (!message || !title)
             return next(new global_error_1.AppError("Both Title and Message are required", 400));
         if (notificationType === "Single") {
@@ -42,7 +43,9 @@ exports.sendBulkPushNotification = (0, async_handler_1.default)(function (req, r
         }
         res.status(200).json({
             status: "success",
-            message: "Notifications sent successfully",
+            message: notificationType === "Single"
+                ? `Push Notification sent to ${firstName} ${lastName}`
+                : "Push Notifications sent successfully",
         });
     });
 });

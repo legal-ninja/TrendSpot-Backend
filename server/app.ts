@@ -11,7 +11,7 @@ import likeRouter from "./routes/likes/like.routes";
 import bookmarkRouter from "./routes/bookmarks/bookmark.routes";
 import activityRouter from "./routes/activities/activities.routes";
 import becomeAuthorRouter from "./routes/become_an_author/become.author.route";
-import pushNotificationRouter from "./routes/push_notification/send.bulk.notif.route";
+import pushNotificationRouter from "./routes/push_notification/send.push.notif.route";
 import path from "path";
 
 const app = express();
