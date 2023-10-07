@@ -18,9 +18,10 @@ const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 exports.getUsers = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const users = yield prisma_client_1.default.user.findMany({});
+        const regularUsers = users.filter((user) => user.isAdmin !== true);
         res.status(200).json({
             status: "success",
-            users,
+            users: regularUsers,
         });
     });
 });

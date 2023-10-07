@@ -8,8 +8,10 @@ export const getUsers = handleAsync(async function (
   next: NextFunction
 ) {
   const users = await prisma.user.findMany({});
+  const regularUsers = users.filter((user) => user.isAdmin !== true);
+
   res.status(200).json({
     status: "success",
-    users,
+    users: regularUsers,
   });
 });
