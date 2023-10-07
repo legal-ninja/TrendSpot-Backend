@@ -7,6 +7,7 @@ import { AppError } from "../../../helpers/global.error";
 import sendEmail from "../../../services/email.service";
 import { emailReply } from "../../../views/reply.email";
 import { commentEmail } from "../../../views/comment.email";
+import sendPushNotification from "../../../services/push.notification";
 
 export const addComment = handleAsync(async function (
   req: AuthenticatedRequest,
@@ -74,7 +75,7 @@ export const addComment = handleAsync(async function (
     },
   });
 
-  const REPLY_SUBJECT = `New Reply on your comment`;
+  const REPLY_SUBJECT = `New Reply to your comment`;
   const REPLY_SEND_TO = authorEmail;
   const COMMENT_SUBJECT = `New Comment on your post`;
   const COMMENT_SEND_TO = authorEmail;
@@ -83,6 +84,12 @@ export const addComment = handleAsync(async function (
   const PATH = "exp://172.20.10.10:19000";
   const REPLY_BODY = emailReply(news?.author.firstName!, PATH, message);
   const COMMENT_BODY = commentEmail(commentAuthor?.firstName!, PATH, message);
+
+  await sendPushNotification({
+    token: commentAuthor?.pushToken || "",
+    title: "Author Request Accepted",
+    body: isReplying ? REPLY_SUBJECT : COMMENT_SUBJECT,
+  });
 
   try {
     if (authorEmail !== req.user?.email) {
