@@ -11,6 +11,7 @@ import likeRouter from "./routes/likes/like.routes";
 import bookmarkRouter from "./routes/bookmarks/bookmark.routes";
 import activityRouter from "./routes/activities/activities.routes";
 import becomeAuthorRouter from "./routes/become_an_author/become.author.route";
+import pushNotificationRouter from "./routes/push_notification/send.bulk.notif.route";
 
 const app = express();
 
@@ -50,6 +51,7 @@ app.use("/api/v1/likes", likeRouter);
 app.use("/api/v1/bookmarks", bookmarkRouter);
 app.use("/api/v1/activities", activityRouter);
 app.use("/api/v1/become-author", becomeAuthorRouter);
+app.use("/api/v1/push-notification", pushNotificationRouter);
 
 app.all("*", (req, res, next) => {
   next(

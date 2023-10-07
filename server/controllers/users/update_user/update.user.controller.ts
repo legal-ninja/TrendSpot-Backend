@@ -77,6 +77,7 @@ export const updateUser = handleAsync(async function (
     avatar,
     bio,
     pushToken,
+    updatingToken,
     isDeactivated,
     isDeactivatedByAdmin,
   } = req.body;
@@ -89,7 +90,14 @@ export const updateUser = handleAsync(async function (
       )
     );
 
-  if (!firstName && !lastName && !avatar && !bio && !pushToken)
+  if (
+    !firstName &&
+    !lastName &&
+    !avatar &&
+    !bio &&
+    !pushToken &&
+    !updatingToken
+  )
     return next(
       new AppError(
         "Please provide at least one credential you want to update",
@@ -113,7 +121,10 @@ export const updateUser = handleAsync(async function (
       firstName: firstName || existingUser.firstName,
       lastName: lastName || existingUser.lastName,
       avatar: avatar || existingUser.avatar,
-      pushToken: pushToken || existingUser.pushToken || null,
+      pushToken:
+        pushToken === "none"
+          ? null
+          : pushToken || existingUser.pushToken || null,
       bio: bio || existingUser.bio,
     },
   });

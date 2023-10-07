@@ -14,7 +14,8 @@ export const register = handleAsync(async function (
   res: Response,
   next: NextFunction
 ) {
-  const { firstName, lastName, email, password, isAdmin, avatar } = req.body;
+  const { firstName, lastName, email, password, isAdmin, avatar, pushToken } =
+    req.body;
 
   let missingFields: string[] = [];
   let bodyObject = {
@@ -54,6 +55,7 @@ export const register = handleAsync(async function (
       lastName,
       email,
       password: passwordHash,
+      pushToken,
       avatar: avatar || "",
       bio: "",
       isAdmin,

@@ -33,7 +33,7 @@ const welcome_email_1 = require("../../../views/welcome.email");
 const email_service_1 = __importDefault(require("../../../services/email.service"));
 exports.register = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { firstName, lastName, email, password, isAdmin, avatar } = req.body;
+        const { firstName, lastName, email, password, isAdmin, avatar, pushToken } = req.body;
         let missingFields = [];
         let bodyObject = {
             firstName,
@@ -60,6 +60,7 @@ exports.register = (0, async_handler_1.default)(function (req, res, next) {
                 lastName,
                 email,
                 password: passwordHash,
+                pushToken,
                 avatar: avatar || "",
                 bio: "",
                 isAdmin,

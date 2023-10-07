@@ -75,10 +75,15 @@ exports.updateMe = (0, async_handler_1.default)(function (req, res, next) {
 });
 exports.updateUser = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { firstName, lastName, avatar, bio, pushToken, isDeactivated, isDeactivatedByAdmin, } = req.body;
+        const { firstName, lastName, avatar, bio, pushToken, updatingToken, isDeactivated, isDeactivatedByAdmin, } = req.body;
         if (isDeactivated || isDeactivatedByAdmin)
             return next(new global_error_1.AppError("Invalid operation. User activation status cannot be updated from this route.", 400));
-        if (!firstName && !lastName && !avatar && !bio && !pushToken)
+        if (!firstName &&
+            !lastName &&
+            !avatar &&
+            !bio &&
+            !pushToken &&
+            !updatingToken)
             return next(new global_error_1.AppError("Please provide at least one credential you want to update", 400));
         const existingUser = yield prisma_client_1.default.user.findFirst({
             where: {
@@ -95,7 +100,9 @@ exports.updateUser = (0, async_handler_1.default)(function (req, res, next) {
                 firstName: firstName || existingUser.firstName,
                 lastName: lastName || existingUser.lastName,
                 avatar: avatar || existingUser.avatar,
-                pushToken: pushToken || existingUser.pushToken || null,
+                pushToken: pushToken === "none"
+                    ? null
+                    : pushToken || existingUser.pushToken || null,
                 bio: bio || existingUser.bio,
             },
         });
