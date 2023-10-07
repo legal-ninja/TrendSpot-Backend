@@ -22,5 +22,5 @@ export interface PushNotification {
   token: string;
   title: string;
   body: string;
-  sound?: "default" | null;
+  sound?: any;
 }

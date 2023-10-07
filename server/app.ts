@@ -12,6 +12,7 @@ import bookmarkRouter from "./routes/bookmarks/bookmark.routes";
 import activityRouter from "./routes/activities/activities.routes";
 import becomeAuthorRouter from "./routes/become_an_author/become.author.route";
 import pushNotificationRouter from "./routes/push_notification/send.bulk.notif.route";
+import path from "path";
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use((req, res, next) => {
 
 app.use(json());
 app.use(cookieParser());
+app.use("/assets", express.static(path.join(__dirname, "assets")));
 app.use(
   cors({
     origin: [

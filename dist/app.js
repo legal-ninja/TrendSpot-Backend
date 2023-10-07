@@ -40,6 +40,7 @@ const bookmark_routes_1 = __importDefault(require("./routes/bookmarks/bookmark.r
 const activities_routes_1 = __importDefault(require("./routes/activities/activities.routes"));
 const become_author_route_1 = __importDefault(require("./routes/become_an_author/become.author.route"));
 const send_bulk_notif_route_1 = __importDefault(require("./routes/push_notification/send.bulk.notif.route"));
+const path_1 = __importDefault(require("path"));
 const app = (0, express_1.default)();
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Credentials", "true");
@@ -47,6 +48,7 @@ app.use((req, res, next) => {
 });
 app.use((0, express_1.json)());
 app.use((0, cookie_parser_1.default)());
+app.use("/assets", express_1.default.static(path_1.default.join(__dirname, "assets")));
 app.use((0, cors_1.default)({
     origin: [
         "http://localhost:5173",
