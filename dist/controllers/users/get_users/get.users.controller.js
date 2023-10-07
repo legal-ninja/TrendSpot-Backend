@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUsers = void 0;
 const async_handler_1 = __importDefault(require("../../../helpers/async.handler"));
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
-exports.getUsers = (0, async_handler_1.default)(function (req, res, next) {
+exports.getUsers = (0, async_handler_1.default)(function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const users = yield prisma_client_1.default.user.findMany({});
         const regularUsers = users.filter((user) => user.isAdmin !== true);

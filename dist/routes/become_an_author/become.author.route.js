@@ -8,6 +8,6 @@ const get_author_requests_controller_1 = require("../../controllers/become_an_au
 const verifyGuest_1 = require("../../middleware/verifyGuest");
 const router = (0, express_1.Router)();
 router.get("/", auth_middleware_1.verifyAuth, auth_middleware_1.verifyAdmin, get_author_requests_controller_1.getAuthourRequests);
-router.post("/", auth_middleware_1.verifyAuth, become_author_controller_1.becomeAnAuthor);
+router.post("/", auth_middleware_1.verifyAuth, auth_middleware_1.verifyAdmin, verifyGuest_1.verifyGuest, become_author_controller_1.becomeAnAuthor);
 router.post("/accept/:requestId/:userId", auth_middleware_1.verifyAuth, verifyGuest_1.verifyGuest, accept_author_request_1.acceptAuthorRequest);
 exports.default = router;
