@@ -9,19 +9,26 @@ export const sendOutPushNotification = handleAsync(async function (
   res: Response,
   next: NextFunction
 ) {
-  const { title, message, firstName, lastName, pushToken, notificationType } =
-    req.body;
+  const { title, message, users, notificationType } = req.body;
 
-  console.log({ pushToken, notificationType });
+  type UserPayload = {
+    firstName: string;
+    lastName: string;
+    pushToken: string;
+    avatar: string;
+  };
+  console.log({ users, notificationType });
 
   if (!message || !title)
     return next(new AppError("Both Title and Message are required", 400));
 
-  if (notificationType === "Single") {
-    await sendPushNotification({
-      token: pushToken,
-      title,
-      body: `Hey ${firstName} ${lastName}, ${message}`,
+  if (notificationType === "Specific") {
+    users.map(async (user: UserPayload) => {
+      await sendPushNotification({
+        token: user.pushToken,
+        title,
+        body: `Hey ${user.firstName} ${user.lastName}, ${message}`,
+      });
     });
   } else {
     const allUsers = await prisma.user.findMany();
@@ -40,9 +47,6 @@ export const sendOutPushNotification = handleAsync(async function (
 
   res.status(200).json({
     status: "success",
-    message:
-      notificationType === "Single"
-        ? `Push Notification sent to ${firstName} ${lastName}`
-        : "Push Notifications sent successfully",
+    message: "Push Notifications sent successfully",
   });
 });

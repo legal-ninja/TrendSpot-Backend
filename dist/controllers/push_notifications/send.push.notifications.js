@@ -19,16 +19,18 @@ const prisma_client_1 = __importDefault(require("../../lib/prisma.client"));
 const global_error_1 = require("../../helpers/global.error");
 exports.sendOutPushNotification = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { title, message, firstName, lastName, pushToken, notificationType } = req.body;
-        console.log({ pushToken, notificationType });
+        const { title, message, users, notificationType } = req.body;
+        console.log({ users, notificationType });
         if (!message || !title)
             return next(new global_error_1.AppError("Both Title and Message are required", 400));
-        if (notificationType === "Single") {
-            yield (0, push_notification_1.default)({
-                token: pushToken,
-                title,
-                body: `Hey ${firstName} ${lastName}, ${message}`,
-            });
+        if (notificationType === "Specific") {
+            users.map((user) => __awaiter(this, void 0, void 0, function* () {
+                yield (0, push_notification_1.default)({
+                    token: user.pushToken,
+                    title,
+                    body: `Hey ${user.firstName} ${user.lastName}, ${message}`,
+                });
+            }));
         }
         else {
             const allUsers = yield prisma_client_1.default.user.findMany();
@@ -43,9 +45,7 @@ exports.sendOutPushNotification = (0, async_handler_1.default)(function (req, re
         }
         res.status(200).json({
             status: "success",
-            message: notificationType === "Single"
-                ? `Push Notification sent to ${firstName} ${lastName}`
-                : "Push Notifications sent successfully",
+            message: "Push Notifications sent successfully",
         });
     });
 });
