@@ -19,7 +19,7 @@ const become_author_email_1 = require("../../views/become.author.email");
 const email_service_1 = __importDefault(require("../../services/email.service"));
 const prisma_client_1 = __importDefault(require("../../lib/prisma.client"));
 exports.becomeAnAuthor = (0, async_handler_1.default)(function (req, res, next) {
-    var _a, _b, _c, _d, _e, _f;
+    var _a, _b, _c, _d, _e, _f, _g;
     return __awaiter(this, void 0, void 0, function* () {
         const userIsAdmin = (_a = req.user) === null || _a === void 0 ? void 0 : _a.isAdmin;
         if (userIsAdmin)
@@ -39,13 +39,21 @@ exports.becomeAnAuthor = (0, async_handler_1.default)(function (req, res, next) 
                 userId: (_d = req.user) === null || _d === void 0 ? void 0 : _d.id,
             },
         });
+        yield prisma_client_1.default.activity.create({
+            data: {
+                description: "requested to become an author",
+                category: "account",
+                action: "become author",
+                userId: (_e = req.user) === null || _e === void 0 ? void 0 : _e.id,
+            },
+        });
         const adminEmails = [process.env.ADMIN_EMAIL_ONE];
         const subject = "Become An Author Request";
         const SENT_FROM = process.env.EMAIL_USER;
         const REPLY_TO = process.env.REPLY_TO;
         const body = (0, become_author_email_1.becomeAuthorEmail)({
-            firstName: (_e = req.user) === null || _e === void 0 ? void 0 : _e.firstName,
-            lastName: (_f = req.user) === null || _f === void 0 ? void 0 : _f.lastName,
+            firstName: (_f = req.user) === null || _f === void 0 ? void 0 : _f.firstName,
+            lastName: (_g = req.user) === null || _g === void 0 ? void 0 : _g.lastName,
             url: "https://trend-spot-admin.vercel.app/notifications",
         });
         adminEmails.map((email) => {

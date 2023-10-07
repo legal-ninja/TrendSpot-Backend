@@ -43,6 +43,15 @@ export const becomeAnAuthor = handleAsync(async function (
     },
   });
 
+  await prisma.activity.create({
+    data: {
+      description: "requested to become an author",
+      category: "account",
+      action: "become author",
+      userId: req.user?.id!,
+    },
+  });
+
   const adminEmails = [process.env.ADMIN_EMAIL_ONE as string];
 
   const subject = "Become An Author Request";
