@@ -40,10 +40,6 @@ export const becomeAnAuthor = handleAsync(async function (
   await prisma.authorRequest.create({
     data: {
       userId: req.user?.id!,
-      firstName: req.user?.firstName!,
-      lastName: req.user?.lastName!,
-      email: req.user?.email!,
-      avatar: req.user?.avatar!,
     },
   });
 

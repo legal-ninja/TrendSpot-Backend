@@ -18,6 +18,9 @@ const global_error_1 = require("../../../helpers/global.error");
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 const slugify_1 = require("../../../helpers/slugify");
 const push_notification_1 = __importDefault(require("../../../services/push.notification"));
+const email_service_1 = __importDefault(require("../../../services/email.service"));
+const publish_request_accepted_1 = require("../../../views/publish.request.accepted");
+const publish_request_rejected_1 = require("../../../views/publish.request.rejected");
 exports.updateNews = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const { title, content, image, readTime, category, response, authorId, fromPublishRequest, } = req.body;
@@ -68,10 +71,27 @@ exports.updateNews = (0, async_handler_1.default)(function (req, res, next) {
                 where: { id: news.id },
             });
         }
-        res.status(200).json({
-            status: "success",
-            message: "News updated successfully",
-            updatedNews,
-        });
+        const subject = "An Update on your request Publish a News";
+        const SENT_FROM = process.env.EMAIL_USER;
+        const REPLY_TO = process.env.REPLY_TO;
+        const email = currentUser === null || currentUser === void 0 ? void 0 : currentUser.email;
+        const body = response === "Accepted"
+            ? (0, publish_request_accepted_1.publishNewsAcceptedEmail)(currentUser === null || currentUser === void 0 ? void 0 : currentUser.firstName, currentUser === null || currentUser === void 0 ? void 0 : currentUser.lastName)
+            : (0, publish_request_rejected_1.publishNewsRejectedEmail)(currentUser === null || currentUser === void 0 ? void 0 : currentUser.firstName, currentUser === null || currentUser === void 0 ? void 0 : currentUser.lastName);
+        try {
+            fromPublishRequest &&
+                (0, email_service_1.default)({ subject, body, send_to: email, SENT_FROM, REPLY_TO });
+            res.status(200).json({
+                status: "success",
+                message: "News updated successfully",
+                updatedNews,
+            });
+        }
+        catch (error) {
+            res.status(500).json({
+                status: "fail",
+                message: `Something went wrong. Please try again.`,
+            });
+        }
     });
 });

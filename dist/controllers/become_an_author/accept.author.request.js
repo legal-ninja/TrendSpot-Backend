@@ -57,12 +57,12 @@ exports.acceptAuthorRequest = (0, async_handler_1.default)(function (req, res, n
             ? yield (0, push_notification_1.default)({
                 token: userToUpdate.pushToken || "",
                 title: "Author Request Accepted",
-                body: `Hey ${userToUpdate.firstName}, Your request to become an author on TrendSpot has been accepted! Refresh app to see changes.`,
+                body: `Hey ${userToUpdate.firstName} ${userToUpdate.lastName}, Your request to become an author on TrendSpot has been accepted! Refresh app to see changes.`,
             })
             : yield (0, push_notification_1.default)({
                 token: userToUpdate.pushToken || "",
                 title: "Author Request Rejected",
-                body: `Hey ${userToUpdate.firstName}, Your request to become an author on TrendSpot has been rejected.`,
+                body: `Hey ${userToUpdate.firstName} ${userToUpdate.lastName}, Your request to become an author on TrendSpot has been rejected.`,
             });
         const subject = "An Update on your request Become An Author on TrendSpot";
         const SENT_FROM = process.env.EMAIL_USER;

@@ -54,7 +54,7 @@ export const reActivateUser = handleAsync(async function (
   await sendPushNotification({
     token,
     title: "Account Reactivated",
-    body: `Hey ${existingUser.firstName}, Your TrendSpot account has been reactivated! You are back up and running!`,
+    body: `Hey ${existingUser.firstName} ${existingUser.lastName}, Your TrendSpot account has been reactivated! You are back up and running!`,
   });
 
   const modifiedUser = {

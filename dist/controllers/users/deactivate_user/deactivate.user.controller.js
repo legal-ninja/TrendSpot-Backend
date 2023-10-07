@@ -62,7 +62,7 @@ exports.deActivateUser = (0, async_handler_1.default)(function (req, res, next) 
         yield (0, push_notification_1.default)({
             token,
             title: "Account Deactivated",
-            body: `Hey ${existingUser.firstName}, Your TrendSpot account has been deactivated. You can always change this setting later.`,
+            body: `Hey ${existingUser.firstName} ${existingUser.lastName}, Your TrendSpot account has been deactivated. You can always change this setting later.`,
         });
         const modifiedUser = Object.assign(Object.assign({}, existingUser), { isDeactivated: true, isDeactivatedByAdmin });
         const { password } = modifiedUser, userInfo = __rest(modifiedUser, ["password"]);

@@ -12,26 +12,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAuthourRequests = void 0;
-const async_handler_1 = __importDefault(require("../../helpers/async.handler"));
-const prisma_client_1 = __importDefault(require("../../lib/prisma.client"));
-const client_1 = require("@prisma/client");
-const utils_1 = require("../../utils");
-exports.getAuthourRequests = (0, async_handler_1.default)(function (req, res) {
+exports.getSingleUserWithToken = void 0;
+const async_handler_1 = __importDefault(require("../../../helpers/async.handler"));
+const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
+const global_error_1 = require("../../../helpers/global.error");
+const generate_token_1 = require("../../../helpers/generate.token");
+exports.getSingleUserWithToken = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const authorRequests = yield prisma_client_1.default.authorRequest.findMany({
-            include: {
-                user: {
-                    select: utils_1.AUTHOR_FIELDS,
-                },
+        const user = yield prisma_client_1.default.user.findFirst({
+            where: {
+                id: req.params.userId,
             },
-            orderBy: {
-                createdAt: client_1.Prisma.SortOrder.desc,
+            include: {
+                news: true,
             },
         });
+        const newToken = (0, generate_token_1.generateToken)(user === null || user === void 0 ? void 0 : user.id);
+        const updatedUser = Object.assign({ token: newToken }, user);
+        if (!user)
+            return next(new global_error_1.AppError("User could not be found", 404));
         res.status(200).json({
             status: "success",
-            requests: authorRequests,
+            user: updatedUser,
         });
     });
 });

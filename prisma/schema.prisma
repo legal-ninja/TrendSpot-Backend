@@ -28,6 +28,7 @@ model User {
    activities Activity []
    joinedAt  DateTime @default(now())
    lastUpdated  DateTime @updatedAt
+   authorRequests AuthorRequest[]
 
     @@map(name: "users")
 }
@@ -129,11 +130,8 @@ model Activity {
 
 model AuthorRequest {
   id String @id @default(uuid()) @map("_id")
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
-  firstName String
-  lastName String
-  email String
-  avatar String
   isAccepted Boolean @default(false)
   actionTaken Boolean @default(false)
   createdAt  DateTime @default(now())

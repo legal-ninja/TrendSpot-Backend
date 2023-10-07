@@ -12,6 +12,7 @@ import { toggleAdminStatus } from "../../controllers/users/user_admin_status/use
 import { verifyAccountStatus } from "../../middleware/account.status";
 import { changePassword } from "../../controllers/users/update_user/change_password/change.password.controller";
 import { verifyGuest } from "../../middleware/verifyGuest";
+import { getSingleUserWithToken } from "../../controllers/users/get_single_user/get.user.with.token";
 
 const router = Router();
 
@@ -33,6 +34,8 @@ router.put(
   verifyGuest,
   changePassword
 );
+
+router.get("/user-with-token/:userId", getSingleUserWithToken);
 
 router.route("/").get(verifyAuth, verifyAdmin, getUsers);
 router

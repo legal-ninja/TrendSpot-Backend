@@ -4,6 +4,9 @@ import { AppError } from "../../../helpers/global.error";
 import prisma from "../../../lib/prisma.client";
 import { slugify } from "../../../helpers/slugify";
 import sendPushNotification from "../../../services/push.notification";
+import sendEmail from "../../../services/email.service";
+import { publishNewsAcceptedEmail } from "../../../views/publish.request.accepted";
+import { publishNewsRejectedEmail } from "../../../views/publish.request.rejected";
 
 export const updateNews = handleAsync(async function (
   req: Request,
@@ -75,9 +78,33 @@ export const updateNews = handleAsync(async function (
     });
   }
 
-  res.status(200).json({
-    status: "success",
-    message: "News updated successfully",
-    updatedNews,
-  });
+  const subject = "An Update on your request Publish a News";
+  const SENT_FROM = process.env.EMAIL_USER as string;
+  const REPLY_TO = process.env.REPLY_TO as string;
+  const email = currentUser?.email!;
+  const body =
+    response === "Accepted"
+      ? publishNewsAcceptedEmail(
+          currentUser?.firstName!,
+          currentUser?.lastName!
+        )
+      : publishNewsRejectedEmail(
+          currentUser?.firstName!,
+          currentUser?.lastName!
+        );
+
+  try {
+    fromPublishRequest &&
+      sendEmail({ subject, body, send_to: email, SENT_FROM, REPLY_TO });
+    res.status(200).json({
+      status: "success",
+      message: "News updated successfully",
+      updatedNews,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "fail",
+      message: `Something went wrong. Please try again.`,
+    });
+  }
 });

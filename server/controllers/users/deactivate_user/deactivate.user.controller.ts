@@ -44,7 +44,7 @@ export const deActivateUser = handleAsync(async function (
   await sendPushNotification({
     token,
     title: "Account Deactivated",
-    body: `Hey ${existingUser.firstName}, Your TrendSpot account has been deactivated. You can always change this setting later.`,
+    body: `Hey ${existingUser.firstName} ${existingUser.lastName}, Your TrendSpot account has been deactivated. You can always change this setting later.`,
   });
 
   const modifiedUser = {

@@ -20,6 +20,7 @@ const global_error_1 = require("../../../helpers/global.error");
 const email_service_1 = __importDefault(require("../../../services/email.service"));
 const reply_email_1 = require("../../../views/reply.email");
 const comment_email_1 = require("../../../views/comment.email");
+const push_notification_1 = __importDefault(require("../../../services/push.notification"));
 exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
@@ -68,7 +69,7 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
                 },
             },
         });
-        const REPLY_SUBJECT = `New Reply on your comment`;
+        const REPLY_SUBJECT = `New Reply to your comment`;
         const REPLY_SEND_TO = authorEmail;
         const COMMENT_SUBJECT = `New Comment on your post`;
         const COMMENT_SEND_TO = authorEmail;
@@ -77,6 +78,11 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
         const PATH = "exp://172.20.10.10:19000";
         const REPLY_BODY = (0, reply_email_1.emailReply)(news === null || news === void 0 ? void 0 : news.author.firstName, PATH, message);
         const COMMENT_BODY = (0, comment_email_1.commentEmail)(commentAuthor === null || commentAuthor === void 0 ? void 0 : commentAuthor.firstName, PATH, message);
+        yield (0, push_notification_1.default)({
+            token: (commentAuthor === null || commentAuthor === void 0 ? void 0 : commentAuthor.pushToken) || "",
+            title: "Author Request Accepted",
+            body: isReplying ? REPLY_SUBJECT : COMMENT_SUBJECT,
+        });
         try {
             if (authorEmail !== ((_c = req.user) === null || _c === void 0 ? void 0 : _c.email)) {
                 (0, email_service_1.default)({
