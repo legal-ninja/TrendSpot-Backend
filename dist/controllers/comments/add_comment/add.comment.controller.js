@@ -24,7 +24,7 @@ const push_notification_1 = __importDefault(require("../../../services/push.noti
 exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
-        const { message, parentId, newsId, authorEmail, path, isReplying } = req.body;
+        const { message, parentId, newsId, authorEmail, authorId, replyerName, path, isReplying, } = req.body;
         let missingFields = [];
         let bodyObject = { message, newsId, authorEmail, path };
         for (let field in bodyObject) {
@@ -43,15 +43,28 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
                 newsId,
             },
         });
-        yield prisma_client_1.default.activity.create({
+        const user = yield prisma_client_1.default.user.findFirst({
+            where: {
+                id: authorId,
+            },
+        });
+        yield prisma_client_1.default.notification.create({
             data: {
                 description: parentId === null
-                    ? "added a comment to a news"
-                    : "added a reply to a news comment",
-                category: "news",
-                action: "add comment",
-                userId: (_b = req.user) === null || _b === void 0 ? void 0 : _b.id,
-                newsId,
+                    ? `${replyerName} added a comment to a news you added`
+                    : `${replyerName} added a reply to a comment you added`,
+                category: "comment",
+                userId: authorId,
+            },
+        });
+        yield (0, push_notification_1.default)({
+            token: user === null || user === void 0 ? void 0 : user.pushToken,
+            title: "TrendSpot",
+            body: parentId === null
+                ? `Hey ${user === null || user === void 0 ? void 0 : user.firstName} ${user === null || user === void 0 ? void 0 : user.lastName}, ${replyerName} added a comment to a news you added`
+                : `Hey ${user === null || user === void 0 ? void 0 : user.firstName} ${user === null || user === void 0 ? void 0 : user.lastName}, ${replyerName} added a reply to your comment on a news`,
+            data: {
+                url: `trendspot://Notifications`,
             },
         });
         const commentAuthor = yield prisma_client_1.default.user.findFirst({
@@ -80,8 +93,15 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
         const COMMENT_BODY = (0, comment_email_1.commentEmail)(commentAuthor === null || commentAuthor === void 0 ? void 0 : commentAuthor.firstName, PATH, message);
         yield (0, push_notification_1.default)({
             token: (commentAuthor === null || commentAuthor === void 0 ? void 0 : commentAuthor.pushToken) || "",
-            title: "Author Request Accepted",
+            title: "TrendSpot",
             body: isReplying ? REPLY_SUBJECT : COMMENT_SUBJECT,
+        });
+        yield prisma_client_1.default.notification.create({
+            data: {
+                description: isReplying ? REPLY_SUBJECT : COMMENT_SUBJECT,
+                category: "comment",
+                userId: (_b = req.user) === null || _b === void 0 ? void 0 : _b.id,
+            },
         });
         try {
             if (authorEmail !== ((_c = req.user) === null || _c === void 0 ? void 0 : _c.email)) {

@@ -12,40 +12,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.markAsread = void 0;
+exports.deleteNotification = void 0;
 const async_handler_1 = __importDefault(require("../../helpers/async.handler"));
 const prisma_client_1 = __importDefault(require("../../lib/prisma.client"));
 const global_error_1 = require("../../helpers/global.error");
-exports.markAsread = (0, async_handler_1.default)(function (req, res, next) {
+exports.deleteNotification = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { type } = req.query;
-        if (!req.params.id)
-            return next(new global_error_1.AppError("Please specify Notification Id", 400));
-        if (type === "all") {
-            yield prisma_client_1.default.notification.updateMany({
-                where: {
-                    isRead: false,
-                },
-                data: {
-                    isRead: true,
-                },
-            });
-        }
-        else {
-            yield prisma_client_1.default.notification.update({
-                where: {
-                    id: req.params.id,
-                },
-                data: {
-                    isRead: true,
-                },
-            });
-        }
+        const notification = yield prisma_client_1.default.notification.findFirst({
+            where: {
+                id: req.params.notifId,
+            },
+        });
+        if (!notification)
+            return next(new global_error_1.AppError("Notification no longer exists", 404));
+        yield prisma_client_1.default.notification.delete({
+            where: {
+                id: req.params.notifId,
+            },
+        });
         res.status(200).json({
             status: "success",
-            message: type === "all"
-                ? "All Notifications marked as read."
-                : "Notification marked as read.",
+            message: "Notification deleted successfully.",
         });
     });
 });

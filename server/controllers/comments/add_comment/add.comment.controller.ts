@@ -14,7 +14,16 @@ export const addComment = handleAsync(async function (
   res: Response,
   next: NextFunction
 ) {
-  const { message, parentId, newsId, authorEmail, path, isReplying } = req.body;
+  const {
+    message,
+    parentId,
+    newsId,
+    authorEmail,
+    authorId,
+    replyerName,
+    path,
+    isReplying,
+  } = req.body;
 
   let missingFields = [];
   let bodyObject = { message, newsId, authorEmail, path };
@@ -45,16 +54,33 @@ export const addComment = handleAsync(async function (
     },
   });
 
-  await prisma.activity.create({
+  const user = await prisma.user.findFirst({
+    where: {
+      id: authorId,
+    },
+  });
+
+  await prisma.notification.create({
     data: {
       description:
         parentId === null
-          ? "added a comment to a news"
-          : "added a reply to a news comment",
-      category: "news",
-      action: "add comment",
-      userId: req.user?.id!,
-      newsId,
+          ? `${replyerName} added a comment to a news you added`
+          : `${replyerName} added a reply to a comment you added`,
+      category: "comment",
+      userId: authorId,
+    },
+  });
+
+  await sendPushNotification({
+    token: user?.pushToken!,
+    title: "TrendSpot",
+    body:
+      parentId === null
+        ? `Hey ${user?.firstName} ${user?.lastName}, ${replyerName} added a comment to a news you added`
+        : `Hey ${user?.firstName} ${user?.lastName}, ${replyerName} added a reply to your comment on a news`,
+
+    data: {
+      url: `trendspot://Notifications`,
     },
   });
 
@@ -87,8 +113,16 @@ export const addComment = handleAsync(async function (
 
   await sendPushNotification({
     token: commentAuthor?.pushToken || "",
-    title: "Author Request Accepted",
+    title: "TrendSpot",
     body: isReplying ? REPLY_SUBJECT : COMMENT_SUBJECT,
+  });
+
+  await prisma.notification.create({
+    data: {
+      description: isReplying ? REPLY_SUBJECT : COMMENT_SUBJECT,
+      category: "comment",
+      userId: req.user?.id!,
+    },
   });
 
   try {

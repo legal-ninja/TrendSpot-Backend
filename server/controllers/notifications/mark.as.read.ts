@@ -15,8 +15,11 @@ export const markAsread = handleAsync(async function (
   if (!req.params.id)
     return next(new AppError("Please specify Notification Id", 400));
 
-  if (type === "All") {
+  if (type === "all") {
     await prisma.notification.updateMany({
+      where: {
+        isRead: false,
+      },
       data: {
         isRead: true,
       },
@@ -35,8 +38,8 @@ export const markAsread = handleAsync(async function (
   res.status(200).json({
     status: "success",
     message:
-      type === "All"
-        ? "All Notification marked as read."
+      type === "all"
+        ? "All Notifications marked as read."
         : "Notification marked as read.",
   });
 });
