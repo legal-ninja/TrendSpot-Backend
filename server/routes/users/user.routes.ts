@@ -16,7 +16,7 @@ import { getSingleUserWithToken } from "../../controllers/users/get_single_user/
 
 const router = Router();
 
-router.route("/").get(getUsers);
+router.route("/tUsers/:type").get(verifyAuth, getUsers);
 
 router.put("/account/deactivate", verifyAuth, verifyGuest, deActivateUser);
 router.put("/account/reactivate", verifyAuth, verifyGuest, reActivateUser);
@@ -37,7 +37,6 @@ router.put(
 
 router.get("/user-with-token/:userId", getSingleUserWithToken);
 
-router.route("/:type").get(verifyAuth, verifyAdmin, getUsers);
 router
   .route("/:userId")
   .get(getSingleUser)

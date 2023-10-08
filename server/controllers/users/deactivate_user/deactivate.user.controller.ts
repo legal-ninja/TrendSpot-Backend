@@ -42,9 +42,11 @@ export const deActivateUser = handleAsync(async function (
   });
 
   await sendPushNotification({
-    token,
+    token: token || existingUser.pushToken,
     title: "Account Deactivated",
-    body: `Hey ${existingUser.firstName} ${existingUser.lastName}, Your TrendSpot account has been deactivated. You can always change this setting later.`,
+    body: !token
+      ? `Hey ${existingUser.firstName} ${existingUser.lastName}, Your TrendSpot account has been deactivated by the admin. File an appeal if you think it should not be so.`
+      : `Hey ${existingUser.firstName} ${existingUser.lastName}, Your TrendSpot account has been deactivated. You can always change this setting later.`,
     data: {
       url: `trendspot://AccountInfo`,
     },

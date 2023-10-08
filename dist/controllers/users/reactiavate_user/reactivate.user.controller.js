@@ -29,9 +29,8 @@ const global_error_1 = require("../../../helpers/global.error");
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 const push_notification_1 = __importDefault(require("../../../services/push.notification"));
 exports.reActivateUser = (0, async_handler_1.default)(function (req, res, next) {
-    var _a;
+    var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("in react");
         const { userId, token } = req.body;
         if (!userId)
             return next(new global_error_1.AppError("Please specify the user id", 404));
@@ -42,16 +41,14 @@ exports.reActivateUser = (0, async_handler_1.default)(function (req, res, next) 
         });
         if (!existingUser)
             return next(new global_error_1.AppError("User could not be found", 404));
-        // if (
-        //   existingUser.isDeactivatedByAdmin &&
-        //   req.user?.email !== "trendspot@admin.com"
-        // )
-        //   return next(
-        //     new AppError(
-        //       "Your account was deactivated by the admin. Please file an appeal to get your account reactivated",
-        //       401
-        //     )
-        //   );
+        if (existingUser.isDeactivatedByAdmin &&
+            ((_a = req.user) === null || _a === void 0 ? void 0 : _a.email) !== "trendspot@admin.com") {
+            return next(new global_error_1.AppError("This account was deactivated by the super admin. Please file an appeal to get your account reactivated.", 401));
+        }
+        else if (!existingUser.isDeactivatedByAdmin &&
+            ((_b = req.user) === null || _b === void 0 ? void 0 : _b.email) !== existingUser.email) {
+            return next(new global_error_1.AppError("This account was deactivated by the user not by an admin. Only the user can reactivate this account.", 401));
+        }
         yield prisma_client_1.default.user.update({
             where: {
                 id: existingUser.id,
@@ -66,11 +63,11 @@ exports.reActivateUser = (0, async_handler_1.default)(function (req, res, next) 
                 description: "reactivated your account",
                 category: "account",
                 action: "reactivate account",
-                userId: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
+                userId: (_c = req.user) === null || _c === void 0 ? void 0 : _c.id,
             },
         });
         yield (0, push_notification_1.default)({
-            token,
+            token: token || existingUser.pushToken,
             mutableContent: true,
             title: "Account Reactivated",
             body: `Hey ${existingUser.firstName} ${existingUser.lastName}, Your TrendSpot account has been reactivated! You are back up and running!`,

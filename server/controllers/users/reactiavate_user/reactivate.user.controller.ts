@@ -10,8 +10,6 @@ export const reActivateUser = handleAsync(async function (
   res: Response,
   next: NextFunction
 ) {
-  console.log("in react");
-
   const { userId, token } = req.body;
   if (!userId) return next(new AppError("Please specify the user id", 404));
 
@@ -23,16 +21,27 @@ export const reActivateUser = handleAsync(async function (
 
   if (!existingUser) return next(new AppError("User could not be found", 404));
 
-  // if (
-  //   existingUser.isDeactivatedByAdmin &&
-  //   req.user?.email !== "trendspot@admin.com"
-  // )
-  //   return next(
-  //     new AppError(
-  //       "Your account was deactivated by the admin. Please file an appeal to get your account reactivated",
-  //       401
-  //     )
-  //   );
+  if (
+    existingUser.isDeactivatedByAdmin &&
+    req.user?.email !== "trendspot@admin.com"
+  ) {
+    return next(
+      new AppError(
+        "This account was deactivated by the super admin. Please file an appeal to get your account reactivated.",
+        401
+      )
+    );
+  } else if (
+    !existingUser.isDeactivatedByAdmin &&
+    req.user?.email !== existingUser.email
+  ) {
+    return next(
+      new AppError(
+        "This account was deactivated by the user not by an admin. Only the user can reactivate this account.",
+        401
+      )
+    );
+  }
 
   await prisma.user.update({
     where: {
@@ -54,7 +63,7 @@ export const reActivateUser = handleAsync(async function (
   });
 
   await sendPushNotification({
-    token,
+    token: token || existingUser.pushToken,
     mutableContent: true,
     title: "Account Reactivated",
     body: `Hey ${existingUser.firstName} ${existingUser.lastName}, Your TrendSpot account has been reactivated! You are back up and running!`,
