@@ -2,7 +2,6 @@ import { NextFunction, Response } from "express";
 import handleAsync from "../../helpers/async.handler";
 import { AuthenticatedRequest } from "../../models/types/auth";
 import { AppError } from "../../helpers/global.error";
-import { becomeAuthorEmail } from "../../views/become.author.email";
 import sendEmail from "../../services/email.service";
 import prisma from "../../lib/prisma.client";
 import { becomeAuthorAcceptedEmail } from "../../views/become.author.accepted.email";
@@ -58,11 +57,17 @@ export const acceptAuthorRequest = handleAsync(async function (
         token: userToUpdate.pushToken || "",
         title: "Author Request Accepted",
         body: `Hey ${userToUpdate.firstName} ${userToUpdate.lastName}, Your request to become an author on TrendSpot has been accepted! Refresh app to see changes.`,
+        data: {
+          url: `trendspot://Notifications`,
+        },
       })
     : await sendPushNotification({
         token: userToUpdate.pushToken || "",
         title: "Author Request Rejected",
         body: `Hey ${userToUpdate.firstName} ${userToUpdate.lastName}, Your request to become an author on TrendSpot has been rejected.`,
+        data: {
+          url: `trendspot://Notifications`,
+        },
       });
 
   const subject = "An Update on your request Become An Author on TrendSpot";

@@ -40,6 +40,9 @@ exports.sendOutPushNotification = (0, async_handler_1.default)(function (req, re
                     token: user.pushToken,
                     title,
                     body: `Hey ${user === null || user === void 0 ? void 0 : user.firstName} ${user.lastName}, ${message}`,
+                    data: {
+                        url: "trendspot://Notifications",
+                    },
                 });
             }));
         }

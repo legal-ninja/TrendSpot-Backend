@@ -29,6 +29,7 @@ model User {
    joinedAt  DateTime @default(now())
    lastUpdated  DateTime @updatedAt
    authorRequests AuthorRequest[]
+   notifications Notification[]
 
     @@map(name: "users")
 }
@@ -49,6 +50,7 @@ model News {
   likes Like[]
   bookmarks Bookmark[]
   activities Activity[]
+  notification Notification[]
   status String?
   actionTaken Boolean? @default(false)
   isAccepted Boolean? @default(false)
@@ -126,6 +128,20 @@ model Activity {
   newsId String?
 
    @@map(name: "activity")
+}
+
+model Notification {
+  id String @id @default(uuid()) @map("_id")
+  description String
+  category  String
+  notificationDate DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  news News? @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  newsId String?
+  isRead Boolean @default(false)
+
+   @@map(name: "notification")
 }
 
 model AuthorRequest {

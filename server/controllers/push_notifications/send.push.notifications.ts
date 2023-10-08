@@ -41,6 +41,9 @@ export const sendOutPushNotification = handleAsync(async function (
         token: user.pushToken!,
         title,
         body: `Hey ${user?.firstName} ${user.lastName}, ${message}`,
+        data: {
+          url: "trendspot://Notifications",
+        },
       });
     });
   }

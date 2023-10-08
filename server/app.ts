@@ -12,6 +12,7 @@ import bookmarkRouter from "./routes/bookmarks/bookmark.routes";
 import activityRouter from "./routes/activities/activities.routes";
 import becomeAuthorRouter from "./routes/become_an_author/become.author.route";
 import pushNotificationRouter from "./routes/push_notification/send.push.notif.route";
+import notificationRouter from "./routes/notifications/notification.routes";
 import path from "path";
 
 const app = express();
@@ -55,6 +56,7 @@ app.use("/api/v1/bookmarks", bookmarkRouter);
 app.use("/api/v1/activities", activityRouter);
 app.use("/api/v1/become-author", becomeAuthorRouter);
 app.use("/api/v1/push-notification", pushNotificationRouter);
+app.use("/api/v1/notifications", notificationRouter);
 
 app.all("*", (req, res, next) => {
   next(

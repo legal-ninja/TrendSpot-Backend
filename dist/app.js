@@ -40,6 +40,7 @@ const bookmark_routes_1 = __importDefault(require("./routes/bookmarks/bookmark.r
 const activities_routes_1 = __importDefault(require("./routes/activities/activities.routes"));
 const become_author_route_1 = __importDefault(require("./routes/become_an_author/become.author.route"));
 const send_push_notif_route_1 = __importDefault(require("./routes/push_notification/send.push.notif.route"));
+const notification_routes_1 = __importDefault(require("./routes/notifications/notification.routes"));
 const path_1 = __importDefault(require("path"));
 const app = (0, express_1.default)();
 app.use((req, res, next) => {
@@ -75,6 +76,7 @@ app.use("/api/v1/bookmarks", bookmark_routes_1.default);
 app.use("/api/v1/activities", activities_routes_1.default);
 app.use("/api/v1/become-author", become_author_route_1.default);
 app.use("/api/v1/push-notification", send_push_notif_route_1.default);
+app.use("/api/v1/notifications", notification_routes_1.default);
 app.all("*", (req, res, next) => {
     next(new global_error_1.AppError(`Can't find ${req.originalUrl} with method ${req.method} on this server`, 404));
 });

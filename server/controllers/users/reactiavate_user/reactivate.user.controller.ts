@@ -62,13 +62,22 @@ export const reActivateUser = handleAsync(async function (
     },
   });
 
+  await prisma.notification.create({
+    data: {
+      description:
+        "Your TrendSpot account has been reactivated! You are back up and running!",
+      category: "account",
+      userId: req.user?.id!,
+    },
+  });
+
   await sendPushNotification({
     token: token || existingUser.pushToken,
     mutableContent: true,
     title: "Account Reactivated",
     body: `Hey ${existingUser.firstName} ${existingUser.lastName}, Your TrendSpot account has been reactivated! You are back up and running!`,
     data: {
-      url: `trendspot://AccountInfo`,
+      url: `trendspot://Notifications`,
     },
   });
 

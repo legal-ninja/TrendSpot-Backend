@@ -29,7 +29,7 @@ const global_error_1 = require("../../../helpers/global.error");
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 const push_notification_1 = __importDefault(require("../../../services/push.notification"));
 exports.reActivateUser = (0, async_handler_1.default)(function (req, res, next) {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     return __awaiter(this, void 0, void 0, function* () {
         const { userId, token } = req.body;
         if (!userId)
@@ -66,13 +66,20 @@ exports.reActivateUser = (0, async_handler_1.default)(function (req, res, next) 
                 userId: (_c = req.user) === null || _c === void 0 ? void 0 : _c.id,
             },
         });
+        yield prisma_client_1.default.notification.create({
+            data: {
+                description: "Your TrendSpot account has been reactivated! You are back up and running!",
+                category: "account",
+                userId: (_d = req.user) === null || _d === void 0 ? void 0 : _d.id,
+            },
+        });
         yield (0, push_notification_1.default)({
             token: token || existingUser.pushToken,
             mutableContent: true,
             title: "Account Reactivated",
             body: `Hey ${existingUser.firstName} ${existingUser.lastName}, Your TrendSpot account has been reactivated! You are back up and running!`,
             data: {
-                url: `trendspot://AccountInfo`,
+                url: `trendspot://Notifications`,
             },
         });
         const modifiedUser = Object.assign(Object.assign({}, existingUser), { isDeactivated: false, isDeactivatedByAdmin: false });

@@ -41,6 +41,16 @@ export const deActivateUser = handleAsync(async function (
     },
   });
 
+  await prisma.notification.create({
+    data: {
+      description: isDeactivatedByAdmin
+        ? "Your TrendSpot account has been deactivated by the admin. File an appeal if you think it should not be so."
+        : "Your TrendSpot account has been deactivated. You can always change this setting later.",
+      category: "account",
+      userId: req.user?.id!,
+    },
+  });
+
   await sendPushNotification({
     token: token || existingUser.pushToken,
     title: "Account Deactivated",
@@ -48,7 +58,7 @@ export const deActivateUser = handleAsync(async function (
       ? `Hey ${existingUser.firstName} ${existingUser.lastName}, Your TrendSpot account has been deactivated by the admin. File an appeal if you think it should not be so.`
       : `Hey ${existingUser.firstName} ${existingUser.lastName}, Your TrendSpot account has been deactivated. You can always change this setting later.`,
     data: {
-      url: `trendspot://AccountInfo`,
+      url: `trendspot://Notifications`,
     },
   });
 
