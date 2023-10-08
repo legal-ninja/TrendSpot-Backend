@@ -23,4 +23,6 @@ export interface PushNotification {
   title: string;
   body: string;
   sound?: any;
+  categoryId?: string;
+  data?: Object;
 }

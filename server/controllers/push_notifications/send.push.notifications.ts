@@ -47,6 +47,9 @@ export const sendOutPushNotification = handleAsync(async function (
 
   res.status(200).json({
     status: "success",
-    message: "Push Notifications sent successfully",
+    message:
+      notificationType === "Specific" && users.length === 1
+        ? "Push Notification sent successfully"
+        : "Push Notifications sent successfully",
   });
 });

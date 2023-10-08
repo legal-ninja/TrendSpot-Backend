@@ -72,6 +72,9 @@ exports.reActivateUser = (0, async_handler_1.default)(function (req, res, next) 
             token,
             title: "Account Reactivated",
             body: `Hey ${existingUser.firstName} ${existingUser.lastName}, Your TrendSpot account has been reactivated! You are back up and running!`,
+            data: {
+                url: `trendspot://AccountInfo`,
+            },
         });
         const modifiedUser = Object.assign(Object.assign({}, existingUser), { isDeactivated: false, isDeactivatedByAdmin: false });
         const { password } = modifiedUser, userInfo = __rest(modifiedUser, ["password"]);

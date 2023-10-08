@@ -45,7 +45,9 @@ exports.sendOutPushNotification = (0, async_handler_1.default)(function (req, re
         }
         res.status(200).json({
             status: "success",
-            message: "Push Notifications sent successfully",
+            message: notificationType === "Specific" && users.length === 1
+                ? "Push Notification sent successfully"
+                : "Push Notifications sent successfully",
         });
     });
 });

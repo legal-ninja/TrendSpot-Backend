@@ -63,6 +63,11 @@ export const updateNews = handleAsync(async function (
       token: currentUser?.pushToken!,
       title: "News Publication Approved",
       body: `Hey ${currentUser?.firstName} ${currentUser?.lastName}, Your news has been approved and published!`,
+      data: {
+        newsId: req.params.newsId,
+        slug: req.params.slug,
+        url: `trendspot://news/${req.params.slug}/${req.params.newsId}`,
+      },
     });
   } else {
     await sendPushNotification({

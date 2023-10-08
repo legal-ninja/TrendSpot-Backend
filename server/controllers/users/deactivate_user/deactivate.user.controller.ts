@@ -45,6 +45,9 @@ export const deActivateUser = handleAsync(async function (
     token,
     title: "Account Deactivated",
     body: `Hey ${existingUser.firstName} ${existingUser.lastName}, Your TrendSpot account has been deactivated. You can always change this setting later.`,
+    data: {
+      url: `trendspot://AccountInfo`,
+    },
   });
 
   const modifiedUser = {

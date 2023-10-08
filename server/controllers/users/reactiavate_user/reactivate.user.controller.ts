@@ -55,6 +55,9 @@ export const reActivateUser = handleAsync(async function (
     token,
     title: "Account Reactivated",
     body: `Hey ${existingUser.firstName} ${existingUser.lastName}, Your TrendSpot account has been reactivated! You are back up and running!`,
+    data: {
+      url: `trendspot://AccountInfo`,
+    },
   });
 
   const modifiedUser = {
