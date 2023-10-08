@@ -29,6 +29,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "exp://172.20.10.10:19000",
+      "http://localhost:19006",
       "https://trend-spot-admin.vercel.app",
     ],
     credentials: true,
