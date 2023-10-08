@@ -10,6 +10,8 @@ export const reActivateUser = handleAsync(async function (
   res: Response,
   next: NextFunction
 ) {
+  console.log("in react");
+
   const { userId, token } = req.body;
   if (!userId) return next(new AppError("Please specify the user id", 404));
 

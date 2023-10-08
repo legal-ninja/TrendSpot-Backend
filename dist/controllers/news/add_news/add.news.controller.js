@@ -73,6 +73,14 @@ exports.addNews = (0, async_handler_1.default)(function (req, res, next) {
                 title: "News Publication",
                 body: `Hey ${(_j = req.user) === null || _j === void 0 ? void 0 : _j.firstName}, Your news has been sent to the admins for a review. We would keep in touch!`,
             });
+        // const subject = "News Publication Request";
+        // const SENT_FROM = process.env.EMAIL_USER as string;
+        // const REPLY_TO = process.env.REPLY_TO as string;
+        // const body = becomeAuthorEmail({
+        //   firstName: req.user?.firstName!,
+        //   lastName: req.user?.lastName!,
+        //   url: "https://trend-spot-admin.vercel.app/notifications",
+        // });
         res.status(200).json({
             status: "success",
             news,

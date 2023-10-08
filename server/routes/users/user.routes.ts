@@ -37,7 +37,7 @@ router.put(
 
 router.get("/user-with-token/:userId", getSingleUserWithToken);
 
-router.route("/").get(verifyAuth, verifyAdmin, getUsers);
+router.route("/:type").get(verifyAuth, verifyAdmin, getUsers);
 router
   .route("/:userId")
   .get(getSingleUser)

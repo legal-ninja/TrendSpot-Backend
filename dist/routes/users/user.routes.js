@@ -19,7 +19,7 @@ router.put("/account/reactivate", auth_middleware_1.verifyAuth, verifyGuest_1.ve
 router.put("/update-me", account_status_1.verifyAccountStatus, auth_middleware_1.verifyAuth, verifyGuest_1.verifyGuest, update_user_controller_1.updateMe);
 router.put("/account/change-password", account_status_1.verifyAccountStatus, auth_middleware_1.verifyAuth, verifyGuest_1.verifyGuest, change_password_controller_1.changePassword);
 router.get("/user-with-token/:userId", get_user_with_token_1.getSingleUserWithToken);
-router.route("/").get(auth_middleware_1.verifyAuth, auth_middleware_1.verifyAdmin, get_users_controller_1.getUsers);
+router.route("/:type").get(auth_middleware_1.verifyAuth, auth_middleware_1.verifyAdmin, get_users_controller_1.getUsers);
 router
     .route("/:userId")
     .get(get_single_user_1.getSingleUser)

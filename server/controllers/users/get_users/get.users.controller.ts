@@ -7,10 +7,13 @@ export const getUsers = handleAsync(async function (
   res: Response
 ) {
   const users = await prisma.user.findMany({});
+  const type = req.params.type;
+  console.log({ type });
+  const typeIsAll = type === "all";
   const regularUsers = users.filter((user) => user.isAdmin !== true);
 
   res.status(200).json({
     status: "success",
-    users: regularUsers,
+    users: typeIsAll ? users : regularUsers,
   });
 });

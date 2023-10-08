@@ -31,6 +31,7 @@ const push_notification_1 = __importDefault(require("../../../services/push.noti
 exports.reActivateUser = (0, async_handler_1.default)(function (req, res, next) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
+        console.log("in react");
         const { userId, token } = req.body;
         if (!userId)
             return next(new global_error_1.AppError("Please specify the user id", 404));
