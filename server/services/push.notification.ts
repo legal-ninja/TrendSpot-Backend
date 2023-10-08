@@ -8,12 +8,16 @@ async function sendPushNotification({
   title,
   body,
   sound,
+  data,
+  mutableContent,
 }: PushNotification) {
   const pushMessage = {
     to: token,
     sound: sound || "default",
     title,
     body,
+    data,
+    mutableContent,
   };
 
   try {

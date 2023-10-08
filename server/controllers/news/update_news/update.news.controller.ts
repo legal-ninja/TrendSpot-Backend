@@ -58,9 +58,13 @@ export const updateNews = handleAsync(async function (
     where: { id: authorId },
   });
 
+  console.log("Slug:", req.params.slug);
+  console.log("News ID:", req.params.newsId);
+
   if (response === "Accepted") {
     await sendPushNotification({
       token: currentUser?.pushToken!,
+      mutableContent: true,
       title: "News Publication Approved",
       body: `Hey ${currentUser?.firstName} ${currentUser?.lastName}, Your news has been approved and published!`,
       data: {

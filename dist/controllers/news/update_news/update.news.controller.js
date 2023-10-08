@@ -52,9 +52,12 @@ exports.updateNews = (0, async_handler_1.default)(function (req, res, next) {
         const currentUser = yield prisma_client_1.default.user.findFirst({
             where: { id: authorId },
         });
+        console.log("Slug:", req.params.slug);
+        console.log("News ID:", req.params.newsId);
         if (response === "Accepted") {
             yield (0, push_notification_1.default)({
                 token: currentUser === null || currentUser === void 0 ? void 0 : currentUser.pushToken,
+                mutableContent: true,
                 title: "News Publication Approved",
                 body: `Hey ${currentUser === null || currentUser === void 0 ? void 0 : currentUser.firstName} ${currentUser === null || currentUser === void 0 ? void 0 : currentUser.lastName}, Your news has been approved and published!`,
                 data: {

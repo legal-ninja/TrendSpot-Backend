@@ -25,4 +25,5 @@ export interface PushNotification {
   sound?: any;
   categoryId?: string;
   data?: Object;
+  mutableContent?: boolean;
 }

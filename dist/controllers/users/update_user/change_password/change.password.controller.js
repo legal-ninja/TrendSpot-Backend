@@ -54,6 +54,9 @@ exports.changePassword = (0, async_handler_1.default)(function (req, res, next) 
             token,
             title: "Password Changed",
             body: `Hey ${currentUser.firstName}, Your TrendSpot password has been changed.`,
+            data: {
+                url: `trendspot://AuthSequence`,
+            },
         });
         res.status(200).json({
             status: "success",

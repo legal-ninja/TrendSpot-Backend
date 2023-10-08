@@ -70,6 +70,7 @@ exports.reActivateUser = (0, async_handler_1.default)(function (req, res, next) 
         });
         yield (0, push_notification_1.default)({
             token,
+            mutableContent: true,
             title: "Account Reactivated",
             body: `Hey ${existingUser.firstName} ${existingUser.lastName}, Your TrendSpot account has been reactivated! You are back up and running!`,
             data: {

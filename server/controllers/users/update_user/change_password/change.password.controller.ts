@@ -49,6 +49,9 @@ export const changePassword = handleAsync(async function (
     token,
     title: "Password Changed",
     body: `Hey ${currentUser.firstName}, Your TrendSpot password has been changed.`,
+    data: {
+      url: `trendspot://AuthSequence`,
+    },
   });
 
   res.status(200).json({
