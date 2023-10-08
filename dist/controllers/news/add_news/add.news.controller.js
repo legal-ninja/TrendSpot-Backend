@@ -18,8 +18,10 @@ const global_error_1 = require("../../../helpers/global.error");
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 const slugify_1 = require("../../../helpers/slugify");
 const push_notification_1 = __importDefault(require("../../../services/push.notification"));
+const publish_request_1 = require("../../../views/publish.request");
+const email_service_1 = __importDefault(require("../../../services/email.service"));
 exports.addNews = (0, async_handler_1.default)(function (req, res, next) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
     return __awaiter(this, void 0, void 0, function* () {
         const { title, content, image, readTime, category, token, fromPublishRequest, } = req.body;
         let missingFields = [];
@@ -73,17 +75,35 @@ exports.addNews = (0, async_handler_1.default)(function (req, res, next) {
                 title: "News Publication",
                 body: `Hey ${(_j = req.user) === null || _j === void 0 ? void 0 : _j.firstName}, Your news has been sent to the admins for a review. We would keep in touch!`,
             });
-        // const subject = "News Publication Request";
-        // const SENT_FROM = process.env.EMAIL_USER as string;
-        // const REPLY_TO = process.env.REPLY_TO as string;
-        // const body = becomeAuthorEmail({
-        //   firstName: req.user?.firstName!,
-        //   lastName: req.user?.lastName!,
-        //   url: "https://trend-spot-admin.vercel.app/notifications",
-        // });
-        res.status(200).json({
-            status: "success",
-            news,
+        const adminEmails = [process.env.ADMIN_EMAIL_ONE];
+        const subject = "News Publication Request";
+        const SENT_FROM = process.env.EMAIL_USER;
+        const REPLY_TO = process.env.REPLY_TO;
+        const body = (0, publish_request_1.publishRequestEmail)({
+            firstName: (_k = req.user) === null || _k === void 0 ? void 0 : _k.firstName,
+            lastName: (_l = req.user) === null || _l === void 0 ? void 0 : _l.lastName,
+            url: "https://trend-spot-admin.vercel.app/notifications",
+        });
+        adminEmails.map((email) => {
+            var _a;
+            try {
+                (0, email_service_1.default)({ subject, body, send_to: email, SENT_FROM, REPLY_TO });
+                ((_a = req.user) === null || _a === void 0 ? void 0 : _a.isAdmin)
+                    ? res.status(200).json({
+                        status: "success",
+                        news,
+                    })
+                    : res.status(200).json({
+                        status: "success",
+                        message: `Your news has been sent to the admins for a review. We would keep in touch!`,
+                    });
+            }
+            catch (error) {
+                res.status(500).json({
+                    status: "fail",
+                    message: `Something went wrong. Please try again.`,
+                });
+            }
         });
     });
 });

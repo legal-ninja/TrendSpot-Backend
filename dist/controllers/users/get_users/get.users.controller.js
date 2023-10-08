@@ -19,7 +19,6 @@ exports.getUsers = (0, async_handler_1.default)(function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const users = yield prisma_client_1.default.user.findMany({});
         const type = req.params.type;
-        console.log({ type });
         const typeIsAll = type === "all";
         const regularUsers = users.filter((user) => user.isAdmin !== true);
         res.status(200).json({

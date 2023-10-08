@@ -5,6 +5,8 @@ import prisma from "../../../lib/prisma.client";
 import { slugify } from "../../../helpers/slugify";
 import { AuthenticatedRequest } from "../../../models/types/auth";
 import sendPushNotification from "../../../services/push.notification";
+import { publishRequestEmail } from "../../../views/publish.request";
+import sendEmail from "../../../services/email.service";
 
 export const addNews = handleAsync(async function (
   req: AuthenticatedRequest,
@@ -85,17 +87,34 @@ export const addNews = handleAsync(async function (
         body: `Hey ${req.user?.firstName}, Your news has been sent to the admins for a review. We would keep in touch!`,
       });
 
-  // const subject = "News Publication Request";
-  // const SENT_FROM = process.env.EMAIL_USER as string;
-  // const REPLY_TO = process.env.REPLY_TO as string;
-  // const body = becomeAuthorEmail({
-  //   firstName: req.user?.firstName!,
-  //   lastName: req.user?.lastName!,
-  //   url: "https://trend-spot-admin.vercel.app/notifications",
-  // });
+  const adminEmails = [process.env.ADMIN_EMAIL_ONE as string];
 
-  res.status(200).json({
-    status: "success",
-    news,
+  const subject = "News Publication Request";
+  const SENT_FROM = process.env.EMAIL_USER as string;
+  const REPLY_TO = process.env.REPLY_TO as string;
+  const body = publishRequestEmail({
+    firstName: req.user?.firstName!,
+    lastName: req.user?.lastName!,
+    url: "https://trend-spot-admin.vercel.app/notifications",
+  });
+
+  adminEmails.map((email) => {
+    try {
+      sendEmail({ subject, body, send_to: email, SENT_FROM, REPLY_TO });
+      req.user?.isAdmin
+        ? res.status(200).json({
+            status: "success",
+            news,
+          })
+        : res.status(200).json({
+            status: "success",
+            message: `Your news has been sent to the admins for a review. We would keep in touch!`,
+          });
+    } catch (error) {
+      res.status(500).json({
+        status: "fail",
+        message: `Something went wrong. Please try again.`,
+      });
+    }
   });
 });
