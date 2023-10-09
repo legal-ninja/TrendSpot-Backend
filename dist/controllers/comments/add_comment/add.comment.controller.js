@@ -73,6 +73,27 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
                 },
             },
         });
+        const REPLY_SUBJECT = `New Reply to your comment`;
+        const REPLY_SEND_TO = authorEmail;
+        const COMMENT_SUBJECT = `New Comment on your post`;
+        const COMMENT_SEND_TO = authorEmail;
+        const SENT_FROM = process.env.EMAIL_USER;
+        const REPLY_TO = process.env.REPLY_TO;
+        const PATH = "exp://172.20.10.10:19000";
+        const REPLY_BODY = (0, reply_email_1.emailReply)(news === null || news === void 0 ? void 0 : news.author.firstName, PATH, message);
+        const COMMENT_BODY = (0, comment_email_1.commentEmail)(commentAuthor === null || commentAuthor === void 0 ? void 0 : commentAuthor.firstName, PATH, message);
+        // await sendPushNotification({
+        //   token: commentAuthor?.pushToken || "",
+        //   title: "TrendSpot",
+        //   body: isReplying ? REPLY_SUBJECT : COMMENT_SUBJECT,
+        // });
+        yield prisma_client_1.default.notification.create({
+            data: {
+                description: isReplying ? REPLY_SUBJECT : COMMENT_SUBJECT,
+                category: "comment",
+                userId: (_b = req.user) === null || _b === void 0 ? void 0 : _b.id,
+            },
+        });
         yield (0, push_notification_1.default)({
             token: user === null || user === void 0 ? void 0 : user.pushToken,
             title: "TrendSpot",
@@ -83,27 +104,6 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
                 newsId: req.params.newsId,
                 slug: req.params.slug,
                 url: `trendspot://news/${news === null || news === void 0 ? void 0 : news.slug}/${newsId}`,
-            },
-        });
-        const REPLY_SUBJECT = `New Reply to your comment`;
-        const REPLY_SEND_TO = authorEmail;
-        const COMMENT_SUBJECT = `New Comment on your post`;
-        const COMMENT_SEND_TO = authorEmail;
-        const SENT_FROM = process.env.EMAIL_USER;
-        const REPLY_TO = process.env.REPLY_TO;
-        const PATH = "exp://172.20.10.10:19000";
-        const REPLY_BODY = (0, reply_email_1.emailReply)(news === null || news === void 0 ? void 0 : news.author.firstName, PATH, message);
-        const COMMENT_BODY = (0, comment_email_1.commentEmail)(commentAuthor === null || commentAuthor === void 0 ? void 0 : commentAuthor.firstName, PATH, message);
-        yield (0, push_notification_1.default)({
-            token: (commentAuthor === null || commentAuthor === void 0 ? void 0 : commentAuthor.pushToken) || "",
-            title: "TrendSpot",
-            body: isReplying ? REPLY_SUBJECT : COMMENT_SUBJECT,
-        });
-        yield prisma_client_1.default.notification.create({
-            data: {
-                description: isReplying ? REPLY_SUBJECT : COMMENT_SUBJECT,
-                category: "comment",
-                userId: (_b = req.user) === null || _b === void 0 ? void 0 : _b.id,
             },
         });
         try {

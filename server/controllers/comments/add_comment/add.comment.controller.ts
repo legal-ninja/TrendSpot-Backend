@@ -89,6 +89,30 @@ export const addComment = handleAsync(async function (
     },
   });
 
+  const REPLY_SUBJECT = `New Reply to your comment`;
+  const REPLY_SEND_TO = authorEmail;
+  const COMMENT_SUBJECT = `New Comment on your post`;
+  const COMMENT_SEND_TO = authorEmail;
+  const SENT_FROM = process.env.EMAIL_USER as string;
+  const REPLY_TO = process.env.REPLY_TO as string;
+  const PATH = "exp://172.20.10.10:19000";
+  const REPLY_BODY = emailReply(news?.author.firstName!, PATH, message);
+  const COMMENT_BODY = commentEmail(commentAuthor?.firstName!, PATH, message);
+
+  // await sendPushNotification({
+  //   token: commentAuthor?.pushToken || "",
+  //   title: "TrendSpot",
+  //   body: isReplying ? REPLY_SUBJECT : COMMENT_SUBJECT,
+  // });
+
+  await prisma.notification.create({
+    data: {
+      description: isReplying ? REPLY_SUBJECT : COMMENT_SUBJECT,
+      category: "comment",
+      userId: req.user?.id!,
+    },
+  });
+
   await sendPushNotification({
     token: user?.pushToken!,
     title: "TrendSpot",
@@ -101,30 +125,6 @@ export const addComment = handleAsync(async function (
       newsId: req.params.newsId,
       slug: req.params.slug,
       url: `trendspot://news/${news?.slug}/${newsId}`,
-    },
-  });
-
-  const REPLY_SUBJECT = `New Reply to your comment`;
-  const REPLY_SEND_TO = authorEmail;
-  const COMMENT_SUBJECT = `New Comment on your post`;
-  const COMMENT_SEND_TO = authorEmail;
-  const SENT_FROM = process.env.EMAIL_USER as string;
-  const REPLY_TO = process.env.REPLY_TO as string;
-  const PATH = "exp://172.20.10.10:19000";
-  const REPLY_BODY = emailReply(news?.author.firstName!, PATH, message);
-  const COMMENT_BODY = commentEmail(commentAuthor?.firstName!, PATH, message);
-
-  await sendPushNotification({
-    token: commentAuthor?.pushToken || "",
-    title: "TrendSpot",
-    body: isReplying ? REPLY_SUBJECT : COMMENT_SUBJECT,
-  });
-
-  await prisma.notification.create({
-    data: {
-      description: isReplying ? REPLY_SUBJECT : COMMENT_SUBJECT,
-      category: "comment",
-      userId: req.user?.id!,
     },
   });
 
