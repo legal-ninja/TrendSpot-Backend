@@ -1,12 +1,9 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import handleAsync from "../../../helpers/async.handler";
 import { AUTHOR_FIELDS } from "../../../utils";
 import prisma from "../../../lib/prisma.client";
 import { AuthenticatedRequest } from "../../../models/types/auth";
 import { AppError } from "../../../helpers/global.error";
-import sendEmail from "../../../services/email.service";
-import { emailReply } from "../../../views/reply.email";
-import { commentEmail } from "../../../views/comment.email";
 import sendPushNotification from "../../../services/push.notification";
 
 export const addComment = handleAsync(async function (
@@ -89,21 +86,8 @@ export const addComment = handleAsync(async function (
     },
   });
 
-  const REPLY_SUBJECT = `New Reply to your comment`;
-  const REPLY_SEND_TO = authorEmail;
-  const COMMENT_SUBJECT = `New Comment on your post`;
-  const COMMENT_SEND_TO = authorEmail;
-  const SENT_FROM = process.env.EMAIL_USER as string;
-  const REPLY_TO = process.env.REPLY_TO as string;
-  const PATH = "exp://172.20.10.10:19000";
-  const REPLY_BODY = emailReply(news?.author.firstName!, PATH, message);
-  const COMMENT_BODY = commentEmail(commentAuthor?.firstName!, PATH, message);
-
-  // await sendPushNotification({
-  //   token: commentAuthor?.pushToken || "",
-  //   title: "TrendSpot",
-  //   body: isReplying ? REPLY_SUBJECT : COMMENT_SUBJECT,
-  // });
+  const REPLY_SUBJECT = "New Reply to your comment";
+  const COMMENT_SUBJECT = "New Comment on your post";
 
   await prisma.notification.create({
     data: {
@@ -114,7 +98,7 @@ export const addComment = handleAsync(async function (
   });
 
   await sendPushNotification({
-    token: user?.pushToken!,
+    token: isReplying ? commentAuthor?.pushToken! : user?.pushToken!,
     title: "TrendSpot",
     body:
       parentId === null
@@ -128,24 +112,8 @@ export const addComment = handleAsync(async function (
     },
   });
 
-  try {
-    if (authorEmail !== req.user?.email) {
-      sendEmail({
-        subject: isReplying ? REPLY_SUBJECT : COMMENT_SUBJECT,
-        body: isReplying ? REPLY_BODY : COMMENT_BODY,
-        send_to: isReplying ? REPLY_SEND_TO : COMMENT_SEND_TO,
-        SENT_FROM,
-        REPLY_TO,
-      });
-    }
-    res.status(200).json({
-      status: "success",
-      comment,
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: "fail",
-      message: `Something went wrong. Please try again.`,
-    });
-  }
+  res.status(200).json({
+    status: "success",
+    comment,
+  });
 });

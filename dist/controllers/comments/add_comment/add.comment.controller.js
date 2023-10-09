@@ -17,12 +17,9 @@ const async_handler_1 = __importDefault(require("../../../helpers/async.handler"
 const utils_1 = require("../../../utils");
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 const global_error_1 = require("../../../helpers/global.error");
-const email_service_1 = __importDefault(require("../../../services/email.service"));
-const reply_email_1 = require("../../../views/reply.email");
-const comment_email_1 = require("../../../views/comment.email");
 const push_notification_1 = __importDefault(require("../../../services/push.notification"));
 exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
-    var _a, _b, _c;
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         const { message, parentId, newsId, authorEmail, authorId, replyerName, path, isReplying, } = req.body;
         let missingFields = [];
@@ -73,20 +70,8 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
                 },
             },
         });
-        const REPLY_SUBJECT = `New Reply to your comment`;
-        const REPLY_SEND_TO = authorEmail;
-        const COMMENT_SUBJECT = `New Comment on your post`;
-        const COMMENT_SEND_TO = authorEmail;
-        const SENT_FROM = process.env.EMAIL_USER;
-        const REPLY_TO = process.env.REPLY_TO;
-        const PATH = "exp://172.20.10.10:19000";
-        const REPLY_BODY = (0, reply_email_1.emailReply)(news === null || news === void 0 ? void 0 : news.author.firstName, PATH, message);
-        const COMMENT_BODY = (0, comment_email_1.commentEmail)(commentAuthor === null || commentAuthor === void 0 ? void 0 : commentAuthor.firstName, PATH, message);
-        // await sendPushNotification({
-        //   token: commentAuthor?.pushToken || "",
-        //   title: "TrendSpot",
-        //   body: isReplying ? REPLY_SUBJECT : COMMENT_SUBJECT,
-        // });
+        const REPLY_SUBJECT = "New Reply to your comment";
+        const COMMENT_SUBJECT = "New Comment on your post";
         yield prisma_client_1.default.notification.create({
             data: {
                 description: isReplying ? REPLY_SUBJECT : COMMENT_SUBJECT,
@@ -95,7 +80,7 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
             },
         });
         yield (0, push_notification_1.default)({
-            token: user === null || user === void 0 ? void 0 : user.pushToken,
+            token: isReplying ? commentAuthor === null || commentAuthor === void 0 ? void 0 : commentAuthor.pushToken : user === null || user === void 0 ? void 0 : user.pushToken,
             title: "TrendSpot",
             body: parentId === null
                 ? `Hey ${user === null || user === void 0 ? void 0 : user.firstName} ${user === null || user === void 0 ? void 0 : user.lastName}, ${replyerName} added a comment to a news you added`
@@ -106,26 +91,9 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
                 url: `trendspot://news/${news === null || news === void 0 ? void 0 : news.slug}/${newsId}`,
             },
         });
-        try {
-            if (authorEmail !== ((_c = req.user) === null || _c === void 0 ? void 0 : _c.email)) {
-                (0, email_service_1.default)({
-                    subject: isReplying ? REPLY_SUBJECT : COMMENT_SUBJECT,
-                    body: isReplying ? REPLY_BODY : COMMENT_BODY,
-                    send_to: isReplying ? REPLY_SEND_TO : COMMENT_SEND_TO,
-                    SENT_FROM,
-                    REPLY_TO,
-                });
-            }
-            res.status(200).json({
-                status: "success",
-                comment,
-            });
-        }
-        catch (error) {
-            res.status(500).json({
-                status: "fail",
-                message: `Something went wrong. Please try again.`,
-            });
-        }
+        res.status(200).json({
+            status: "success",
+            comment,
+        });
     });
 });
