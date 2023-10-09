@@ -72,21 +72,6 @@ export const addComment = handleAsync(async function (
     },
   });
 
-  await sendPushNotification({
-    token: user?.pushToken!,
-    title: "TrendSpot",
-    body:
-      parentId === null
-        ? `Hey ${user?.firstName} ${user?.lastName}, ${replyerName} added a comment to a news you added`
-        : `Hey ${user?.firstName} ${user?.lastName}, ${replyerName} added a reply to your comment on a news`,
-
-    data: {
-      newsId: req.params.newsId,
-      slug: req.params.slug,
-      url: `trendspot://news/${req.params.slug}/${req.params.newsId}`,
-    },
-  });
-
   const commentAuthor = await prisma.user.findFirst({
     where: {
       email: authorEmail,
@@ -101,6 +86,21 @@ export const addComment = handleAsync(async function (
       author: {
         select: AUTHOR_FIELDS,
       },
+    },
+  });
+
+  await sendPushNotification({
+    token: user?.pushToken!,
+    title: "TrendSpot",
+    body:
+      parentId === null
+        ? `Hey ${user?.firstName} ${user?.lastName}, ${replyerName} added a comment to a news you added`
+        : `Hey ${user?.firstName} ${user?.lastName}, ${replyerName} added a reply to your comment on a news`,
+
+    data: {
+      newsId: req.params.newsId,
+      slug: req.params.slug,
+      url: `trendspot://news/${news?.slug}/${newsId}`,
     },
   });
 

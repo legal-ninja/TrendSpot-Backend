@@ -58,18 +58,6 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
                 newsId,
             },
         });
-        yield (0, push_notification_1.default)({
-            token: user === null || user === void 0 ? void 0 : user.pushToken,
-            title: "TrendSpot",
-            body: parentId === null
-                ? `Hey ${user === null || user === void 0 ? void 0 : user.firstName} ${user === null || user === void 0 ? void 0 : user.lastName}, ${replyerName} added a comment to a news you added`
-                : `Hey ${user === null || user === void 0 ? void 0 : user.firstName} ${user === null || user === void 0 ? void 0 : user.lastName}, ${replyerName} added a reply to your comment on a news`,
-            data: {
-                newsId: req.params.newsId,
-                slug: req.params.slug,
-                url: `trendspot://news/${req.params.slug}/${req.params.newsId}`,
-            },
-        });
         const commentAuthor = yield prisma_client_1.default.user.findFirst({
             where: {
                 email: authorEmail,
@@ -83,6 +71,18 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
                 author: {
                     select: utils_1.AUTHOR_FIELDS,
                 },
+            },
+        });
+        yield (0, push_notification_1.default)({
+            token: user === null || user === void 0 ? void 0 : user.pushToken,
+            title: "TrendSpot",
+            body: parentId === null
+                ? `Hey ${user === null || user === void 0 ? void 0 : user.firstName} ${user === null || user === void 0 ? void 0 : user.lastName}, ${replyerName} added a comment to a news you added`
+                : `Hey ${user === null || user === void 0 ? void 0 : user.firstName} ${user === null || user === void 0 ? void 0 : user.lastName}, ${replyerName} added a reply to your comment on a news`,
+            data: {
+                newsId: req.params.newsId,
+                slug: req.params.slug,
+                url: `trendspot://news/${news === null || news === void 0 ? void 0 : news.slug}/${newsId}`,
             },
         });
         const REPLY_SUBJECT = `New Reply to your comment`;
