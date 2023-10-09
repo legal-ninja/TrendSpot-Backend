@@ -66,8 +66,9 @@ export const addComment = handleAsync(async function (
         parentId === null
           ? `${replyerName} added a comment to a news you added`
           : `${replyerName} added a reply to a comment you added`,
-      category: "comment",
+      category: "news",
       userId: authorId,
+      newsId,
     },
   });
 

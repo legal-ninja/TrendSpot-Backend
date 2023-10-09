@@ -53,8 +53,9 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
                 description: parentId === null
                     ? `${replyerName} added a comment to a news you added`
                     : `${replyerName} added a reply to a comment you added`,
-                category: "comment",
+                category: "news",
                 userId: authorId,
+                newsId,
             },
         });
         yield (0, push_notification_1.default)({
