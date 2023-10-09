@@ -31,6 +31,7 @@ const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 const generate_token_1 = require("../../../helpers/generate.token");
 const welcome_email_1 = require("../../../views/welcome.email");
 const email_service_1 = __importDefault(require("../../../services/email.service"));
+const push_notification_1 = __importDefault(require("../../../services/push.notification"));
 exports.register = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const { firstName, lastName, email, password, isAdmin, avatar, pushToken } = req.body;
@@ -60,10 +61,19 @@ exports.register = (0, async_handler_1.default)(function (req, res, next) {
                 lastName,
                 email,
                 password: passwordHash,
-                pushToken,
+                pushToken: pushToken,
                 avatar: avatar || "",
                 bio: "",
                 isAdmin,
+            },
+        });
+        yield (0, push_notification_1.default)({
+            token: newUser.pushToken,
+            mutableContent: true,
+            title: "Welcome To TrendSpot",
+            body: `Hey ${newUser.firstName} ${newUser.lastName},"Welcome to TrendSpot! 🌟 Stay updated with the latest news and trends. Dive in now for a fresh perspective! 📰 #TrendSpot #StayInformed"`,
+            data: {
+                url: `trendspot://ExploreScreen`,
             },
         });
         const token = (0, generate_token_1.generateToken)(newUser.id);

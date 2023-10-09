@@ -8,6 +8,7 @@ import { generateToken } from "../../../helpers/generate.token";
 
 import { welcome } from "../../../views/welcome.email";
 import sendEmail from "../../../services/email.service";
+import sendPushNotification from "../../../services/push.notification";
 
 export const register = handleAsync(async function (
   req: Request,
@@ -55,10 +56,20 @@ export const register = handleAsync(async function (
       lastName,
       email,
       password: passwordHash,
-      pushToken,
+      pushToken: pushToken!,
       avatar: avatar || "",
       bio: "",
       isAdmin,
+    },
+  });
+
+  await sendPushNotification({
+    token: newUser.pushToken!,
+    mutableContent: true,
+    title: "Welcome To TrendSpot",
+    body: `Hey ${newUser.firstName} ${newUser.lastName},"Welcome to TrendSpot! 🌟 Stay updated with the latest news and trends. Dive in now for a fresh perspective! 📰 #TrendSpot #StayInformed"`,
+    data: {
+      url: `trendspot://ExploreScreen`,
     },
   });
 

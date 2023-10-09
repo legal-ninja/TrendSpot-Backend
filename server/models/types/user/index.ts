@@ -10,6 +10,7 @@ export interface User {
   lastUpdated: Date;
   isAuthor: boolean | null;
   isAdmin: boolean;
+  pushToken?: string | null;
   isDeactivated: boolean;
   isDeactivatedByAdmin: boolean;
   isSuperAdmin: boolean;
