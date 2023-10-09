@@ -57,7 +57,7 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
         });
         const commentAuthor = yield prisma_client_1.default.user.findFirst({
             where: {
-                email: authorEmail,
+                OR: [{ email: authorEmail }, { firstName: authorEmail[0] }],
             },
         });
         const news = yield prisma_client_1.default.news.findFirst({

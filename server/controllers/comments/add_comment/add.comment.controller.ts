@@ -71,7 +71,7 @@ export const addComment = handleAsync(async function (
 
   const commentAuthor = await prisma.user.findFirst({
     where: {
-      email: authorEmail,
+      OR: [{ email: authorEmail }, { firstName: authorEmail[0] }],
     },
   });
 
