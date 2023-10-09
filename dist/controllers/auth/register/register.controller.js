@@ -70,8 +70,8 @@ exports.register = (0, async_handler_1.default)(function (req, res, next) {
         yield (0, push_notification_1.default)({
             token: newUser.pushToken,
             mutableContent: true,
-            title: "Welcome To TrendSpot",
-            body: `Hey ${newUser.firstName} ${newUser.lastName},"Welcome to TrendSpot! 🌟 Stay updated with the latest news and trends. Dive in now for a fresh perspective! 📰 #TrendSpot #StayInformed"`,
+            title: "Welcome To TrendSpot!",
+            body: `Hey ${newUser.firstName} ${newUser.lastName}, Welcome to the community! 🌟 Stay updated with the latest news and trends. Dive in now for a fresh perspective! 📰 #TrendSpot #StayInformed`,
             data: {
                 url: `trendspot://ExploreScreen`,
             },

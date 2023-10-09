@@ -66,8 +66,8 @@ export const register = handleAsync(async function (
   await sendPushNotification({
     token: newUser.pushToken!,
     mutableContent: true,
-    title: "Welcome To TrendSpot",
-    body: `Hey ${newUser.firstName} ${newUser.lastName},"Welcome to TrendSpot! 🌟 Stay updated with the latest news and trends. Dive in now for a fresh perspective! 📰 #TrendSpot #StayInformed"`,
+    title: "Welcome To TrendSpot!",
+    body: `Hey ${newUser.firstName} ${newUser.lastName}, Welcome to the community! 🌟 Stay updated with the latest news and trends. Dive in now for a fresh perspective! 📰 #TrendSpot #StayInformed`,
     data: {
       url: `trendspot://ExploreScreen`,
     },
