@@ -21,9 +21,10 @@ const push_notification_1 = __importDefault(require("../../../services/push.noti
 exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
     var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
-        const { message, parentId, newsId, authorEmail, authorId, replyerName, path, isReplying, } = req.body;
+        const { message, parentId, newsId, authorEmail, authorId, replyerName, path, } = req.body;
         let missingFields = [];
         let bodyObject = { message, newsId, authorEmail, path };
+        const isReplying = parentId !== null;
         for (let field in bodyObject) {
             if (!req.body[field])
                 missingFields.push(field);
