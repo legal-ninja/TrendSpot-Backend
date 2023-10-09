@@ -18,8 +18,9 @@ const global_error_1 = require("../../helpers/global.error");
 const become_author_email_1 = require("../../views/become.author.email");
 const email_service_1 = __importDefault(require("../../services/email.service"));
 const prisma_client_1 = __importDefault(require("../../lib/prisma.client"));
+const push_notification_1 = __importDefault(require("../../services/push.notification"));
 exports.becomeAnAuthor = (0, async_handler_1.default)(function (req, res, next) {
-    var _a, _b, _c, _d, _e, _f, _g;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
     return __awaiter(this, void 0, void 0, function* () {
         const userIsAdmin = (_a = req.user) === null || _a === void 0 ? void 0 : _a.isAdmin;
         if (userIsAdmin)
@@ -39,12 +40,27 @@ exports.becomeAnAuthor = (0, async_handler_1.default)(function (req, res, next) 
                 userId: (_d = req.user) === null || _d === void 0 ? void 0 : _d.id,
             },
         });
+        yield prisma_client_1.default.notification.create({
+            data: {
+                description: "Your request to Become An Author on TrendSpot has been sent to the admins.",
+                category: "author",
+                userId: (_e = req.user) === null || _e === void 0 ? void 0 : _e.id,
+            },
+        });
+        yield (0, push_notification_1.default)({
+            token: ((_f = req.user) === null || _f === void 0 ? void 0 : _f.pushToken) || "",
+            title: "Author Request Accepted",
+            body: `Hey ${(_g = req.user) === null || _g === void 0 ? void 0 : _g.firstName} ${(_h = req.user) === null || _h === void 0 ? void 0 : _h.lastName}, Your request to Become An Author on TrendSpot has been sent to the admins.`,
+            data: {
+                url: `trendspot://Notifications`,
+            },
+        });
         yield prisma_client_1.default.activity.create({
             data: {
                 description: "requested to become an author",
                 category: "account",
                 action: "become author",
-                userId: (_e = req.user) === null || _e === void 0 ? void 0 : _e.id,
+                userId: (_j = req.user) === null || _j === void 0 ? void 0 : _j.id,
             },
         });
         const adminEmails = [process.env.ADMIN_EMAIL_ONE];
@@ -52,8 +68,8 @@ exports.becomeAnAuthor = (0, async_handler_1.default)(function (req, res, next) 
         const SENT_FROM = process.env.EMAIL_USER;
         const REPLY_TO = process.env.REPLY_TO;
         const body = (0, become_author_email_1.becomeAuthorEmail)({
-            firstName: (_f = req.user) === null || _f === void 0 ? void 0 : _f.firstName,
-            lastName: (_g = req.user) === null || _g === void 0 ? void 0 : _g.lastName,
+            firstName: (_k = req.user) === null || _k === void 0 ? void 0 : _k.firstName,
+            lastName: (_l = req.user) === null || _l === void 0 ? void 0 : _l.lastName,
             url: "https://trend-spot-admin.vercel.app/notifications",
         });
         adminEmails.map((email) => {

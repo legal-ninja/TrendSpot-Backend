@@ -5,6 +5,7 @@ import { AppError } from "../../helpers/global.error";
 import { becomeAuthorEmail } from "../../views/become.author.email";
 import sendEmail from "../../services/email.service";
 import prisma from "../../lib/prisma.client";
+import sendPushNotification from "../../services/push.notification";
 
 export const becomeAnAuthor = handleAsync(async function (
   req: AuthenticatedRequest,
@@ -40,6 +41,24 @@ export const becomeAnAuthor = handleAsync(async function (
   await prisma.authorRequest.create({
     data: {
       userId: req.user?.id!,
+    },
+  });
+
+  await prisma.notification.create({
+    data: {
+      description:
+        "Your request to Become An Author on TrendSpot has been sent to the admins.",
+      category: "author",
+      userId: req.user?.id!,
+    },
+  });
+
+  await sendPushNotification({
+    token: req.user?.pushToken || "",
+    title: "Author Request Accepted",
+    body: `Hey ${req.user?.firstName} ${req.user?.lastName}, Your request to Become An Author on TrendSpot has been sent to the admins.`,
+    data: {
+      url: `trendspot://Notifications`,
     },
   });
 
