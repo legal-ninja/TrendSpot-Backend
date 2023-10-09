@@ -80,7 +80,9 @@ export const addComment = handleAsync(async function (
         : `Hey ${user?.firstName} ${user?.lastName}, ${replyerName} added a reply to your comment on a news`,
 
     data: {
-      url: `trendspot://Notifications`,
+      newsId: req.params.newsId,
+      slug: req.params.slug,
+      url: `trendspot://news/${req.params.slug}/${req.params.newsId}`,
     },
   });
 

@@ -64,7 +64,9 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
                 ? `Hey ${user === null || user === void 0 ? void 0 : user.firstName} ${user === null || user === void 0 ? void 0 : user.lastName}, ${replyerName} added a comment to a news you added`
                 : `Hey ${user === null || user === void 0 ? void 0 : user.firstName} ${user === null || user === void 0 ? void 0 : user.lastName}, ${replyerName} added a reply to your comment on a news`,
             data: {
-                url: `trendspot://Notifications`,
+                newsId: req.params.newsId,
+                slug: req.params.slug,
+                url: `trendspot://news/${req.params.slug}/${req.params.newsId}`,
             },
         });
         const commentAuthor = yield prisma_client_1.default.user.findFirst({
