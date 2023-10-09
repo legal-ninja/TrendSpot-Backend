@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import handleAsync from "../../../helpers/async.handler";
 import prisma from "../../../lib/prisma.client";
 import { AUTHOR_FIELDS } from "../../../utils";
+import { Prisma } from "@prisma/client";
 
 export const getNewsLikes = handleAsync(async function (
   req: Request,
@@ -16,6 +17,9 @@ export const getNewsLikes = handleAsync(async function (
       user: {
         select: AUTHOR_FIELDS,
       },
+    },
+    orderBy: {
+      createdAt: Prisma.SortOrder.desc,
     },
   });
 

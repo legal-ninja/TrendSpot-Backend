@@ -16,8 +16,9 @@ exports.togglePostLike = void 0;
 const async_handler_1 = __importDefault(require("../../../helpers/async.handler"));
 const global_error_1 = require("../../../helpers/global.error");
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
+const push_notification_1 = __importDefault(require("../../../services/push.notification"));
 exports.togglePostLike = (0, async_handler_1.default)(function (req, res, next) {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
     return __awaiter(this, void 0, void 0, function* () {
         const { newsId } = req.params;
         if (!newsId)
@@ -28,6 +29,7 @@ exports.togglePostLike = (0, async_handler_1.default)(function (req, res, next) 
             },
             include: {
                 likes: true,
+                author: true,
             },
         });
         if (!newsToLike)
@@ -67,6 +69,29 @@ exports.togglePostLike = (0, async_handler_1.default)(function (req, res, next) 
                     newsId: newsToLike.id,
                 },
             });
+            if (newsToLike.authorId === ((_f = req.user) === null || _f === void 0 ? void 0 : _f.id)) {
+                yield (0, push_notification_1.default)({
+                    token: newsToLike.author.pushToken,
+                    title: "+1 like",
+                    body: `Hey ${(_g = newsToLike.author) === null || _g === void 0 ? void 0 : _g.firstName} ${newsToLike.author.lastName}, ${(_h = req.user) === null || _h === void 0 ? void 0 : _h.firstName} ${(_j = req.user) === null || _j === void 0 ? void 0 : _j.lastName} just liked a news you added`,
+                    data: {
+                        newsId: newsToLike.id,
+                        slug: newsToLike.slug,
+                        url: `trendspot://news/${newsToLike.slug}/${newsToLike.id}`,
+                    },
+                });
+                yield prisma_client_1.default.notification.create({
+                    data: {
+                        description: `${(_k = req.user) === null || _k === void 0 ? void 0 : _k.firstName} ${(_l = req.user) === null || _l === void 0 ? void 0 : _l.lastName} just added a liked a news you added`,
+                        category: "news",
+                        userId: newsToLike.authorId,
+                        newsId: newsToLike.id,
+                    },
+                });
+            }
+            else {
+                console.log("SAME USER");
+            }
         }
         res.status(200).json({
             status: "success",

@@ -16,6 +16,7 @@ exports.getNewsLikes = void 0;
 const async_handler_1 = __importDefault(require("../../../helpers/async.handler"));
 const prisma_client_1 = __importDefault(require("../../../lib/prisma.client"));
 const utils_1 = require("../../../utils");
+const client_1 = require("@prisma/client");
 exports.getNewsLikes = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const newsLikes = yield prisma_client_1.default.like.findMany({
@@ -26,6 +27,9 @@ exports.getNewsLikes = (0, async_handler_1.default)(function (req, res, next) {
                 user: {
                     select: utils_1.AUTHOR_FIELDS,
                 },
+            },
+            orderBy: {
+                createdAt: client_1.Prisma.SortOrder.desc,
             },
         });
         res.status(200).json({
