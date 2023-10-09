@@ -30,6 +30,13 @@ exports.sendOutPushNotification = (0, async_handler_1.default)(function (req, re
                     title,
                     body: `Hey ${user.firstName} ${user.lastName}, ${message}`,
                 });
+                yield prisma_client_1.default.notification.create({
+                    data: {
+                        description: message,
+                        category: "notification",
+                        userId: user.id,
+                    },
+                });
             }));
         }
         else {
@@ -42,6 +49,15 @@ exports.sendOutPushNotification = (0, async_handler_1.default)(function (req, re
                     body: `Hey ${user === null || user === void 0 ? void 0 : user.firstName} ${user.lastName}, ${message}`,
                     data: {
                         url: "trendspot://Notifications",
+                    },
+                });
+            }));
+            allUsers.map((user) => __awaiter(this, void 0, void 0, function* () {
+                yield prisma_client_1.default.notification.create({
+                    data: {
+                        description: message,
+                        category: "notification",
+                        userId: user === null || user === void 0 ? void 0 : user.id,
                     },
                 });
             }));

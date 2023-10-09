@@ -21,7 +21,7 @@ const push_notification_1 = __importDefault(require("../../../services/push.noti
 const publish_request_1 = require("../../../views/publish.request");
 const email_service_1 = __importDefault(require("../../../services/email.service"));
 exports.addNews = (0, async_handler_1.default)(function (req, res, next) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
     return __awaiter(this, void 0, void 0, function* () {
         const { title, content, image, readTime, category, token, fromPublishRequest, } = req.body;
         let missingFields = [];
@@ -64,24 +64,49 @@ exports.addNews = (0, async_handler_1.default)(function (req, res, next) {
                     userId: (_f = req.user) === null || _f === void 0 ? void 0 : _f.id,
                 },
             });
-        ((_g = req.user) === null || _g === void 0 ? void 0 : _g.isAdmin)
+        if ((_g = req.user) === null || _g === void 0 ? void 0 : _g.isAdmin) {
+            yield prisma_client_1.default.notification.create({
+                data: {
+                    description: "Your news has been published!",
+                    category: "news",
+                    userId: (_h = req.user) === null || _h === void 0 ? void 0 : _h.id,
+                    newsId: news.id,
+                },
+            });
+        }
+        else {
+            yield prisma_client_1.default.notification.create({
+                data: {
+                    description: "Your news has been sent to the admins for a review. We would keep in touch!",
+                    category: "news",
+                    userId: (_j = req.user) === null || _j === void 0 ? void 0 : _j.id,
+                },
+            });
+        }
+        ((_k = req.user) === null || _k === void 0 ? void 0 : _k.isAdmin)
             ? yield (0, push_notification_1.default)({
                 token,
                 title: "News Published",
-                body: `Hey ${(_h = req.user) === null || _h === void 0 ? void 0 : _h.firstName}, Your news has been published!`,
+                body: `Hey ${(_l = req.user) === null || _l === void 0 ? void 0 : _l.firstName}, Your news has been published!`,
+                data: {
+                    url: "",
+                },
             })
             : yield (0, push_notification_1.default)({
                 token,
                 title: "News Publication",
-                body: `Hey ${(_j = req.user) === null || _j === void 0 ? void 0 : _j.firstName}, Your news has been sent to the admins for a review. We would keep in touch!`,
+                body: `Hey ${(_m = req.user) === null || _m === void 0 ? void 0 : _m.firstName}, Your news has been sent to the admins for a review. We would keep in touch!`,
+                data: {
+                    url: "trendspot://Notifications",
+                },
             });
         const adminEmails = [process.env.ADMIN_EMAIL_ONE];
         const subject = "News Publication Request";
         const SENT_FROM = process.env.EMAIL_USER;
         const REPLY_TO = process.env.REPLY_TO;
         const body = (0, publish_request_1.publishRequestEmail)({
-            firstName: (_k = req.user) === null || _k === void 0 ? void 0 : _k.firstName,
-            lastName: (_l = req.user) === null || _l === void 0 ? void 0 : _l.lastName,
+            firstName: (_o = req.user) === null || _o === void 0 ? void 0 : _o.firstName,
+            lastName: (_p = req.user) === null || _p === void 0 ? void 0 : _p.lastName,
             url: "https://trend-spot-admin.vercel.app/notifications",
         });
         adminEmails.map((email) => {

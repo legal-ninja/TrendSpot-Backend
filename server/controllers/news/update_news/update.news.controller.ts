@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import handleAsync from "../../../helpers/async.handler";
 import { AppError } from "../../../helpers/global.error";
 import prisma from "../../../lib/prisma.client";
@@ -7,9 +7,10 @@ import sendPushNotification from "../../../services/push.notification";
 import sendEmail from "../../../services/email.service";
 import { publishNewsAcceptedEmail } from "../../../views/publish.request.accepted";
 import { publishNewsRejectedEmail } from "../../../views/publish.request.rejected";
+import { AuthenticatedRequest } from "../../../models/types/auth";
 
 export const updateNews = handleAsync(async function (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) {
@@ -58,8 +59,7 @@ export const updateNews = handleAsync(async function (
     where: { id: authorId },
   });
 
-  console.log("Slug:", req.params.slug);
-  console.log("News ID:", req.params.newsId);
+  console.log({ slug: req.params.slug, newsid: req.params.newsId });
 
   if (response === "Accepted") {
     await sendPushNotification({
@@ -78,11 +78,26 @@ export const updateNews = handleAsync(async function (
       token: currentUser?.pushToken!,
       title: "News Publication Rejected",
       body: `Hey ${currentUser?.firstName} ${currentUser?.lastName}, Your news has been rejected and would not be published`,
+      data: {
+        url: "trendspot://Notifications",
+      },
     });
   }
 
+  await prisma.notification.create({
+    data: {
+      description:
+        response === "Accepted"
+          ? "Your news has been approved and published!"
+          : "Your news has been rejected and would not be published",
+      category: "news",
+      userId: currentUser?.id!,
+      newsId: response === "Accepted" ? news.id : null,
+    },
+  });
+
   if (fromPublishRequest && response === "Rejected") {
-    await prisma.news.deleteMany({
+    await prisma.news.delete({
       where: { id: news.id },
     });
   }
@@ -107,7 +122,9 @@ export const updateNews = handleAsync(async function (
       sendEmail({ subject, body, send_to: email, SENT_FROM, REPLY_TO });
     res.status(200).json({
       status: "success",
-      message: "News updated successfully",
+      message: fromPublishRequest
+        ? `Feedback sent to ${currentUser?.firstName!} ${currentUser?.lastName!}`
+        : "News updated successfully",
       updatedNews,
     });
   } catch (error) {

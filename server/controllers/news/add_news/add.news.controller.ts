@@ -75,16 +75,42 @@ export const addNews = handleAsync(async function (
         },
       });
 
+  if (req.user?.isAdmin) {
+    await prisma.notification.create({
+      data: {
+        description: "Your news has been published!",
+        category: "news",
+        userId: req.user?.id!,
+        newsId: news.id,
+      },
+    });
+  } else {
+    await prisma.notification.create({
+      data: {
+        description:
+          "Your news has been sent to the admins for a review. We would keep in touch!",
+        category: "news",
+        userId: req.user?.id!,
+      },
+    });
+  }
+
   req.user?.isAdmin
     ? await sendPushNotification({
         token,
         title: "News Published",
         body: `Hey ${req.user?.firstName}, Your news has been published!`,
+        data: {
+          url: "",
+        },
       })
     : await sendPushNotification({
         token,
         title: "News Publication",
         body: `Hey ${req.user?.firstName}, Your news has been sent to the admins for a review. We would keep in touch!`,
+        data: {
+          url: "trendspot://Notifications",
+        },
       });
 
   const adminEmails = [process.env.ADMIN_EMAIL_ONE as string];

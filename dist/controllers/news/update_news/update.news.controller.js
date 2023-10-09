@@ -52,8 +52,7 @@ exports.updateNews = (0, async_handler_1.default)(function (req, res, next) {
         const currentUser = yield prisma_client_1.default.user.findFirst({
             where: { id: authorId },
         });
-        console.log("Slug:", req.params.slug);
-        console.log("News ID:", req.params.newsId);
+        console.log({ slug: req.params.slug, newsid: req.params.newsId });
         if (response === "Accepted") {
             yield (0, push_notification_1.default)({
                 token: currentUser === null || currentUser === void 0 ? void 0 : currentUser.pushToken,
@@ -72,10 +71,23 @@ exports.updateNews = (0, async_handler_1.default)(function (req, res, next) {
                 token: currentUser === null || currentUser === void 0 ? void 0 : currentUser.pushToken,
                 title: "News Publication Rejected",
                 body: `Hey ${currentUser === null || currentUser === void 0 ? void 0 : currentUser.firstName} ${currentUser === null || currentUser === void 0 ? void 0 : currentUser.lastName}, Your news has been rejected and would not be published`,
+                data: {
+                    url: "trendspot://Notifications",
+                },
             });
         }
+        yield prisma_client_1.default.notification.create({
+            data: {
+                description: response === "Accepted"
+                    ? "Your news has been approved and published!"
+                    : "Your news has been rejected and would not be published",
+                category: "news",
+                userId: currentUser === null || currentUser === void 0 ? void 0 : currentUser.id,
+                newsId: response === "Accepted" ? news.id : null,
+            },
+        });
         if (fromPublishRequest && response === "Rejected") {
-            yield prisma_client_1.default.news.deleteMany({
+            yield prisma_client_1.default.news.delete({
                 where: { id: news.id },
             });
         }
@@ -91,7 +103,9 @@ exports.updateNews = (0, async_handler_1.default)(function (req, res, next) {
                 (0, email_service_1.default)({ subject, body, send_to: email, SENT_FROM, REPLY_TO });
             res.status(200).json({
                 status: "success",
-                message: "News updated successfully",
+                message: fromPublishRequest
+                    ? `Feedback sent to ${currentUser === null || currentUser === void 0 ? void 0 : currentUser.firstName} ${currentUser === null || currentUser === void 0 ? void 0 : currentUser.lastName}`
+                    : "News updated successfully",
                 updatedNews,
             });
         }

@@ -12,6 +12,7 @@ export const sendOutPushNotification = handleAsync(async function (
   const { title, message, users, notificationType } = req.body;
 
   type UserPayload = {
+    id: string;
     firstName: string;
     lastName: string;
     pushToken: string;
@@ -29,6 +30,14 @@ export const sendOutPushNotification = handleAsync(async function (
         title,
         body: `Hey ${user.firstName} ${user.lastName}, ${message}`,
       });
+
+      await prisma.notification.create({
+        data: {
+          description: message,
+          category: "notification",
+          userId: user.id,
+        },
+      });
     });
   } else {
     const allUsers = await prisma.user.findMany();
@@ -43,6 +52,16 @@ export const sendOutPushNotification = handleAsync(async function (
         body: `Hey ${user?.firstName} ${user.lastName}, ${message}`,
         data: {
           url: "trendspot://Notifications",
+        },
+      });
+    });
+
+    allUsers.map(async (user) => {
+      await prisma.notification.create({
+        data: {
+          description: message,
+          category: "notification",
+          userId: user?.id!,
         },
       });
     });
