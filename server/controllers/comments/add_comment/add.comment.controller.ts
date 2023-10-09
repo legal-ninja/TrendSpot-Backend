@@ -69,11 +69,19 @@ export const addComment = handleAsync(async function (
     },
   });
 
-  const commentAuthor = await prisma.user.findFirst({
-    where: {
-      OR: [{ email: authorEmail }, { firstName: authorEmail[0] }],
-    },
-  });
+  let commentAuthor;
+
+  isReplying
+    ? (commentAuthor = await prisma.user.findFirst({
+        where: {
+          firstName: authorEmail[0],
+        },
+      }))
+    : (commentAuthor = await prisma.user.findFirst({
+        where: {
+          email: authorEmail,
+        },
+      }));
 
   const news = await prisma.news.findFirst({
     where: {
@@ -98,8 +106,9 @@ export const addComment = handleAsync(async function (
   });
 
   console.log({ token: commentAuthor?.pushToken });
-  console.log({ token2: user?.pushToken! });
+  console.log({ token2: user?.pushToken! }); // not reply
   console.log({ isReplying });
+  console.log({ commentAuthor });
 
   await sendPushNotification({
     token: isReplying ? commentAuthor?.pushToken! : user?.pushToken!,

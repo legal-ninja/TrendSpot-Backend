@@ -56,11 +56,18 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
                 newsId,
             },
         });
-        const commentAuthor = yield prisma_client_1.default.user.findFirst({
-            where: {
-                OR: [{ email: authorEmail }, { firstName: authorEmail[0] }],
-            },
-        });
+        let commentAuthor;
+        isReplying
+            ? (commentAuthor = yield prisma_client_1.default.user.findFirst({
+                where: {
+                    firstName: authorEmail[0],
+                },
+            }))
+            : (commentAuthor = yield prisma_client_1.default.user.findFirst({
+                where: {
+                    email: authorEmail,
+                },
+            }));
         const news = yield prisma_client_1.default.news.findFirst({
             where: {
                 id: newsId,
@@ -81,8 +88,9 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
             },
         });
         console.log({ token: commentAuthor === null || commentAuthor === void 0 ? void 0 : commentAuthor.pushToken });
-        console.log({ token2: user === null || user === void 0 ? void 0 : user.pushToken });
+        console.log({ token2: user === null || user === void 0 ? void 0 : user.pushToken }); // not reply
         console.log({ isReplying });
+        console.log({ commentAuthor });
         yield (0, push_notification_1.default)({
             token: isReplying ? commentAuthor === null || commentAuthor === void 0 ? void 0 : commentAuthor.pushToken : user === null || user === void 0 ? void 0 : user.pushToken,
             title: "TrendSpot",
