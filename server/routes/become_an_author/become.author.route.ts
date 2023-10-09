@@ -8,7 +8,7 @@ import { verifyGuest } from "../../middleware/verifyGuest";
 const router = Router();
 
 router.get("/", verifyAuth, verifyAdmin, getAuthourRequests);
-router.post("/", verifyAuth, verifyAdmin, verifyGuest, becomeAnAuthor);
+router.post("/", verifyAuth, verifyGuest, becomeAnAuthor);
 router.post(
   "/accept/:requestId/:userId",
   verifyAuth,
