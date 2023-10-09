@@ -53,11 +53,29 @@ exports.acceptAuthorRequest = (0, async_handler_1.default)(function (req, res, n
                 isAuthor: requestWasAccepted ? true : false,
             },
         });
+        if (requestWasAccepted) {
+            yield prisma_client_1.default.notification.create({
+                data: {
+                    description: "Your request to become an author on TrendSpot has been accepted! 🎉 Refresh app to see changes.",
+                    category: "author",
+                    userId: userToUpdate.id,
+                },
+            });
+        }
+        else {
+            yield prisma_client_1.default.notification.create({
+                data: {
+                    description: "Your request to become an author on TrendSpot was rejected.",
+                    category: "author",
+                    userId: userToUpdate.id,
+                },
+            });
+        }
         requestWasAccepted
             ? yield (0, push_notification_1.default)({
                 token: userToUpdate.pushToken || "",
                 title: "Author Request Accepted",
-                body: `Hey ${userToUpdate.firstName} ${userToUpdate.lastName}, Your request to become an author on TrendSpot has been accepted! Refresh app to see changes.`,
+                body: `Hey ${userToUpdate.firstName} ${userToUpdate.lastName}, Your request to become an author on TrendSpot has been accepted! 🎉 Refresh app to see changes.`,
                 data: {
                     url: `trendspot://Notifications`,
                 },

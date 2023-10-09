@@ -52,11 +52,31 @@ export const acceptAuthorRequest = handleAsync(async function (
     },
   });
 
+  if (requestWasAccepted) {
+    await prisma.notification.create({
+      data: {
+        description:
+          "Your request to become an author on TrendSpot has been accepted! 🎉 Refresh app to see changes.",
+        category: "author",
+        userId: userToUpdate.id!,
+      },
+    });
+  } else {
+    await prisma.notification.create({
+      data: {
+        description:
+          "Your request to become an author on TrendSpot was rejected.",
+        category: "author",
+        userId: userToUpdate.id!,
+      },
+    });
+  }
+
   requestWasAccepted
     ? await sendPushNotification({
         token: userToUpdate.pushToken || "",
         title: "Author Request Accepted",
-        body: `Hey ${userToUpdate.firstName} ${userToUpdate.lastName}, Your request to become an author on TrendSpot has been accepted! Refresh app to see changes.`,
+        body: `Hey ${userToUpdate.firstName} ${userToUpdate.lastName}, Your request to become an author on TrendSpot has been accepted! 🎉 Refresh app to see changes.`,
         data: {
           url: `trendspot://Notifications`,
         },
