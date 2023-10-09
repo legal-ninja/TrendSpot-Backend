@@ -69,7 +69,7 @@ exports.togglePostLike = (0, async_handler_1.default)(function (req, res, next) 
                     newsId: newsToLike.id,
                 },
             });
-            if (newsToLike.authorId === ((_f = req.user) === null || _f === void 0 ? void 0 : _f.id)) {
+            if (newsToLike.authorId !== ((_f = req.user) === null || _f === void 0 ? void 0 : _f.id)) {
                 yield (0, push_notification_1.default)({
                     token: newsToLike.author.pushToken,
                     title: "+1 like",

@@ -67,7 +67,7 @@ export const togglePostLike = handleAsync(async function (
       },
     });
 
-    if (newsToLike.authorId === req.user?.id) {
+    if (newsToLike.authorId !== req.user?.id) {
       await sendPushNotification({
         token: newsToLike.author.pushToken!,
         title: "+1 like",
