@@ -62,6 +62,7 @@ exports.addNews = (0, async_handler_1.default)(function (req, res, next) {
                     category: "news",
                     action: "add",
                     userId: (_f = req.user) === null || _f === void 0 ? void 0 : _f.id,
+                    newsId: news.id,
                 },
             });
         if ((_g = req.user) === null || _g === void 0 ? void 0 : _g.isAdmin) {

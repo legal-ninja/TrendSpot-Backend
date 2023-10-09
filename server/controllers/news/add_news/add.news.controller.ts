@@ -72,6 +72,7 @@ export const addNews = handleAsync(async function (
           category: "news",
           action: "add",
           userId: req.user?.id!,
+          newsId: news.id,
         },
       });
 
