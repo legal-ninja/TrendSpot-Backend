@@ -79,12 +79,15 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
                 userId: (_b = req.user) === null || _b === void 0 ? void 0 : _b.id,
             },
         });
+        console.log({ token: commentAuthor === null || commentAuthor === void 0 ? void 0 : commentAuthor.pushToken });
+        console.log({ token2: user === null || user === void 0 ? void 0 : user.pushToken });
+        console.log({ isReplying });
         yield (0, push_notification_1.default)({
             token: isReplying ? commentAuthor === null || commentAuthor === void 0 ? void 0 : commentAuthor.pushToken : user === null || user === void 0 ? void 0 : user.pushToken,
             title: "TrendSpot",
             body: parentId === null
                 ? `Hey ${user === null || user === void 0 ? void 0 : user.firstName} ${user === null || user === void 0 ? void 0 : user.lastName}, ${replyerName} added a comment to a news you added`
-                : `Hey ${user === null || user === void 0 ? void 0 : user.firstName} ${user === null || user === void 0 ? void 0 : user.lastName}, ${replyerName} added a reply to your comment on a news`,
+                : `Hey ${commentAuthor === null || commentAuthor === void 0 ? void 0 : commentAuthor.firstName} ${commentAuthor === null || commentAuthor === void 0 ? void 0 : commentAuthor.lastName}, ${replyerName} added a reply to your comment on a news`,
             data: {
                 newsId: req.params.newsId,
                 slug: req.params.slug,

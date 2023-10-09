@@ -97,13 +97,17 @@ export const addComment = handleAsync(async function (
     },
   });
 
+  console.log({ token: commentAuthor?.pushToken });
+  console.log({ token2: user?.pushToken! });
+  console.log({ isReplying });
+
   await sendPushNotification({
     token: isReplying ? commentAuthor?.pushToken! : user?.pushToken!,
     title: "TrendSpot",
     body:
       parentId === null
         ? `Hey ${user?.firstName} ${user?.lastName}, ${replyerName} added a comment to a news you added`
-        : `Hey ${user?.firstName} ${user?.lastName}, ${replyerName} added a reply to your comment on a news`,
+        : `Hey ${commentAuthor?.firstName} ${commentAuthor?.lastName}, ${replyerName} added a reply to your comment on a news`,
 
     data: {
       newsId: req.params.newsId,
