@@ -9,7 +9,7 @@ export const deleteAllNotifications = handleAsync(async function (
 ) {
   await prisma.notification.deleteMany({
     where: {
-      id: req.user?.id as string,
+      userId: req.user?.id as string,
     },
   });
 

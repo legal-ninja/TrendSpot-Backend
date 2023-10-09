@@ -58,7 +58,7 @@ exports.updateNews = (0, async_handler_1.default)(function (req, res, next) {
                 token: currentUser === null || currentUser === void 0 ? void 0 : currentUser.pushToken,
                 mutableContent: true,
                 title: "News Publication Approved",
-                body: `Hey ${currentUser === null || currentUser === void 0 ? void 0 : currentUser.firstName} ${currentUser === null || currentUser === void 0 ? void 0 : currentUser.lastName}, Your news has been approved and published!`,
+                body: `Hey ${currentUser === null || currentUser === void 0 ? void 0 : currentUser.firstName} ${currentUser === null || currentUser === void 0 ? void 0 : currentUser.lastName}, Your news has been approved and published! 🎉`,
                 data: {
                     newsId: req.params.newsId,
                     slug: req.params.slug,
@@ -70,7 +70,7 @@ exports.updateNews = (0, async_handler_1.default)(function (req, res, next) {
             yield (0, push_notification_1.default)({
                 token: currentUser === null || currentUser === void 0 ? void 0 : currentUser.pushToken,
                 title: "News Publication Rejected",
-                body: `Hey ${currentUser === null || currentUser === void 0 ? void 0 : currentUser.firstName} ${currentUser === null || currentUser === void 0 ? void 0 : currentUser.lastName}, Your news has been rejected and would not be published`,
+                body: `Hey ${currentUser === null || currentUser === void 0 ? void 0 : currentUser.firstName} ${currentUser === null || currentUser === void 0 ? void 0 : currentUser.lastName}, Your news has been rejected and would not be published.`,
                 data: {
                     url: "trendspot://Notifications",
                 },

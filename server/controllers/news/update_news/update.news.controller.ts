@@ -66,7 +66,7 @@ export const updateNews = handleAsync(async function (
       token: currentUser?.pushToken!,
       mutableContent: true,
       title: "News Publication Approved",
-      body: `Hey ${currentUser?.firstName} ${currentUser?.lastName}, Your news has been approved and published!`,
+      body: `Hey ${currentUser?.firstName} ${currentUser?.lastName}, Your news has been approved and published! 🎉`,
       data: {
         newsId: req.params.newsId,
         slug: req.params.slug,
@@ -77,7 +77,7 @@ export const updateNews = handleAsync(async function (
     await sendPushNotification({
       token: currentUser?.pushToken!,
       title: "News Publication Rejected",
-      body: `Hey ${currentUser?.firstName} ${currentUser?.lastName}, Your news has been rejected and would not be published`,
+      body: `Hey ${currentUser?.firstName} ${currentUser?.lastName}, Your news has been rejected and would not be published.`,
       data: {
         url: "trendspot://Notifications",
       },

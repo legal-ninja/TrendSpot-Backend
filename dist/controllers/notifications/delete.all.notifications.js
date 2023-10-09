@@ -20,7 +20,7 @@ exports.deleteAllNotifications = (0, async_handler_1.default)(function (req, res
     return __awaiter(this, void 0, void 0, function* () {
         yield prisma_client_1.default.notification.deleteMany({
             where: {
-                id: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
+                userId: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
             },
         });
         res.status(200).json({
