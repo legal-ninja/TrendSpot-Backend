@@ -103,6 +103,7 @@ export const addComment = handleAsync(async function (
       description: isReplying ? REPLY_SUBJECT : COMMENT_SUBJECT,
       category: "comment",
       userId: req.user?.id!,
+      newsId,
     },
   });
 

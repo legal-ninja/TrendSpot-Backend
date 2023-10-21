@@ -82,7 +82,7 @@ exports.togglePostLike = (0, async_handler_1.default)(function (req, res, next) 
                 });
                 yield prisma_client_1.default.notification.create({
                     data: {
-                        description: `${(_k = req.user) === null || _k === void 0 ? void 0 : _k.firstName} ${(_l = req.user) === null || _l === void 0 ? void 0 : _l.lastName} just added a liked a news you added`,
+                        description: `${(_k = req.user) === null || _k === void 0 ? void 0 : _k.firstName} ${(_l = req.user) === null || _l === void 0 ? void 0 : _l.lastName} just liked a news you added`,
                         category: "news",
                         userId: newsToLike.authorId,
                         newsId: newsToLike.id,

@@ -18,7 +18,6 @@ export const sendOutPushNotification = handleAsync(async function (
     pushToken: string;
     avatar: string;
   };
-  console.log({ users, notificationType });
 
   if (!message || !title)
     return next(new AppError("Both Title and Message are required", 400));

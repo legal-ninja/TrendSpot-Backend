@@ -81,7 +81,7 @@ export const togglePostLike = handleAsync(async function (
 
       await prisma.notification.create({
         data: {
-          description: `${req.user?.firstName} ${req.user?.lastName} just added a liked a news you added`,
+          description: `${req.user?.firstName} ${req.user?.lastName} just liked a news you added`,
           category: "news",
           userId: newsToLike.authorId,
           newsId: newsToLike.id!,

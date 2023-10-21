@@ -71,7 +71,10 @@ export const becomeAnAuthor = handleAsync(async function (
     },
   });
 
-  const adminEmails = [process.env.ADMIN_EMAIL_ONE as string];
+  const adminEmails = [
+    process.env.ADMIN_EMAIL_ONE as string,
+    process.env.ADMIN_EMAIL_TWO as string,
+  ];
 
   const subject = "Become An Author Request";
   const SENT_FROM = process.env.EMAIL_USER as string;

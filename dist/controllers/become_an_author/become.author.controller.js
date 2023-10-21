@@ -63,7 +63,10 @@ exports.becomeAnAuthor = (0, async_handler_1.default)(function (req, res, next) 
                 userId: (_j = req.user) === null || _j === void 0 ? void 0 : _j.id,
             },
         });
-        const adminEmails = [process.env.ADMIN_EMAIL_ONE];
+        const adminEmails = [
+            process.env.ADMIN_EMAIL_ONE,
+            process.env.ADMIN_EMAIL_TWO,
+        ];
         const subject = "Become An Author Request";
         const SENT_FROM = process.env.EMAIL_USER;
         const REPLY_TO = process.env.REPLY_TO;

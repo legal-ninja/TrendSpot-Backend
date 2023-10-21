@@ -20,7 +20,6 @@ const global_error_1 = require("../../helpers/global.error");
 exports.sendOutPushNotification = (0, async_handler_1.default)(function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const { title, message, users, notificationType } = req.body;
-        console.log({ users, notificationType });
         if (!message || !title)
             return next(new global_error_1.AppError("Both Title and Message are required", 400));
         if (notificationType === "Specific") {

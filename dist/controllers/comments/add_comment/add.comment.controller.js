@@ -86,6 +86,7 @@ exports.addComment = (0, async_handler_1.default)(function (req, res, next) {
                 description: isReplying ? REPLY_SUBJECT : COMMENT_SUBJECT,
                 category: "comment",
                 userId: (_b = req.user) === null || _b === void 0 ? void 0 : _b.id,
+                newsId,
             },
         });
         yield (0, push_notification_1.default)({
