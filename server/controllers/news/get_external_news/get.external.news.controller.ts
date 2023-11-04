@@ -16,7 +16,7 @@ export const getExternalNews = handleAsync(async function (
   const requestToNewsAPI = await axios.get(apiUrl, {
     params: {
       apiKey,
-      country: countryCode ? countryCode : "us",
+      country: countryCode ? countryCode : "in",
       category: category ? category : "general",
       pageSize,
     },
